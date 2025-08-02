@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) exit;
 
 // 插件统一版本
 function wxs_watermark_plugin_version(){
-    return "1.0.3";
+    return "1.1.1";
 }
 $version = wxs_watermark_plugin_version();
 
@@ -124,7 +124,9 @@ if (class_exists('CSF')) {
                         </div>
                     </div>
                     <p>请通过左侧选项卡配置插件功能。在调试模式下，水印将以可见文本形式显示，便于测试。</p>
+                    <a href="https://wxsnote.cn/wbmsy" target="_blank" class="but"><i class="fa fa-paper-plane-o"></i> 前往提取水印</a>
                     <p>插件作者：天无神话</p>
+                    <p>作者QQ：2031301686</p>
                     <p>作者博客：<a href="https://wxsnote.cn/" target="_blank">王先生笔记</a></p>
                     <p>原理介绍：<a href="https://wxsnote.cn/6395.html" target="_blank">https://wxsnote.cn/6395.html</a></p>
                     <p>开源地址：<a href="https://github.com/twsh0305/text_watermarking" target="_blank">https://github.com/twsh0305/text_watermarking</a></p>
