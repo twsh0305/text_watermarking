@@ -45,37 +45,6 @@
 3. 登录WordPress后台，进入「插件」页面，激活「文本盲水印」插件
 
 
-## 配置说明
-
-插件核心配置位于`wordpress插件/text_watermarking.php`中的`$wxs_watermark_config`数组，可根据需求修改：
-
-| 配置项 | 说明 | 可选值 |
-|--------|------|--------|
-| `enable` | 是否启用水印功能 | 1（启用）、0（禁用） |
-| `min_paragraph_length` | 最小段落字数限制（短于该值不插入水印） | 正整数（建议15-30） |
-| `insert_method` | 水印插入方式 | 1（末尾）、2（随机）、3（固定间隔） |
-| `random.count_type` | 随机插入次数计算模式（仅`insert_method=2`生效） | 1（自定义次数）、2（按字数比例） |
-| `random.custom_count` | 每段插入次数（仅`count_type=1`生效） | 正整数 |
-| `random.word_based_ratio` | 字数比例（每多少字插入1次，仅`count_type=2`生效） | 正整数（建议200-500） |
-| `fixed.interval` | 固定插入间隔（仅`insert_method=3`生效） | 正整数（建议10-30） |
-| `watermark_content.include_ip` | 是否包含访问者IP | true/false |
-| `watermark_content.include_user` | 是否包含用户标识 | true/false |
-| `watermark_content.include_time` | 是否包含时间戳 | true/false |
-| `watermark_content.include_custom` | 是否包含自定义文本 | true/false |
-| `watermark_content.custom_text` | 自定义文本内容（仅`include_custom=true`生效） | 任意字符串 |
-| `bot_ua` | 爬虫UA过滤列表 | 爬虫用户代理字符串数组 |
-| `debug_mode` | 是否开启调试模式（水印可见化） | 1（启用）、0（禁用） |
-
-
-## 使用方法
-
-1. 插件激活后，默认配置下自动生效
-2. 登录用户访问时，由PHP后端处理文章内容并插入水印
-3. 未登录用户访问时，由前端端JavaScript处理并插入水印
-4. 动态加载的内容（如AJAX加载的段落）会被自动监控并补加水印
-5. 开启调试模式（`debug_mode=1`）后，水印会以`[水印：内容]`形式显示，方便验证效果
-
-
 ## 水印提取
 
 如需提取文本中的水印信息，可使用项目中的`example.php`提供的提取工具：
@@ -92,4 +61,4 @@ echo "提取的水印信息：" . $extracted;
 
 项目地址：[https://github.com/twsh0305/text_watermarking](https://github.com/twsh0305/text_watermarking)
 
-文章说明：[https://wxsnote.cn/暂无](https://wxsnote.cn/暂无)
+原理介绍文章：[https://wxsnote.cn/6395.html](https://wxsnote.cn/6395.html)
