@@ -40,7 +40,7 @@ if ( ! class_exists( 'CSF_Field_dimensions' ) ) {
 
       echo $this->field_before();
 
-      echo '<div class="csf--inputs" data-depend-id="'. esc_attr( $this->field['id'] ) .'">';
+      echo '<div class="csf--inputs">';
 
       if ( ! empty( $args['width'] ) ) {
         $placeholder = ( ! empty( $args['width_placeholder'] ) ) ? ' placeholder="'. esc_attr( $args['width_placeholder'] ) .'"' : '';

@@ -133,7 +133,8 @@ if ( ! class_exists( 'CSF_Field_background' ) ) {
 
         CSF::field( array(
           'id'          => 'background-image',
-          'type'        => 'media',
+          'library'  => 'image',
+          'type' => 'upload',
           'class'       => 'csf-assign-field-background',
           'library'     => $args['background_image_library'],
           'preview'     => $args['background_image_preview'],
@@ -158,7 +159,7 @@ if ( ! class_exists( 'CSF_Field_background' ) ) {
           'id'              => 'background-position',
           'type'            => 'select',
           'options'         => array(
-            ''              => esc_html__( 'Background Position', 'csf' ),
+            ''              => esc_html__( 'Background Position', 'csf' ).':',
             'left top'      => esc_html__( 'Left Top', 'csf' ),
             'left center'   => esc_html__( 'Left Center', 'csf' ),
             'left bottom'   => esc_html__( 'Left Bottom', 'csf' ),
@@ -181,7 +182,7 @@ if ( ! class_exists( 'CSF_Field_background' ) ) {
           'id'          => 'background-repeat',
           'type'        => 'select',
           'options'     => array(
-            ''          => esc_html__( 'Background Repeat', 'csf' ),
+            ''          => esc_html__( 'Background Repeat', 'csf' ).':',
             'repeat'    => esc_html__( 'Repeat', 'csf' ),
             'no-repeat' => esc_html__( 'No Repeat', 'csf' ),
             'repeat-x'  => esc_html__( 'Repeat Horizontally', 'csf' ),
@@ -199,7 +200,7 @@ if ( ! class_exists( 'CSF_Field_background' ) ) {
           'id'       => 'background-attachment',
           'type'     => 'select',
           'options'  => array(
-            ''       => esc_html__( 'Background Attachment', 'csf' ),
+            ''       => esc_html__( 'Background Attachment', 'csf' ).':',
             'scroll' => esc_html__( 'Scroll', 'csf' ),
             'fixed'  => esc_html__( 'Fixed', 'csf' ),
           ),
@@ -215,7 +216,7 @@ if ( ! class_exists( 'CSF_Field_background' ) ) {
           'id'        => 'background-size',
           'type'      => 'select',
           'options'   => array(
-            ''        => esc_html__( 'Background Size', 'csf' ),
+            ''        => esc_html__( 'Background Size', 'csf' ).':',
             'cover'   => esc_html__( 'Cover', 'csf' ),
             'contain' => esc_html__( 'Contain', 'csf' ),
             'auto'    => esc_html__( 'Auto', 'csf' ),
@@ -232,7 +233,7 @@ if ( ! class_exists( 'CSF_Field_background' ) ) {
           'id'            => 'background-origin',
           'type'          => 'select',
           'options'       => array(
-            ''            => esc_html__( 'Background Origin', 'csf' ),
+            ''            => esc_html__( 'Background Origin', 'csf' ).':',
             'padding-box' => esc_html__( 'Padding Box', 'csf' ),
             'border-box'  => esc_html__( 'Border Box', 'csf' ),
             'content-box' => esc_html__( 'Content Box', 'csf' ),
@@ -249,7 +250,7 @@ if ( ! class_exists( 'CSF_Field_background' ) ) {
           'id'            => 'background-clip',
           'type'          => 'select',
           'options'       => array(
-            ''            => esc_html__( 'Background Clip', 'csf' ),
+            ''            => esc_html__( 'Background Clip', 'csf' ).':',
             'border-box'  => esc_html__( 'Border Box', 'csf' ),
             'padding-box' => esc_html__( 'Padding Box', 'csf' ),
             'content-box' => esc_html__( 'Content Box', 'csf' ),
@@ -266,7 +267,7 @@ if ( ! class_exists( 'CSF_Field_background' ) ) {
           'id'            => 'background-blend-mode',
           'type'          => 'select',
           'options'       => array(
-            ''            => esc_html__( 'Background Blend Mode', 'csf' ),
+            ''            => esc_html__( 'Background Blend Mode', 'csf' ).':',
             'normal'      => esc_html__( 'Normal', 'csf' ),
             'multiply'    => esc_html__( 'Multiply', 'csf' ),
             'screen'      => esc_html__( 'Screen', 'csf' ),

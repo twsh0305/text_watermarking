@@ -65,7 +65,7 @@ if ( ! class_exists( 'CSF_Field_border' ) ) {
 
       echo $this->field_before();
 
-      echo '<div class="csf--inputs" data-depend-id="'. esc_attr( $this->field['id'] ) .'">';
+      echo '<div class="csf--inputs">';
 
       if ( ! empty( $args['all'] ) ) {
 
