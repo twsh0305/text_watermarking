@@ -172,7 +172,7 @@ if (class_exists('CSF')) {
                     'hybrid'  => '动静混合',
                 ],
                 'default' => 'hybrid',
-                'desc'    => '动态：纯PHP处理，不管登录状态<br>静态：纯JS处理，不管管登录状态<br>动静混合：登录用户用PHP，未登录用户用JS（适合有缓存的网站）',
+                'desc'    => '动态：纯PHP处理，建议<br>静态：纯JS处理，不建议，可被绕过<br>动静混合：登录用户用PHP，未登录用户用JS（适合有缓存的网站）',
                 'dependency' => ['enable', '==', 1],
             ],
             [
