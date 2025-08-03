@@ -107,8 +107,8 @@ This project uses MIT protocol open source, brief description of requirements：
 
 ## information of the author
 
-- author：天无神话
-- blog：[王先生笔记](https://wxsnote.cn/)
+- author：There is no myth
+- blog：[Mr. Wang's Notes](https://wxsnote.cn/)
 - introduction of the principle：[implementation of text blind watermark technology](https://wxsnote.cn/6395.html)
 - QQ groups：[399019539](https://jq.qq.com/?_wv=1027&k=eiGEOg3i)
 - Open Source Address：[GitHub](https://github.com/twsh0305/text_watermarking)
