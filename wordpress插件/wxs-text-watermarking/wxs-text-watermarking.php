@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) exit;
 
 // 插件统一版本
 function wxs_watermark_plugin_version(){
-    return "1.1.1";
+    return "1.0.3";
 }
 $version = wxs_watermark_plugin_version();
 
@@ -139,6 +139,7 @@ if (class_exists('CSF')) {
                     .wxs-welcome-panel { padding: 20px; background: #fff; border-radius: 4px; }
                     .wxs-features { display: flex; flex-wrap: wrap; gap: 20px; margin: 20px 0; }
                     .feature-box { flex: 1; min-width: 250px; padding: 15px; background: #f9f9f9; border-radius: 4px; }
+                    html body .csf-theme-light .csf-header-inner::before { content: "WXS" !important; }
                 </style>
                 ',
             ],
@@ -737,4 +738,18 @@ function wxs_output_watermark_config() {
     
     wp_localize_script('wxs-watermark-script', 'wxsWatermarkConfig', $js_config);
 }
+
+// 插件卸载时清理数据
+register_uninstall_hook(__FILE__, 'wxs_watermark_uninstall');
+/**
+ * 插件卸载时执行的清理函数
+ */
+function wxs_watermark_uninstall() {
+    // 安全检查：确保是通过WordPress卸载程序调用
+    if (!defined('WP_UNINSTALL_PLUGIN')) {
+        exit;
+    }
     
+    // 删除插件存储的所有选项数据
+    delete_option('wxs_watermark_settings');
+}
