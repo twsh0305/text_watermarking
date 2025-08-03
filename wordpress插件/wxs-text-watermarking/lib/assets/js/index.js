@@ -1,11 +1,64 @@
+// wxs-text-watermarking - 纯JS模式
+// 该脚本用于在文章内容中插入文本盲水印，支持静态和动态内容处理
+// 仅在文章页面有效，支持混合模式和纯JS模式
+// 通过配置文件控制水印内容和插入方式，支持IP获取和用户信息插入
+// 支持调试模式，输出详细日志信息
+// 作者：天无神话
 document.addEventListener('DOMContentLoaded', function() {
+    // 页面状态变量
+    const wxs_isUserLoggedIn = window.wxs_isUserLoggedIn || false;
+    const wxs_current_user_id = window.wxs_current_user_id || false;
+    const wxs_isArticlePage = window.wxs_isArticlePage || false;
     // 页面状态变量
     const wxs_isUserLoggedIn = window.wxs_isUserLoggedIn || false;
     const wxs_current_user_id = window.wxs_current_user_id || false;
     const wxs_isArticlePage = window.wxs_isArticlePage || false;
 
     // 加载配置
+    // 加载配置
     const config = window.wxsWatermarkConfig || {};
+    const isDebug = config.debug_mode === 1 || config.debug_mode === '1';
+    
+    // 仅在调试模式下输出初始化信息
+    if (isDebug) {
+        console.log('文本盲水印JS初始化 - 纯JS模式');
+        console.log('用户登录状态:', wxs_isUserLoggedIn);
+        console.log('当前用户ID:', wxs_current_user_id);
+        console.log('是否为文章页面:', wxs_isArticlePage);
+        console.log('完整配置信息:', config);
+    }
+
+    // 判断是否启用
+    const isEnabled = 
+        config.enable === 1 || 
+        config.enable === '1' || 
+        config.enable === true || 
+        config.enable === 'true';
+    
+    // 仅在调试模式下输出启用状态
+    if (isDebug) {
+        console.log('是否启用水印（判断结果）:', isEnabled);
+    }
+    
+    if (!isEnabled) {
+        return;
+    }
+    
+    if (!wxs_isArticlePage) {
+        if (isDebug) {
+            console.log('当前不是文章页面，不处理水印');
+        }
+        return;
+    }
+    
+    // 混合模式下，登录用户不执行JS水印处理
+    if (config.run_mode === 'hybrid' && wxs_isUserLoggedIn) {
+        if (isDebug) {
+            console.log('混合模式 - 登录用户，不执行JS水印处理');
+        }
+        return;
+    }
+    
     const isDebug = config.debug_mode === 1 || config.debug_mode === '1';
     
     // 仅在调试模式下输出初始化信息
@@ -59,7 +112,27 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
     
+    const botUAs = (config.bot_ua || []).map(bot => bot.trim().toLowerCase());
+    const isBot = botUAs.some(bot => userAgent.includes(bot));
+    if (isBot) {
+        if (isDebug) {
+            console.log('检测到爬虫，不插入水印');
+        }
+        return;
+    }
+    
     // 目标容器
+    const articleContainer = document.querySelector('.article-content') 
+        || document.querySelector('.post-content')
+        || document.querySelector('#content')
+        || document.querySelector('.entry-content')
+        || document.body;
+    if (!articleContainer) {
+        if (isDebug) {
+            console.error('未找到文章内容容器，无法插入水印');
+        }
+        return;
+    }
     const articleContainer = document.querySelector('.article-content') 
         || document.querySelector('.post-content')
         || document.querySelector('#content')
@@ -73,18 +146,28 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // IP获取逻辑
+    // IP获取逻辑
     let pageIP = 'unknown';
     let ipReady = false;
+    let pendingTasks = [];
     let pendingTasks = [];
 
     async function fetchPageIP() {
         if (isDebug) {
             console.log('开始获取IP...');
         }
+        if (isDebug) {
+            console.log('开始获取IP...');
+        }
         try {
             const res = await fetch(config.ip_endpoint);
             if (!res.ok) throw new Error(`HTTP状态码: ${res.status}`);
+            const res = await fetch(config.ip_endpoint);
+            if (!res.ok) throw new Error(`HTTP状态码: ${res.status}`);
             const data = await res.json();
+            pageIP = data.success ? data.ip : 'unknown-ip';
+            if (isDebug) {
+                console.log('IP获取成功:', pageIP);
             pageIP = data.success ? data.ip : 'unknown-ip';
             if (isDebug) {
                 console.log('IP获取成功:', pageIP);
@@ -94,14 +177,71 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.error('IP获取失败:', e);
             }
             pageIP = 'unknown-ip';
+            if (isDebug) {
+                console.error('IP获取失败:', e);
+            }
+            pageIP = 'unknown-ip';
         } finally {
             ipReady = true;
+            pendingTasks.forEach(task => task());
+            pendingTasks = [];
             pendingTasks.forEach(task => task());
             pendingTasks = [];
         }
     }
     fetchPageIP();
 
+    // 1. 配置规范化处理
+    // 输出原始配置值（仅调试模式）
+    if (isDebug) {
+        console.log('原始配置值:', {
+            include_ip: config.watermark_content?.include_ip,
+            include_ip_type: typeof config.watermark_content?.include_ip,
+            include_user: config.watermark_content?.include_user,
+            include_time: config.watermark_content?.include_time,
+            include_custom: config.watermark_content?.include_custom
+        });
+    }
+
+    // 更严格的配置规范化，确保转换为布尔值
+    const normalizedConfig = {
+        ...config,
+        watermark_content: {
+            ...config.watermark_content,
+            // 明确判断是否为1或'true'，其他值都视为false
+            include_ip: config.watermark_content?.include_ip === 1 || 
+                       config.watermark_content?.include_ip === '1' ||
+                       config.watermark_content?.include_ip === true ||
+                       config.watermark_content?.include_ip === 'true',
+                       
+            include_user: config.watermark_content?.include_user === 1 || 
+                        config.watermark_content?.include_user === '1' ||
+                        config.watermark_content?.include_user === true ||
+                        config.watermark_content?.include_user === 'true',
+                        
+            include_time: config.watermark_content?.include_time === 1 || 
+                        config.watermark_content?.include_time === '1' ||
+                        config.watermark_content?.include_time === true ||
+                        config.watermark_content?.include_time === 'true',
+                        
+            include_custom: config.watermark_content?.include_custom === 1 || 
+                          config.watermark_content?.include_custom === '1' ||
+                          config.watermark_content?.include_custom === true ||
+                          config.watermark_content?.include_custom === 'true',
+        }
+    };
+
+    // 输出转换后的配置值（仅调试模式）
+    if (isDebug) {
+        console.log('转换后的配置值:', {
+            include_ip: normalizedConfig.watermark_content.include_ip,
+            include_user: normalizedConfig.watermark_content.include_user,
+            include_time: normalizedConfig.watermark_content.include_time,
+            include_custom: normalizedConfig.watermark_content.include_custom
+        });
+    }
+
+    // 水印信息生成器
     // 1. 配置规范化处理
     // 输出原始配置值（仅调试模式）
     if (isDebug) {
@@ -165,12 +305,26 @@ document.addEventListener('DOMContentLoaded', function() {
         
         getUser() { 
             return wxs_isUserLoggedIn ? (wxs_current_user_id || 'user') : 'guest';
+        constructor(contentConfig) {
+            this.contentConfig = contentConfig;
+            if (isDebug) {
+                console.log('水印内容配置:', this.contentConfig);
+            }
         }
+        
+        getIP() { return pageIP; }
+        
+        getUser() { 
+            return wxs_isUserLoggedIn ? (wxs_current_user_id || 'user') : 'guest';
+        }
+        
         
         formatTime() {
             const d = new Date();
             return `${d.getFullYear()}-${(d.getMonth()+1).toString().padStart(2, '0')}-${d.getDate().toString().padStart(2, '0')} ${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}:${d.getSeconds().toString().padStart(2, '0')}`;
+            return `${d.getFullYear()}-${(d.getMonth()+1).toString().padStart(2, '0')}-${d.getDate().toString().padStart(2, '0')} ${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}:${d.getSeconds().toString().padStart(2, '0')}`;
         }
+        
         
         async generateRaw() {
             const parts = [];
@@ -227,8 +381,62 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             return raw;
         }
+            const { include_ip, include_user, include_time, include_custom, custom_text } = this.contentConfig;
+            
+            // 每个条件都添加详细日志（仅调试模式）
+            if (include_ip) {
+                if (isDebug) {
+                    console.log('include_ip为true，添加IP信息');
+                }
+                parts.push(`IP:${this.getIP()}`);
+            } else {
+                if (isDebug) {
+                    console.log('include_ip为false，不添加IP信息');
+                }
+            }
+            
+            if (include_user) {
+                if (isDebug) {
+                    console.log('include_user为true，添加用户信息');
+                }
+                parts.push(`USER:${this.getUser()}`);
+            } else {
+                if (isDebug) {
+                    console.log('include_user为false，不添加用户信息');
+                }
+            }
+            
+            if (include_time) {
+                if (isDebug) {
+                    console.log('include_time为true，添加时间信息');
+                }
+                parts.push(`TIME:${this.formatTime()}`);
+            } else {
+                if (isDebug) {
+                    console.log('include_time为false，不添加时间信息');
+                }
+            }
+            
+            if (include_custom && custom_text) {
+                if (isDebug) {
+                    console.log('include_custom为true，添加自定义文本');
+                }
+                parts.push(custom_text);
+            } else {
+                if (isDebug) {
+                    console.log('include_custom为false或无自定义文本，不添加自定义信息');
+                }
+            }
+            
+            const raw = parts.join('|');
+            if (isDebug) {
+                console.log('最终生成的水印原始内容:', raw);
+            }
+            return raw;
+        }
     }
 
+    // 水印处理器
     // 水印处理器
     class WatermarkProcessor {
         constructor(config) {
@@ -248,9 +456,24 @@ document.addEventListener('DOMContentLoaded', function() {
             if (isDebug) {
                 console.log('水印处理器初始化完成');
             }
+            this.minLength = parseInt(config.min_paragraph_length) || 20;
+            this.insertMethod = parseInt(config.insert_method) || 2;
+            this.random = {
+                count_type: parseInt(config.random?.count_type) || 2,
+                custom_count: parseInt(config.random?.custom_count) || 1,
+                word_based_ratio: parseInt(config.random?.word_based_ratio) || 400
+            };
+            this.fixed = { interval: parseInt(config.fixed?.interval) || 20 };
+            this.isDebug = config.debug_mode === '1' || config.debug_mode === 1;
+            this.maxPositionAttempts = 100; // 最大尝试次数，防止死循环
+            
+            if (isDebug) {
+                console.log('水印处理器初始化完成');
+            }
         }
 
         byteToChar(byte) {
+            if (!Number.isInteger(byte) || byte < 0 || byte > 255) return '';
             if (!Number.isInteger(byte) || byte < 0 || byte > 255) return '';
             return byte < 16 
                 ? String.fromCodePoint(0xFE00 + byte) 
@@ -263,14 +486,28 @@ document.addEventListener('DOMContentLoaded', function() {
                 const debugMark = `[水印调试JS模式：${raw}]`;
                 console.log('生成调试水印:', debugMark);
                 return debugMark;
+                const debugMark = `[水印调试JS模式：${raw}]`;
+                console.log('生成调试水印:', debugMark);
+                return debugMark;
             }
+            return Array.from(new TextEncoder().encode(raw)).map(b => this.byteToChar(b)).join('');
             return Array.from(new TextEncoder().encode(raw)).map(b => this.byteToChar(b)).join('');
         }
 
         getInsertCount(textLength) {
             let count = this.random.count_type === 1 
+            let count = this.random.count_type === 1 
                 ? Math.max(1, this.random.custom_count) 
                 : Math.max(1, Math.floor(textLength / this.random.word_based_ratio));
+            
+            // 限制最大插入次数（每50字符最多1次）
+            const maxPossibleCount = Math.floor(textLength / 50);
+            count = Math.min(count, maxPossibleCount);
+            
+            if (isDebug) {
+                console.log(`插入次数: 配置=${this.random.custom_count}, 实际=${count}`);
+            }
+            return count;
             
             // 限制最大插入次数（每50字符最多1次）
             const maxPossibleCount = Math.floor(textLength / 50);
@@ -285,6 +522,23 @@ document.addEventListener('DOMContentLoaded', function() {
         getRandomPositions(textLength) {
             const positions = [];
             const count = this.getInsertCount(textLength);
+            const safeStart = 5;
+            const safeEnd = textLength - 5;
+            
+            // 文本过短直接返回中间位置
+            if (safeStart >= safeEnd) {
+                return [Math.floor(textLength / 2)];
+            }
+            
+            // 最多可容纳的位置数量（间隔至少30字符）
+            const maxPossiblePositions = Math.floor((safeEnd - safeStart) / 30);
+            const actualCount = Math.min(count, maxPossiblePositions);
+            
+            if (isDebug) {
+                console.log(`生成随机位置: 需求=${count}, 实际=${actualCount}, 范围=[${safeStart}, ${safeEnd}]`);
+            }
+            
+            for (let i = 0; i < actualCount; i++) {
             const safeStart = 5;
             const safeEnd = textLength - 5;
             
@@ -338,7 +592,43 @@ document.addEventListener('DOMContentLoaded', function() {
                         console.warn(`无法为位置${i+1}找到合适位置，跳过`);
                     }
                 }
+                let attempts = 0; // 尝试次数计数器
+                let foundValidPosition = false;
+                
+                // 限制尝试次数，防止死循环
+                do {
+                    pos = Math.floor(Math.random() * (safeEnd - safeStart)) + safeStart;
+                    pos = Math.max(safeStart, Math.min(pos, safeEnd));
+                    attempts++;
+                    
+                    // 检查找到有效位置或尝试次数过多，退出循环
+                    if (attempts >= this.maxPositionAttempts) {
+                        if (isDebug) {
+                            console.warn(`生成位置${i+1}超过最大尝试次数(${this.maxPositionAttempts})，可能继续位置`);
+                        }
+                        break;
+                    }
+                    
+                    // 检查是否与已有位置距离足够
+                    if (!positions.some(p => Math.abs(p - pos) < 30)) {
+                        foundValidPosition = true;
+                        break;
+                    }
+                } while (true);
+                
+                // 只添加有效的位置
+                if (foundValidPosition) {
+                    positions.push(pos);
+                    if (isDebug) {
+                        console.log(`生成位置 ${i+1}: ${pos} (尝试${attempts}次)`);
+                    }
+                } else {
+                    if (isDebug) {
+                        console.warn(`无法为位置${i+1}找到合适位置，跳过`);
+                    }
+                }
             }
+            
             
             return positions.sort((a, b) => a - b);
         }
@@ -370,12 +660,52 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 return text;
             }
+            if (typeof text !== 'string') {
+                if (isDebug) {
+                    console.error('无效文本类型，跳过处理');
+                }
+                return text;
+            }
+            
+            const textLength = text.length;
+            if (isDebug) {
+                console.log(`处理文本: 长度=${textLength}, 最小要求=${this.minLength}`);
+            }
+            
+            if (textLength < this.minLength) {
+                return text;
+            }
+            
+            let watermark;
+            try {
+                watermark = await this.generateWatermark();
+                if (!watermark) return text;
+            } catch (e) {
+                if (isDebug) {
+                    console.error('水印印生成失败:', e);
+                }
+                return text;
+            }
 
             switch (this.insertMethod) {
                 case 1: 
                     return text + watermark;
                     
+                case 1: 
+                    return text + watermark;
+                    
                 case 2: {
+                    const positions = this.getRandomPositions(textLength);
+                    if (isDebug) {
+                        console.log(`随机插入位置: ${JSON.stringify(positions)}`);
+                    }
+                    
+                    let result = '';
+                    let lastPos = 0;
+                    
+                    for (const pos of positions) {
+                        const currentPos = Math.max(lastPos, pos);
+                        result += text.substring(lastPos, currentPos);
                     const positions = this.getRandomPositions(textLength);
                     if (isDebug) {
                         console.log(`随机插入位置: ${JSON.stringify(positions)}`);
@@ -393,9 +723,20 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     result += text.substring(lastPos);
                     return result;
+                        lastPos = currentPos;
+                    }
+                    
+                    result += text.substring(lastPos);
+                    return result;
                 }
                 
+                
                 case 3: {
+                    let result = '';
+                    for (let i = 0; i < textLength; i++) {
+                        result += text[i];
+                        if ((i + 1) % this.fixed.interval === 0 && i < textLength - 1) {
+                            result += watermark;
                     let result = '';
                     for (let i = 0; i < textLength; i++) {
                         result += text[i];
@@ -404,7 +745,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     }
                     return result;
+                    return result;
                 }
+                
+                default: 
+                    return text;
                 
                 default: 
                     return text;
@@ -414,9 +759,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 使用规范化后的配置创建处理器
     const processor = new WatermarkProcessor(normalizedConfig);
+    // 使用规范化后的配置创建处理器
+    const processor = new WatermarkProcessor(normalizedConfig);
 
     async function processTextNode(node) {
         if (node.nodeType !== 3 || !node.textContent.trim()) return;
+        if (!ipReady) await new Promise(resolve => pendingTasks.push(resolve));
         if (!ipReady) await new Promise(resolve => pendingTasks.push(resolve));
         
         const original = node.textContent;
@@ -424,10 +772,16 @@ document.addEventListener('DOMContentLoaded', function() {
         if (processed !== original) {
             node.textContent = processed;
         }
+        if (processed !== original) {
+            node.textContent = processed;
+        }
     }
 
     async function processPTag(pTag) {
         if (pTag.tagName !== 'P') return;
+        if (!ipReady) await new Promise(resolve => pendingTasks.push(resolve));
+        
+        const fragment = document.createDocumentFragment();
         if (!ipReady) await new Promise(resolve => pendingTasks.push(resolve));
         
         const fragment = document.createDocumentFragment();
@@ -441,13 +795,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 })());
             } else {
                 fragment.appendChild(child.cloneNode(true));
+                promises.push((async () => {
+                    const originalText = child.textContent;
+                    const processedText = await processor.processText(originalText);
+                    fragment.appendChild(document.createTextNode(processedText || originalText));
+                })());
+            } else {
+                fragment.appendChild(child.cloneNode(true));
             }
         });
         await Promise.all(promises);
         pTag.innerHTML = '';
         pTag.appendChild(fragment);
+        pTag.innerHTML = '';
+        pTag.appendChild(fragment);
     }
 
+    // 初始化
     // 初始化
     async function initStatic() {
         // 混合模式下，登录用户不执行JS水印处理
@@ -459,7 +823,32 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         if (!ipReady) await new Promise(resolve => pendingTasks.push(resolve));
+        // 混合模式下，登录用户不执行JS水印处理
+        if (normalizedConfig.run_mode === 'hybrid' && wxs_isUserLoggedIn) {
+            if (isDebug) {
+                console.log('混合模式 - 登录用户，跳过JS水印初始化');
+            }
+            return;
+        }
+        
+        if (!ipReady) await new Promise(resolve => pendingTasks.push(resolve));
         const pTags = articleContainer.querySelectorAll('p');
+        if (isDebug) {
+            console.log(`找到${pTags.length}个P标签`);
+        }
+        
+        // 限制同时处理的P标签数量，避免CPU峰值过高
+        const batchSize = 5;
+        for (let i = 0; i < pTags.length; i += batchSize) {
+            const batch = Array.from(pTags).slice(i, i + batchSize);
+            await Promise.all(batch.map(p => processPTag(p)));
+            // 每批处理后短暂延迟，降低CPU压力
+            await new Promise(resolve => setTimeout(resolve, 50));
+        }
+        
+        if (isDebug) {
+            console.log('静态内容处理完成');
+        }
         if (isDebug) {
             console.log(`找到${pTags.length}个P标签`);
         }
@@ -492,12 +881,30 @@ document.addEventListener('DOMContentLoaded', function() {
                         if (node.nodeType === 1) {
                             if (node.tagName === 'P') {
                                 ipReady ? processPTag(node) : pendingTasks.push(() => processPTag(node));
+        // 混合模式下，登录用户不执行动态监听
+        if (normalizedConfig.run_mode === 'hybrid' && wxs_isUserLoggedIn) {
+            return;
+        }
+        
+        const observer = new MutationObserver(mutations => {
+            // 使用setTimeout延迟处理，避免高频DOM变动导致的性能问题
+            setTimeout(() => {
+                mutations.forEach(mutation => {
+                    mutation.addedNodes.forEach(node => {
+                        if (node.nodeType === 1) {
+                            if (node.tagName === 'P') {
+                                ipReady ? processPTag(node) : pendingTasks.push(() => processPTag(node));
                             } else {
                                 node.querySelectorAll('p').forEach(p => {
                                     ipReady ? processPTag(p) : pendingTasks.push(() => processPTag(p));
                                 });
                             }
+                                node.querySelectorAll('p').forEach(p => {
+                                    ipReady ? processPTag(p) : pendingTasks.push(() => processPTag(p));
+                                });
+                            }
                         }
+                    });
                     });
                 });
             }, 100); // 延迟100ms，合并高频变动
@@ -507,8 +914,21 @@ document.addEventListener('DOMContentLoaded', function() {
         if (isDebug) {
             console.log('动态内容监听已启动');
         }
+            }, 100); // 延迟100ms，合并高频变动
+        });
+        
+        observer.observe(articleContainer, { childList: true, subtree: true });
+        if (isDebug) {
+            console.log('动态内容监听已启动');
+        }
     }
 
+    // 启动流程
+    initStatic().then(watchDynamic).catch(err => {
+        if (isDebug) {
+            console.error('水印处理失败:', err);
+        }
+    });
     // 启动流程
     initStatic().then(watchDynamic).catch(err => {
         if (isDebug) {

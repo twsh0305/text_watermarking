@@ -12,6 +12,7 @@ License: MIT
 if (!defined('ABSPATH')) exit;
 
 // 插件统一版本
+// 插件统一版本
 function wxs_watermark_plugin_version(){
     return "1.0.4";
 }
@@ -49,7 +50,7 @@ foreach ($required_files as $file) {
     if (file_exists($full_path)) {
         require_once $full_path;
     } else {
-        error_log("文本盲水印插件错误：缺失必要文件 - {$full_path}");
+        error_log("文本盲水印插件错误：缺失失必要文件 - {$full_path}");
     }
 }
 
@@ -94,7 +95,9 @@ if (class_exists('CSF')) {
         'menu_position'   => 58,
         'framework_title' => '文本盲水印配置 <small>v'.$version.'</small>',
         'footer_text'     => '文本盲水印插件-<a href="https://wxsnote.cn" target="_blank">王先生笔记</a> V'.$version,
+        'footer_text'     => '文本盲水印插件-<a href="https://wxsnote.cn" target="_blank">王先生笔记</a> V'.$version,
         'show_bar_menu'   => false,
+        'theme'           => 'light',
         'theme'           => 'light',
     ]);
 
@@ -107,8 +110,13 @@ if (class_exists('CSF')) {
             [
                 'type'  => 'submessage',
                 'style'   => 'warning',
+                'type'  => 'submessage',
+                'style'   => 'warning',
                 'content' => '
                 <div class="wxs-welcome-panel">
+                <h3 style="color:#fd4c73;"><i class="fa fa-heart fa-fw"></i> 感谢您使用文本盲水印插件</h3>
+                    
+                    <p>插件功能：该插件可以在文章内容中嵌入不可见的盲水印，帮助您保护原创内容。</p>
                 <h3 style="color:#fd4c73;"><i class="fa fa-heart fa-fw"></i> 感谢您使用文本盲水印插件</h3>
                     
                     <p>插件功能：该插件可以在文章内容中嵌入不可见的盲水印，帮助您保护原创内容。</p>
@@ -128,7 +136,16 @@ if (class_exists('CSF')) {
                     </div>
                     <p>请通过左侧选项卡配置插件功能。在调试模式下，水印将以可见文本形式显示，便于测试。</p>
                     <a href="https://wxsnote.cn/wbmsy" target="_blank" class="but"><i class="fa fa-paper-plane-o"></i> 前往提取水印</a>
+                    <a href="https://wxsnote.cn/wbmsy" target="_blank" class="but"><i class="fa fa-paper-plane-o"></i> 前往提取水印</a>
                     <p>插件作者：天无神话</p>
+                    <p>作者QQ：2031301686</p>
+                    <p>作者博客：<a href="https://wxsnote.cn/" target="_blank">王先生笔记</a></p>
+                    <p>原理介绍：<a href="https://wxsnote.cn/6395.html" target="_blank">https://wxsnote.cn/6395.html</a></p>
+                    <p>开源地址：<a href="https://github.com/twsh0305/text_watermarking" target="_blank">https://github.com/twsh0305/text_watermarking</a></p>
+                    <p>QQ群：<a href="https://jq.qq.com/?_wv=1027&k=eiGEOg3i" target="_blank">399019539</a></p>
+                    <p>天无神话制作，转载请注明开源地址，谢谢合作。</p>
+                    <p style="color:red">开源协议主要要求：禁止移除或修改作者信息</p>
+                    <p>后台框架：<a href="https://github.com/Codestar/codestar-framework" target="_blank">Codestar Framework</a> 加密方案：<a href="https://github.com/paulgb/emoji-encoder" target="_blank">Emoji Encoder</a></p>
                     <p>作者QQ：2031301686</p>
                     <p>作者博客：<a href="https://wxsnote.cn/" target="_blank">王先生笔记</a></p>
                     <p>原理介绍：<a href="https://wxsnote.cn/6395.html" target="_blank">https://wxsnote.cn/6395.html</a></p>
@@ -143,6 +160,7 @@ if (class_exists('CSF')) {
                     .wxs-features { display: flex; flex-wrap: wrap; gap: 20px; margin: 20px 0; }
                     .feature-box { flex: 1; min-width: 250px; padding: 15px; background: #f9f9f9; border-radius: 4px; }
                     html body .csf-theme-light .csf-header-inner::before { content: "WXS" !important; }
+                    html body .csf-theme-light .csf-header-inner::before { content: "WXS" !important; }
                 </style>
                 ',
             ],
@@ -156,6 +174,7 @@ if (class_exists('CSF')) {
         'fields' => [
             [
                 'type'    => 'heading',
+                'content' => '基本设置',
                 'content' => '基本设置',
             ],
             [
@@ -186,6 +205,7 @@ if (class_exists('CSF')) {
                 'default' => 20,
                 'min'     => 1,
                 'dependency' => ['enable', '==', 1],
+                'dependency' => ['enable', '==', 1],
             ],
             [
                 'id'      => 'insert_method',
@@ -199,12 +219,17 @@ if (class_exists('CSF')) {
                 'default' => 2,
                 'desc'    => '选择水印在文章中的插入方式',
                 'dependency' => ['enable', '==', 1],
+                'dependency' => ['enable', '==', 1],
             ],
             
             // 随机位置插入设置（仅当选择随机位置时显示）
             [
                 'type'    => 'heading',
                 'content' => '随机位置插入设置',
+                'dependency' => [
+                    ['enable', '==', 1],
+                    ['insert_method', '==', 2]
+                ],
                 'dependency' => [
                     ['enable', '==', 1],
                     ['insert_method', '==', 2]
@@ -223,6 +248,10 @@ if (class_exists('CSF')) {
                     ['enable', '==', 1],
                     ['insert_method', '==', 2]
                 ],
+                'dependency' => [
+                    ['enable', '==', 1],
+                    ['insert_method', '==', 2]
+                ],
             ],
             [
                 'id'        => 'random_custom_count',
@@ -232,6 +261,7 @@ if (class_exists('CSF')) {
                 'default'   => 1,
                 'min'       => 1,
                 'dependency' => [
+                    ['enable', '==', 1],
                     ['enable', '==', 1],
                     ['insert_method', '==', 2],
                     ['random_count_type', '==', 1]
@@ -246,6 +276,7 @@ if (class_exists('CSF')) {
                 'min'       => 50,
                 'dependency' => [
                     ['enable', '==', 1],
+                    ['enable', '==', 1],
                     ['insert_method', '==', 2],
                     ['random_count_type', '==', 2]
                 ],
@@ -255,6 +286,10 @@ if (class_exists('CSF')) {
             [
                 'type'    => 'heading',
                 'content' => '固定字数插入设置',
+                'dependency' => [
+                    ['enable', '==', 1],
+                    ['insert_method', '==', 3]
+                ],
                 'dependency' => [
                     ['enable', '==', 1],
                     ['insert_method', '==', 3]
@@ -271,6 +306,10 @@ if (class_exists('CSF')) {
                     ['enable', '==', 1],
                     ['insert_method', '==', 3]
                 ],
+                'dependency' => [
+                    ['enable', '==', 1],
+                    ['insert_method', '==', 3]
+                ],
             ],
             
             [
@@ -278,8 +317,10 @@ if (class_exists('CSF')) {
                 'type'    => 'switcher',
                 'title'   => '调试模式',
                 'label'   => '启用后水印将以可见文本形式显示（[水印调试:...]）',
+                'label'   => '启用后水印将以可见文本形式显示（[水印调试:...]）',
                 'default' => 0,
                 'desc'    => '用于测试水印效果，正式环境建议关闭',
+                'dependency' => ['enable', '==', 1],
                 'dependency' => ['enable', '==', 1],
             ],
         ]
@@ -294,6 +335,7 @@ if (class_exists('CSF')) {
                 'id'      => 'include_ip',
                 'type'    => 'switcher',
                 'title'   => '包含访问者IP',
+                'label'   => '访客的IP地址，用户溯源定位',
                 'label'   => '访客的IP地址，用户溯源定位',
                 'default' => 1,
             ],
@@ -326,6 +368,9 @@ if (class_exists('CSF')) {
                 'dependency' => [
                     ['include_custom', '==', 1]
                 ],
+                'dependency' => [
+                    ['include_custom', '==', 1]
+                ],
             ],
         ]
     ]);
@@ -339,6 +384,7 @@ if (class_exists('CSF')) {
                 'id'      => 'bot_ua',
                 'type'    => 'textarea',
                 'title'   => '爬虫UA列表',
+                'desc'    => '每行一个爬虫标识，匹配时不插入水印，清空时不匹配，用于防止搜索引擎抓取错误，建议配合WAF使用，拦截假蜘蛛。',
                 'desc'    => '每行一个爬虫标识，匹配时不插入水印，清空时不匹配，用于防止搜索引擎抓取错误，建议配合WAF使用，拦截假蜘蛛。',
                 'default' => "googlebot\nbingbot\nbaiduspider\nsogou web spider\n360spider\nyisouspider\nbytespider\nduckduckbot\nyandexbot\nyahoo",
             ],
@@ -415,6 +461,10 @@ function wxs_toVariationSelector($byte) {
         return null; // 无效字节
     }
     
+    if (!is_int($byte) || $byte < 0 || $byte > 255) {
+        return null; // 无效字节
+    }
+    
     if ($byte >= 0 && $byte < 16) {
         return mb_chr(VARIATION_SELECTOR_START + $byte, 'UTF-8');
     } elseif ($byte >= 16 && $byte < 256) {
@@ -461,6 +511,8 @@ function wxs_generate_watermark_raw() {
         $parts[] = sanitize_text_field($wxs_watermark_config['custom_text']);
     }
     
+    $raw = implode('|', $parts);
+    return $raw;
     $raw = implode('|', $parts);
     return $raw;
 }
@@ -581,6 +633,7 @@ function wxs_process_html_content($content) {
     $isDebug = !empty($wxs_watermark_config['debug_mode']);
     $rawWatermark = wxs_generate_watermark_raw();
     $watermark = $isDebug ? "[水印调试PHP模式:{$rawWatermark}]" : wxs_generate_watermark_selector();
+    $watermark = $isDebug ? "[水印调试PHP模式:{$rawWatermark}]" : wxs_generate_watermark_selector();
     
     if (empty($watermark)) {
         return $content;
@@ -595,10 +648,19 @@ function wxs_process_html_content($content) {
     $dom->loadHTML('<?xml encoding="UTF-8">' . $content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
     libxml_clear_errors(); // 清除错误
     
+    libxml_use_internal_errors(true); // 禁用libxml错误输出
+    $dom->loadHTML('<?xml encoding="UTF-8">' . $content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+    libxml_clear_errors(); // 清除错误
+    
     $xpath = new DOMXPath($dom);
     // 处理<p>标签
     $nodes = $xpath->query('//p');
+    // 处理<p>标签
+    $nodes = $xpath->query('//p');
     
+    if ($nodes->length > 0) {
+        foreach ($nodes as $node) {
+            foreach ($node->childNodes as $child) {
     if ($nodes->length > 0) {
         foreach ($nodes as $node) {
             foreach ($node->childNodes as $child) {
@@ -623,15 +685,22 @@ function wxs_process_html_content($content) {
 
 /**
  * 主处理函数 - 根据运行模式决定处理方式
+ * 主处理函数 - 根据运行模式决定处理方式
  */
 function wxs_watermark_main($content) {
     global $wxs_watermark_config;
     
     // 检查是否启用
     if (empty($wxs_watermark_config['enable'])) {
+    // 检查是否启用
+    if (empty($wxs_watermark_config['enable'])) {
         return $content;
     }
     
+    // 获取运行模式
+    $run_mode = isset($wxs_watermark_config['run_mode']) ? $wxs_watermark_config['run_mode'] : 'hybrid';
+    
+    // 爬虫过滤
     // 获取运行模式
     $run_mode = isset($wxs_watermark_config['run_mode']) ? $wxs_watermark_config['run_mode'] : 'hybrid';
     
@@ -644,8 +713,11 @@ function wxs_watermark_main($content) {
     }
     
     $is_bot = false;
+    $is_bot = false;
     foreach ($bot_ua_list as $bot) {
         if (!empty($bot) && strpos($user_agent, $bot) !== false) {
+            $is_bot = true;
+            break;
             $is_bot = true;
             break;
         }
@@ -684,9 +756,45 @@ function wxs_watermark_main($content) {
             return $is_logged_in ? wxs_process_html_content($content) : $content;
             break;
     }
+    // 如果是爬虫，不添加水印
+    if ($is_bot) {
+        return $content;
+    }
+    
+    // 根据运行模式处理
+    switch ($run_mode) {
+        case 'dynamic':
+            // 动态模式：纯PHP处理，不管登录状态
+            return wxs_process_html_content($content);
+            break;
+            
+        case 'static':
+            // 静态模式：纯JS处理，返回原始内容，由JS处理
+            return $content;
+            break;
+            
+        case 'hybrid':
+            // 混合模式：登录用户用PHP，未登录用户用JS
+            // 强化判断：明确检查登录状态并记录日志
+            $is_logged_in = is_user_logged_in();
+            if (!empty($wxs_watermark_config['debug_mode'])) {
+                error_log("混合模式处理 - 用户登录状态: " . ($is_logged_in ? "已登录(PHP处理)" : "未登录(JS处理)"));
+            }
+            return $is_logged_in ? wxs_process_html_content($content) : $content;
+            break;
+            
+        default:
+            // 未知模式默认使用混合模式逻辑
+            $is_logged_in = is_user_logged_in();
+            return $is_logged_in ? wxs_process_html_content($content) : $content;
+            break;
+    }
 }
 add_filter('the_content', 'wxs_watermark_main', 999);
 
+/**
+ * 脚本入队与配置本地化 - 根据运行模式决定是否加载JS
+ */
 /**
  * 脚本入队与配置本地化 - 根据运行模式决定是否加载JS
  */
@@ -737,8 +845,55 @@ add_action('wp_enqueue_scripts', function() {
     
     // 入队JS文件（单篇文章页）
     if ($load_js && is_single()) {
+    global $wxs_watermark_config, $version;
+    
+    // 检查是否启用
+    if (empty($wxs_watermark_config['enable'])) {
+        return;
+    }
+    
+    // 获取运行模式
+    $run_mode = isset($wxs_watermark_config['run_mode']) ? $wxs_watermark_config['run_mode'] : 'hybrid';
+    
+    // 爬虫检测
+    $user_agent = strtolower($_SERVER['HTTP_USER_AGENT'] ?? '');
+    $bot_ua_list = [];
+    if (!empty($wxs_watermark_config['bot_ua'])) {
+        $bot_ua_list = array_filter(array_map('trim', explode("\n", $wxs_watermark_config['bot_ua'])));
+    }
+    
+    $is_bot = false;
+    foreach ($bot_ua_list as $bot) {
+        if (!empty($bot) && strpos($user_agent, $bot) !== false) {
+            $is_bot = true;
+            break;
+        }
+    }
+    
+    // 如果是爬虫，不加载JS
+    if ($is_bot) {
+        return;
+    }
+    
+    // 纯JS模式下强制加载JS，无论登录状态
+    $load_js = false;
+    if ($run_mode === 'static') {
+        $load_js = true;
+        // 调试模式下记录加载信息
+        if (!empty($wxs_watermark_config['debug_mode'])) {
+            error_log('纯JS模式已启用，加载水印脚本');
+        }
+    } elseif ($run_mode === 'dynamic') {
+        $load_js = false;
+    } else { // hybrid
+        $load_js = !is_user_logged_in();
+    }
+    
+    // 入队JS文件（单篇文章页）
+    if ($load_js && is_single()) {
         wp_enqueue_script(
             'wxs-watermark-script',
+            WXS_WATERMARK_PLUGIN_URL . 'lib/assets/js/index.min.js',
             WXS_WATERMARK_PLUGIN_URL . 'lib/assets/js/index.min.js',
             [],
             $version,
@@ -769,8 +924,19 @@ function wxs_output_watermark_config() {
     $watermark_raw = wxs_generate_watermark_raw();
     
     // 格式化配置，确保debug_mode正确传递
+    // 强制在调试模式下输出详细日志
+    $is_debug = !empty($wxs_watermark_config['debug_mode']);
+    if ($is_debug) {
+        error_log('水印调试模式已启用 - 配置信息: ' . print_r($wxs_watermark_config, true));
+    }
+    
+    // 生成水印内容供JS使用
+    $watermark_raw = wxs_generate_watermark_raw();
+    
+    // 格式化配置，确保debug_mode正确传递
     $js_config = [
         'enable' => isset($wxs_watermark_config['enable']) ? $wxs_watermark_config['enable'] : 0,
+        'ip_endpoint' => WXS_WATERMARK_PLUGIN_URL . 'fuckip.php',
         'ip_endpoint' => WXS_WATERMARK_PLUGIN_URL . 'fuckip.php',
         'min_paragraph_length' => isset($wxs_watermark_config['min_paragraph_length']) ? $wxs_watermark_config['min_paragraph_length'] : 20,
         'insert_method' => isset($wxs_watermark_config['insert_method']) ? $wxs_watermark_config['insert_method'] : 2,
@@ -792,9 +958,26 @@ function wxs_output_watermark_config() {
         'bot_ua' => isset($wxs_watermark_config['bot_ua']) ? explode("\n", $wxs_watermark_config['bot_ua']) : [],
         'debug_mode' => $is_debug ? 1 : 0, // 确保是数字类型
         'run_mode' => isset($wxs_watermark_config['run_mode']) ? $wxs_watermark_config['run_mode'] : 'hybrid', // 传递运行模式
+        'debug_mode' => $is_debug ? 1 : 0, // 确保是数字类型
+        'run_mode' => isset($wxs_watermark_config['run_mode']) ? $wxs_watermark_config['run_mode'] : 'hybrid', // 传递运行模式
     ];
     
     wp_localize_script('wxs-watermark-script', 'wxsWatermarkConfig', $js_config);
+}
+
+// 插件卸载时清理数据
+register_uninstall_hook(__FILE__, 'wxs_watermark_uninstall');
+/**
+ * 插件卸载时执行的清理函数
+ */
+function wxs_watermark_uninstall() {
+    // 安全检查：确保是通过WordPress卸载程序调用
+    if (!defined('WP_UNINSTALL_PLUGIN')) {
+        exit;
+    }
+    
+    // 删除插件存储的所有选项数据
+    delete_option('wxs_watermark_settings');
 }
 
 // 插件卸载时清理数据
