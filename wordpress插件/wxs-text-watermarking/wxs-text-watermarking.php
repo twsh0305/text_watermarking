@@ -40,10 +40,10 @@ if (!function_exists('wxs_watermark_get_setting')) {
 
 // 安全引入必要文件
 $required_files = [
-    '/inc/codestar-framework/codestar-framework.php',
-    '/inc/options.php',
-    '/inc/encode.php',
-    '/inc/functions.php'
+    '/lib/codestar-framework/codestar-framework.php',
+    '/lib/options.php',
+    '/lib/encode.php',
+    '/lib/functions.php'
 ];
 foreach ($required_files as $file) {
     $full_path = WXS_WATERMARK_PLUGIN_DIR . $file;
