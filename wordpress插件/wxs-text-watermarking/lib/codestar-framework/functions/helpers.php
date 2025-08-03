@@ -1,10 +1,4 @@
 <?php if ( ! defined( 'ABSPATH' ) ) { die; } // Cannot access directly.
-/*
- * @Author: Qinver
- * @Url: zibll.com
- * @Date: 2021-04-11 21:36:20
- * @LastEditTime: 2023-09-02 11:32:36
- */
 /**
  *
  * Array search key & value
