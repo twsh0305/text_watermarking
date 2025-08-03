@@ -31,7 +31,7 @@ function wxs_watermark_init_csf_settings() {
         'framework_title' => '文本盲水印配置 <small style="color: #fff;">v'.$version.'</small>',
         'footer_text'     => '文本盲水印插件-<a href="https://wxsnote.cn" target="_blank">王先生笔记</a> V'.$version,
         'show_bar_menu'   => false,
-        // 'theme'           => 'light',
+        'theme'           => 'light',
     ]);
 
     // 添加各个设置面板
@@ -85,10 +85,12 @@ function wxs_watermark_get_welcome_content() {
             </div>
         </div>
         <p>请通过左侧选项卡配置插件功能。在调试模式下，水印将以可见文本形式显示，便于测试。</p>
-        <a href="https://wxsnote.cn/wbmsy" target="_blank" class="but"><i class="fa fa-paper-plane-o"></i> 前往提取水印</a>
+        <a href="https://wxsnote.cn/wbmsy" target="_blank" class="wxs-watermark-btn"><i class="fa fa-paper-plane-o"></i> 前往提取水印</a>
+        <p style="color:red">仅对P标签处理，不要疑惑为什么有些地方没有添加水印，后续版本会增加容器选择器和标签选择器，还有，例如网址，你不加超链接，你就给个代码高亮啊，纯P标签的网址，这个无法完美适配的</p>
         <p>插件作者：天无神话</p>
         <p>作者QQ：2031301686</p>
         <p>作者博客：<a href="https://wxsnote.cn/" target="_blank">王先生笔记</a></p>
+        <p>共同开发：<a href="https://https://dmyblog.cn/" target="_blank">大绵羊博客</a></p>
         <p>原理介绍：<a href="https://wxsnote.cn/6395.html" target="_blank">https://wxsnote.cn/6395.html</a></p>
         <p>开源地址：<a href="https://github.com/twsh0305/text_watermarking" target="_blank">https://github.com/twsh0305/text_watermarking</a></p>
         <p>QQ群：<a href="https://jq.qq.com/?_wv=1027&k=eiGEOg3i" target="_blank">399019539</a></p>
@@ -101,6 +103,41 @@ function wxs_watermark_get_welcome_content() {
         .wxs-features { display: flex; flex-wrap: wrap; gap: 20px; margin: 20px 0; }
         .feature-box { flex: 1; min-width: 200px; padding: 15px; background: #f9f9f9; border-radius: 4px; }
         html body .csf-theme-light .csf-header-inner::before { content: "WXS" !important; }
+        /* 基础按钮样式 */
+        .wxs-watermark-btn {
+          display: inline-block;
+          padding: 12px 24px;          /* 内边距，控制按钮大小 */
+          background-color: #2196F3;   /* 主色：蓝色 */
+          color: #ffffff;              /* 文字颜色：白色 */
+          font-size: 14px;             /* 文字大小 */
+          font-weight: 500;            /* 文字加粗，提升辨识度 */
+          text-align: center;          /* 文字居中 */
+          text-decoration: none;       /* 去除下划线 */
+          border-radius: 4px;          /* 圆角 */
+          border: none;                /* 隐藏边框 */
+          cursor: pointer;             /* 鼠标悬停显示手型 */
+          transition: all 0.3s ease;   /* 过渡动画，提升交互感 */
+        }
+        
+        /* 图标与文字对齐 */
+        .wxs-watermark-btn i {
+          margin-right: 8px;           /* 图标与文字间距 */
+          vertical-align: middle;      /* 垂直居中对齐 */
+        }
+        
+        /* 悬停效果（加深颜色） */
+        .wxs-watermark-btn:hover {
+          background-color: #1976D2;   /*  hover 色：更深的蓝色 */
+          color: #ffffff;              /* 文字颜色：白色 */
+          text-decoration: none;       /* 确保无下划线 */
+          box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3); /* 可选：添加阴影增强层次感 */
+        }
+        
+        /* 聚焦效果（适配辅助设备） */
+        .wxs-watermark-btn:focus {
+          outline: none;               /* 隐藏默认聚焦边框 */
+          box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2); /* 聚焦时显示浅色外框 */
+        }
     </style>';
 }
 
@@ -146,7 +183,7 @@ function wxs_watermark_get_basic_settings_fields() {
                 'hybrid'  => '动静混合',
             ],
             'default' => 'hybrid',
-            'desc'    => '动态：纯PHP处理，不管登录状态<br>静态：纯JS处理，不管登录状态<br>动静混合：登录用户用PHP，未登录用户用JS（适合有缓存的网站）',
+            'desc'    => '动态：纯PHP处理，推荐，确保没有安装如super cache页面缓存类似插件<br>静态：纯JS处理，不是很推荐，可被绕过<br>动静混合：登录用户用PHP，未登录用户用JS（适合有缓存的网站）<br>若开启JS模式或混合模式下，请开启WAF拦截假蜘蛛',
             'dependency' => ['enable', '==', 1],
         ],
         
@@ -322,7 +359,7 @@ function wxs_watermark_get_content_settings_fields() {
  */
 function wxs_watermark_create_bot_filter_section() {
     CSF::createSection('wxs_watermark_settings', [
-        'title'  => '爬虫过滤设置',
+        'title'  => '爬虫过滤白名单',
         'icon'   => 'fa fa-bug',
         'fields' => wxs_watermark_get_bot_filter_fields()
     ]);

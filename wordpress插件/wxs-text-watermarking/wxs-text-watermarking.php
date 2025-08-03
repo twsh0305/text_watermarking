@@ -37,6 +37,28 @@ if (!function_exists('wxs_watermark_get_setting')) {
     }
 }
 
+/**
+ * 加载插件后台样式
+ */
+function wxs_watermark_enqueue_admin_styles() {
+    // 获取当前后台屏幕对象
+    $current_screen = get_current_screen();
+    
+    // 仅在插件设置页面加载样式（匹配CSF设置的menu_slug）
+    if (isset($current_screen->id) && $current_screen->id === 'toplevel_page_wxs-watermark') {
+        // 注册并加载样式文件
+        wp_enqueue_style(
+            'wxs-watermark-admin-style', // 样式唯一标识
+            WXS_WATERMARK_PLUGIN_URL . 'lib/assets/css/style.min.css', // 样式路径
+            array(), // 依赖样式（无依赖留空）
+            wxs_watermark_plugin_version(), // 版本号（用于缓存控制）
+            'all' // 样式适用设备
+        );
+    }
+}
+// 挂钩到后台样式加载钩子
+add_action('admin_enqueue_scripts', 'wxs_watermark_enqueue_admin_styles');
+
 // 安全引入必要文件
 $required_files = [
     '/lib/codestar-framework/codestar-framework.php',
