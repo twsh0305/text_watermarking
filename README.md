@@ -89,6 +89,9 @@
    $extractedInfo = wxs_extractWatermark($textWithWatermark);
    echo "提取的水印信息：" . $extractedInfo;
    ```
+## 插件基于以下开源项目
+后台框架：[Codestar Framework](https://github.com/Codestar/codestar-framework) 加密方案：[Emoji Encoder](https://github.com/paulgb/emoji-encoder)
+
 ## 开源协议
 
 本项目采用MIT协议开源，简述要求：
