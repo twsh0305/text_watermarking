@@ -2,7 +2,7 @@
 
 A specialized text copyright protection tool designed for WordPress blogs. It enables copyright tracing and infringement evidence collection of original content by embedding invisible blind watermark information in article content.
 
-[中文文档](https://github.com/twsh0305/text_watermarking/blob/main/README.md) | [English](https://github.com/twsh0305/text_watermarking/blob/main/README_EN.md)
+[中文文档](https://github.com/twsh0305/text_watermarking/blob/main/README.md) | [English document](https://github.com/twsh0305/text_watermarking/blob/main/README_EN.md)
 
 ## Screenshots
 <img width="2539" height="1085" alt="image" src="https://github.com/user-attachments/assets/371b429b-2885-48db-ba43-98280b972307" />
@@ -94,17 +94,22 @@ To detect watermark information in text, you can use two methods:
    $textWithWatermark = "Text content containing blind watermark...";
    $extractedInfo = wxs_extractWatermark($textWithWatermark);
    echo "Extracted watermark information: " . $extractedInfo;
+   ```
 
-Plugin based on the following open-source projects
-Backend framework: Codestar Framework Encryption scheme: Emoji Encoder
-Open-Source License
-This project is open-source under the MIT license. Brief requirements:
-Prohibition of removing or modifying author information
-Please indicate the open-source address when reprinting
-Author Information
-Author: Tian Wu Shen Hua
-Blog: Mr. Wang's Notes
-Principle introduction: Implementation of Text Blind Watermark Technology
-QQ Group: 399019539
-Open-source address: GitHub Repository
+## Plugin based on the following open-source projects
+background frame：[Codestar Framework](https://github.com/Codestar/codestar-framework) encryption scheme：[Emoji Encoder](https://github.com/paulgb/emoji-encoder)
+
+## open source protocol
+
+This project uses MIT protocol open source, brief description of requirements：
+- Do not remove or modify author information
+- Please indicate the open source address.
+
+## information of the author
+
+- author：天无神话
+- blog：[王先生笔记](https://wxsnote.cn/)
+- introduction of the principle：[implementation of text blind watermark technology](https://wxsnote.cn/6395.html)
+- QQ groups：[399019539](https://jq.qq.com/?_wv=1027&k=eiGEOg3i)
+- Open Source Address：[GitHub](https://github.com/twsh0305/text_watermarking)
 
