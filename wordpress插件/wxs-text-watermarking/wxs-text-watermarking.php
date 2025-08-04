@@ -3,7 +3,7 @@
 Plugin Name: 文本盲水印
 Plugin URI: https://github.com/twsh0305/text_watermarking
 Description: 为文章内容添加盲水印，支持多种插入方式和自定义配置
-Version: 1.0.5
+Version: 1.0.6
 Author: 天无神话
 Author URI: https://wxsnote.cn/
 License: MIT
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) exit;
 
 // 插件统一版本
 function wxs_watermark_plugin_version(){
-    return "1.0.5";
+    return "1.0.6";
 }
 $version = wxs_watermark_plugin_version();
 
@@ -62,10 +62,7 @@ add_action('admin_enqueue_scripts', 'wxs_watermark_enqueue_admin_styles');
 // 安全引入必要文件
 $required_files = [
     '/lib/codestar-framework/codestar-framework.php',
-    '/lib/wxs-settings.php',
-    '/lib/options.php',
-    '/lib/encode.php',
-    '/lib/functions.php'
+    '/lib/wxs-settings.php'
 ];
 foreach ($required_files as $file) {
     $full_path = WXS_WATERMARK_PLUGIN_DIR . $file;
