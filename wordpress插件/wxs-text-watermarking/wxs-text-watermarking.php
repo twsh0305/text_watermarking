@@ -2,7 +2,7 @@
 /*
 Plugin Name: 文本盲水印
 Plugin URI: https://github.com/twsh0305/text_watermarking
-Description: 为文章内容添加盲水印，支持多种插入方式和自定义配置
+Description: 为文章内容添加盲水印，支持多种插入方式和自定义配置，过滤UA白名单
 Version: 1.0.7
 Author: 天无神话
 Author URI: https://wxsnote.cn/
