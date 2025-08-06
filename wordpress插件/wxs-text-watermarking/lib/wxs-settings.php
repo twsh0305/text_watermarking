@@ -385,7 +385,7 @@ function wxs_watermark_get_html_tags_fields() {
             'id'      => 'html_tags',
             'type'    => 'text',
             'title'   => '处理的HTML标签',
-            'desc'    => '输入要处理的HTML标签，用逗号<code>,</code>分隔，仅文章，默认是<code>p</code>,<code>li</code><br>文章常见标签：<code>h2</code>到<code>h6</code>,<code>p</code>,<code>li</code>,<code>span</code>,<code>strong</code>,<code>em</code>,<code>b</code>,<code>i</code>,<code>blockquote</code>,<code>q</code>,等<br>不推荐：<code>code</code>,<code>pre</code>',
+            'desc'    => '输入要处理的HTML标签，用逗号<code>,</code>分隔，仅文章，不递归，仅一层，默认是<code>p</code>,<code>li</code><br>文章常见标签：<code>h2</code>到<code>h6</code>,<code>p</code>,<code>li</code>,<code>span</code>,<code>strong</code>,<code>em</code>,<code>b</code>,<code>i</code>,<code>blockquote</code>,<code>q</code>,等<br>不推荐：<code>code</code>,<code>pre</code>',
             'default' => 'p,li',
         ],
         [
@@ -399,7 +399,7 @@ function wxs_watermark_get_html_tags_fields() {
             'id'        => 'js_class_selectors',
             'type'      => 'text',
             'title'     => 'Class选择器设置',
-            'desc'      => '仅JS生效，格式示例：<code>.css1</code>,<code>.css2</code>,<code>p.css3</code>,<code>span.css4</code>',
+            'desc'      => '仅JS生效，递归标签内全部，格式示例：<code>.css1</code>,<code>.css2</code>,<code>p.css3</code>,<code>span.css4</code>',
             'default'   => '',
             'dependency' => [
                 ['js_global_enable', '==', 1]
@@ -409,7 +409,7 @@ function wxs_watermark_get_html_tags_fields() {
             'id'        => 'js_id_selectors',
             'type'      => 'text',
             'title'     => 'ID选择器设置',
-            'desc'      => '仅JS生效，格式示例：<code>#id1</code>,<code>#id2</code>',
+            'desc'      => '仅JS生效，递归标签内全部，格式示例：<code>#id1</code>,<code>#id2</code>',
             'default'   => '',
             'dependency' => [
                 ['js_global_enable', '==', 1]
