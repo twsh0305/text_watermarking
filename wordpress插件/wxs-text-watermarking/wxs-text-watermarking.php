@@ -2,8 +2,8 @@
 /*
 Plugin Name: 文本盲水印
 Plugin URI: https://github.com/twsh0305/text_watermarking
-Description: 为文章内容添加盲水印，支持多种插入方式和自定义配置
-Version: 1.0.5
+Description: 为文章内容添加盲水印，支持多种插入方式和自定义配置，过滤UA白名单
+Version: 1.0.7
 Author: 天无神话
 Author URI: https://wxsnote.cn/
 License: MIT
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) exit;
 
 // 插件统一版本
 function wxs_watermark_plugin_version(){
-    return "1.0.5";
+    return "1.0.7";
 }
 $version = wxs_watermark_plugin_version();
 
@@ -36,6 +36,8 @@ if (!function_exists('wxs_watermark_get_setting')) {
         return isset($all_settings[$key]) ? $all_settings[$key] : $default;
     }
 }
+
+
 
 /**
  * 加载插件后台样式
@@ -62,13 +64,21 @@ add_action('admin_enqueue_scripts', 'wxs_watermark_enqueue_admin_styles');
 // 安全引入必要文件
 $required_files = [
     '/lib/codestar-framework/codestar-framework.php',
-    '/lib/wxs-settings.php',
-    '/lib/options.php',
-    '/lib/encode.php',
-    '/lib/functions.php'
+    '/lib/wxs-settings.php'
 ];
+
+// 检查Codestar Framework是否已存在
+$csf_exists = class_exists('CSF');
+
 foreach ($required_files as $file) {
     $full_path = WXS_WATERMARK_PLUGIN_DIR . $file;
+    
+    // 如果是Codestar框架文件且已存在，则跳过加载
+    if ($file === '/lib/codestar-framework/codestar-framework.php' && $csf_exists) {
+        continue;
+    }
+    
+    // 加载其他文件（尤其是wxs-settings.php始终加载）
     if (file_exists($full_path)) {
         require_once $full_path;
     } else {
@@ -332,7 +342,16 @@ function wxs_process_paragraph($text, $watermark) {
 }
 
 /**
- * 处理HTML内容中的所有段落
+ * 获取配置的HTML标签
+ */
+function wxs_watermark_get_html_tags() {
+    $tags = wxs_watermark_get_setting('html_tags', 'p,li');
+    $tags = array_map('trim', explode(',', $tags));
+    return array_filter($tags); // 过滤空值
+}
+
+/**
+ * 处理HTML内容中的所有配置标签
  */
 function wxs_process_html_content($content) {
     global $wxs_watermark_config;
@@ -351,6 +370,10 @@ function wxs_process_html_content($content) {
         return $content;
     }
     
+    // 获取配置的标签
+    $tags = wxs_watermark_get_html_tags();
+    if(empty($tags)) $tags = ['p', 'li'];
+    
     // 处理HTML编码问题
     $content = mb_convert_encoding($content, 'HTML-ENTITIES', 'UTF-8');
     
@@ -361,17 +384,20 @@ function wxs_process_html_content($content) {
     libxml_clear_errors(); // 清除错误
     
     $xpath = new DOMXPath($dom);
-    // 处理<p>标签
-    $nodes = $xpath->query('//p');
     
-    if ($nodes->length > 0) {
-        foreach ($nodes as $node) {
-            foreach ($node->childNodes as $child) {
-                if ($child->nodeType === XML_TEXT_NODE) {
-                    $original_text = $child->nodeValue;
-                    $processed_text = wxs_process_paragraph($original_text, $watermark);
-                    if ($processed_text !== $original_text) {
-                        $child->nodeValue = $processed_text;
+    // 处理所有配置的标签
+    foreach ($tags as $tag) {
+        $nodes = $xpath->query("//{$tag}");
+        
+        if ($nodes->length > 0) {
+            foreach ($nodes as $node) {
+                foreach ($node->childNodes as $child) {
+                    if ($child->nodeType === XML_TEXT_NODE) {
+                        $original_text = $child->nodeValue;
+                        $processed_text = wxs_process_paragraph($original_text, $watermark);
+                        if ($processed_text !== $original_text) {
+                            $child->nodeValue = $processed_text;
+                        }
                     }
                 }
             }
@@ -424,7 +450,7 @@ function wxs_watermark_main($content) {
     // 根据运行模式处理
     switch ($run_mode) {
         case 'dynamic':
-            // 动态模式：纯PHP处理，不管登录状态
+            // 动态模式：纯PHP处理，不管是否为登录状态
             return wxs_process_html_content($content);
             break;
             
@@ -435,7 +461,6 @@ function wxs_watermark_main($content) {
             
         case 'hybrid':
             // 混合模式：登录用户用PHP，未登录用户用JS
-            // 强化判断：明确检查登录状态并记录日志
             $is_logged_in = is_user_logged_in();
             if (!empty($wxs_watermark_config['debug_mode'])) {
                 error_log("混合模式处理 - 用户登录状态: " . ($is_logged_in ? "已登录(PHP处理)" : "未登录(JS处理)"));
@@ -500,8 +525,8 @@ add_action('wp_enqueue_scripts', function() {
         $load_js = !is_user_logged_in();
     }
     
-    // 入队JS文件（单篇文章页）
-    if ($load_js && is_single()) {
+    // 入队JS文件
+    if ($load_js) {
         wp_enqueue_script(
             'wxs-watermark-script',
             WXS_WATERMARK_PLUGIN_URL . 'lib/assets/js/index.min.js',
@@ -533,6 +558,10 @@ function wxs_output_watermark_config() {
     // 生成水印内容供JS使用
     $watermark_raw = wxs_generate_watermark_raw();
     
+    // 获取配置的HTML标签
+    $html_tags = wxs_watermark_get_html_tags();
+    if(empty($html_tags)) $html_tags = ['p', 'li'];
+    
     // 格式化配置，确保debug_mode正确传递
     $js_config = [
         'enable' => isset($wxs_watermark_config['enable']) ? $wxs_watermark_config['enable'] : 0,
@@ -554,6 +583,12 @@ function wxs_output_watermark_config() {
             'include_custom' => isset($wxs_watermark_config['include_custom']) ? $wxs_watermark_config['include_custom'] : 1,
             'custom_text' => isset($wxs_watermark_config['custom_text']) ? $wxs_watermark_config['custom_text'] : '王先生笔记 版权所有',
         ],
+        // 新增配置项
+        'htmlTags' => $html_tags,
+        'jsGlobalEnable' => isset($wxs_watermark_config['js_global_enable']) ? $wxs_watermark_config['js_global_enable'] : 0,
+        'jsClassSelectors' => isset($wxs_watermark_config['js_class_selectors']) ? $wxs_watermark_config['js_class_selectors'] : '',
+        'jsIdSelectors' => isset($wxs_watermark_config['js_id_selectors']) ? $wxs_watermark_config['js_id_selectors'] : '',
+        
         'bot_ua' => isset($wxs_watermark_config['bot_ua']) ? explode("\n", $wxs_watermark_config['bot_ua']) : [],
         'debug_mode' => $is_debug ? 1 : 0, // 确保是数字类型
         'run_mode' => isset($wxs_watermark_config['run_mode']) ? $wxs_watermark_config['run_mode'] : 'hybrid', // 传递运行模式

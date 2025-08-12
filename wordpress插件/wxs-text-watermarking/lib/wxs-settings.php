@@ -3,8 +3,8 @@
  * 文本盲水印插件 - CSF设置面板配置
  * 
  * @package WXS Text Watermarking
- * @author 大绵羊
- * @version 1.0.5
+ * @author 大绵羊 天无神话
+ * @version 1.0.7
  */
 
 // 防止直接访问
@@ -38,6 +38,7 @@ function wxs_watermark_init_csf_settings() {
     wxs_watermark_create_welcome_section();
     wxs_watermark_create_basic_settings_section();
     wxs_watermark_create_content_settings_section();
+    wxs_watermark_create_html_settings_section();
     wxs_watermark_create_bot_filter_section();
     
     return true;
@@ -86,16 +87,28 @@ function wxs_watermark_get_welcome_content() {
         </div>
         <p>请通过左侧选项卡配置插件功能。在调试模式下，水印将以可见文本形式显示，便于测试。</p>
         <a href="https://wxsnote.cn/wbmsy" target="_blank" class="wxs-watermark-btn"><i class="fa fa-paper-plane-o"></i> 前往提取水印</a>
-        <p style="color:red">仅对P标签处理，不要疑惑为什么有些地方没有添加水印，后续版本会增加容器选择器和标签选择器，还有，例如网址，你不加超链接，你就给个代码高亮啊，纯P标签的网址，这个无法完美适配的</p>
+        <p style="color:red">小问题；例如网址，你不加超链接，你就给个代码高亮啊，纯P标签的网址，这个是无法完美适配的</p>
         <p>插件作者：天无神话</p>
         <p>作者QQ：2031301686</p>
         <p>作者博客：<a href="https://wxsnote.cn/" target="_blank">王先生笔记</a></p>
         <p>共同开发：<a href="https://https://dmyblog.cn/" target="_blank">大绵羊博客</a></p>
-        <p>原理介绍：<a href="https://wxsnote.cn/6395.html" target="_blank">https://wxsnote.cn/6395.html</a></p>
-        <p>开源地址：<a href="https://github.com/twsh0305/text_watermarking" target="_blank">https://github.com/twsh0305/text_watermarking</a></p>
         <p>QQ群：<a href="https://jq.qq.com/?_wv=1027&k=eiGEOg3i" target="_blank">399019539</a></p>
         <p>天无神话制作，转载请注明开源地址，谢谢合作。</p>
         <p style="color:red">开源协议主要要求：禁止移除或修改作者信息</p>
+        <p>原理介绍：<a href="https://wxsnote.cn/6395.html" target="_blank">https://wxsnote.cn/6395.html</a></p>
+        <p>开源地址：<a href="https://github.com/twsh0305/text_watermarking" target="_blank">https://github.com/twsh0305/text_watermarking</a></p>
+        <p>插件日志：</p>
+        <ul>
+        <li>1.0.0 纯function钩子代码</li>
+        <li>1.0.1 创建插件</li>
+        <li>1.0.2 引入CSF框架，创建设置面板</li>
+        <li>1.0.3 新增js控制 20250806发布</li>
+        <li>1.0.4 修复部分wordpress设置面板页面空白</li>
+        <li>1.0.5 修复CSF框架缺失样式的问题</li>
+        <li>1.0.6 修复引入文件错误</li>
+        <li>1.0.7 增加标签选择，class元素选择及id容器选择 20250806发布</li>
+        <li>计划：更新时区选择，标签白名单</li>
+        </ul>
         <p>后台框架：<a href="https://github.com/Codestar/codestar-framework" target="_blank">Codestar Framework</a> 加密方案：<a href="https://github.com/paulgb/emoji-encoder" target="_blank">Emoji Encoder</a></p>
     </div>
     <style>
@@ -148,7 +161,7 @@ function wxs_watermark_create_basic_settings_section() {
     CSF::createSection('wxs_watermark_settings', [
         'title'  => '基础设置',
         'icon'   => 'fa fa-cog',
-        'fields' => wxs_watermark_get_basic_settings_fields()
+        'fields' => wxs_watermark_get_basic_settings_fields(),
     ]);
 }
 
@@ -354,6 +367,58 @@ function wxs_watermark_get_content_settings_fields() {
     ];
 }
 
+
+
+function wxs_watermark_create_html_settings_section() {
+    CSF::createSection('wxs_watermark_settings', [
+        'title'  => '高级设置',
+        'icon'   => 'fa fa-cogs',
+        'fields' => wxs_watermark_get_html_tags_fields(),
+    ]);
+}
+
+
+
+function wxs_watermark_get_html_tags_fields() {
+    return [
+        [
+            'id'      => 'html_tags',
+            'type'    => 'text',
+            'title'   => '处理的HTML标签',
+            'desc'    => '输入要处理的HTML标签，用逗号<code>,</code>分隔，仅文章，不递归，仅一层，默认是<code>p</code>,<code>li</code><br>文章常见标签：<code>h2</code>到<code>h6</code>,<code>p</code>,<code>li</code>,<code>span</code>,<code>strong</code>,<code>em</code>,<code>b</code>,<code>i</code>,<code>blockquote</code>,<code>q</code>,等<br>不推荐：<code>code</code>,<code>pre</code>',
+            'default' => 'p,li',
+        ],
+        [
+            'id'      => 'js_global_enable',
+            'type'    => 'switcher',
+            'title'   => 'JS全局处理开关',
+            'label'   => '开启后将根据下方选择器处理文章以外的内容，默认关闭',
+            'default' => 0,
+        ],
+        [
+            'id'        => 'js_class_selectors',
+            'type'      => 'text',
+            'title'     => 'Class选择器设置',
+            'desc'      => '仅JS生效，递归标签内全部，格式示例：<code>.css1</code>,<code>.css2</code>,<code>p.css3</code>,<code>span.css4</code>',
+            'default'   => '',
+            'dependency' => [
+                ['js_global_enable', '==', 1]
+            ],
+        ],
+        [
+            'id'        => 'js_id_selectors',
+            'type'      => 'text',
+            'title'     => 'ID选择器设置',
+            'desc'      => '仅JS生效，递归标签内全部，格式示例：<code>#id1</code>,<code>#id2</code>',
+            'default'   => '',
+            'dependency' => [
+                ['js_global_enable', '==', 1]
+            ],
+        ],
+    ];
+}
+
+
 /**
  * 创建爬虫过滤设置面板
  */
@@ -373,6 +438,9 @@ function wxs_watermark_get_bot_filter_fields() {
         [
             'id'      => 'bot_ua',
             'type'    => 'textarea',
+            'attributes'  => array(
+                    'rows' => 5,
+                ),
             'title'   => '爬虫UA列表',
             'desc'    => '每行一个爬虫标识，匹配时不插入水印，清空时不匹配，用于防止搜索引擎抓取错误，建议配合WAF使用，拦截假蜘蛛。',
             'default' => "googlebot\nbingbot\nbaiduspider\nsogou web spider\n360spider\nyisouspider\nbytespider\nduckduckbot\nyandexbot\nyahoo",
