@@ -1,5 +1,5 @@
 {
   "latest_version": "1.0.8",
-  "update_log": "修复：1.使用wp的本地时间，2.如果存在子比主题，则直接调用子比主题的CSF框架，3.修复PHP8.x的报错",
+  "update_log": "修复：1.使用wp的本地时间，2.如果存在子比主题，则直接调用子比主题的CSF框架，3.修复PHP8.x的报错，4.增加更新检测",
   "download_url": "https://github.com/twsh0305/text_watermarking/releases/latest"
 }
