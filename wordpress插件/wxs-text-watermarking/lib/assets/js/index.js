@@ -6,41 +6,65 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 加载配置
     const config = window.wxsWatermarkConfig || {};
-    const isDebug = config.debug_mode === 1 || config.debug_mode === '1';
     
+
+    // 配置规范化（统一处理布尔值类型，避免字符串"0"/"1"误判）
+    const normalizedConfig = {
+        ...config,
+        // 将字符串"0"/"1"转为布尔值
+        enable: !!Number(config.enable),
+        jsGlobalEnable: !!Number(config.jsGlobalEnable),
+        global_force_article: !!Number(config.global_force_article),
+        debug_mode: !!Number(config.debug_mode),
+        // 水印内容的布尔值处理
+        watermark_content: {
+            ...config.watermark_content,
+            include_ip: !!Number(config.watermark_content?.include_ip),
+            include_user: !!Number(config.watermark_content?.include_user),
+            include_time: !!Number(config.watermark_content?.include_time),
+            include_custom: !!Number(config.watermark_content?.include_custom),
+        },
+        // 其他数值型配置转为数字
+        min_paragraph_length: parseInt(config.min_paragraph_length) || 20,
+        insert_method: parseInt(config.insert_method) || 2,
+        random: {
+            count_type: parseInt(config.random?.count_type) || 2,
+            custom_count: parseInt(config.random?.custom_count) || 1,
+            word_based_ratio: parseInt(config.random?.word_based_ratio) || 400
+        },
+        fixed: {
+            interval: parseInt(config.fixed?.interval) || 20
+        }
+    };
+    const isDebug = normalizedConfig.debug_mode; 
+
+
     // 仅在调试模式下输出初始化信息
     if (isDebug) {
         console.log('文本盲水印JS初始化 - 纯JS模式');
         console.log('用户登录状态:', wxs_isUserLoggedIn);
         console.log('当前用户ID:', wxs_current_user_id);
         console.log('是否为文章页面:', wxs_isArticlePage);
-        console.log('完整配置信息:', config);
+        console.log('原始配置信息:', config);
+        console.log('规范化后配置信息:', normalizedConfig);
     }
 
     // 判断插件是否启用
-    const isEnabled = 
-        config.enable === 1 || 
-        config.enable === '1' || 
-        config.enable === true || 
-        config.enable === 'true';
+    const isEnabled = normalizedConfig.enable;
     // 判断JS全局模式是否启用
-    const isGlobalEnabled = 
-        config.jsGlobalEnable === 1 || 
-        config.jsGlobalEnable === '1' || 
-        config.jsGlobalEnable === true || 
-        config.jsGlobalEnable === 'true';
+    const isGlobalEnabled = normalizedConfig.jsGlobalEnable;
 
-    
     // 仅在调试模式下输出启用状态
     if (isDebug) {
         console.log('是否启用水印:', isEnabled);
         console.log('是否启用全局处理:', isGlobalEnabled);
+        console.log('文章页是否强制启用全局选择器:', normalizedConfig.global_force_article);
     }
-    
+
     if (!isEnabled) {
         return;
     }
-    
+
     // 不是文章页面且未启用全局处理时才跳过
     if (!wxs_isArticlePage && !isGlobalEnabled) {
         if (isDebug) {
@@ -48,18 +72,18 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         return;
     }
-    
+
     // 混合模式下，登录用户不执行JS水印处理
-    if (config.run_mode === 'hybrid' && wxs_isUserLoggedIn) {
+    if (normalizedConfig.run_mode === 'hybrid' && wxs_isUserLoggedIn) {
         if (isDebug) {
             console.log('混合模式 - 登录用户，不执行JS水印处理');
         }
         return;
     }
-    
+
     // 爬虫过滤
     const userAgent = navigator.userAgent.toLowerCase();
-    const botUAs = (config.bot_ua || []).map(bot => bot.trim().toLowerCase());
+    const botUAs = (normalizedConfig.bot_ua || []).map(bot => bot.trim().toLowerCase());
     const isBot = botUAs.some(bot => userAgent.includes(bot));
     if (isBot) {
         if (isDebug) {
@@ -69,8 +93,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // 获取HTML标签配置
-    const htmlTags = config.htmlTags || ['p', 'li'];
-    
+    const htmlTags = normalizedConfig.htmlTags || ['p', 'li'];
+
     // 目标容器
     const articleContainer = document.querySelector('.article-content') 
         || document.querySelector('.post-content')
@@ -94,7 +118,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('开始获取IP...');
         }
         try {
-            const res = await fetch(config.ip_endpoint);
+            const res = await fetch(normalizedConfig.ip_endpoint);
             if (!res.ok) throw new Error(`HTTP状态码: ${res.status}`);
             const data = await res.json();
             pageIP = data.success ? data.ip : 'unknown-ip';
@@ -113,30 +137,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     fetchPageIP();
-
-    // 配置规范化处理
-    const normalizedConfig = {
-        ...config,
-        watermark_content: {
-            ...config.watermark_content,
-            include_ip: config.watermark_content?.include_ip === 1 || 
-                       config.watermark_content?.include_ip === '1' ||
-                       config.watermark_content?.include_ip === true ||
-                       config.watermark_content?.include_ip === 'true',
-            include_user: config.watermark_content?.include_user === 1 || 
-                        config.watermark_content?.include_user === '1' ||
-                        config.watermark_content?.include_user === true ||
-                        config.watermark_content?.include_user === 'true',
-            include_time: config.watermark_content?.include_time === 1 || 
-                        config.watermark_content?.include_time === '1' ||
-                        config.watermark_content?.include_time === true ||
-                        config.watermark_content?.include_time === 'true',
-            include_custom: config.watermark_content?.include_custom === 1 || 
-                          config.watermark_content?.include_custom === '1' ||
-                          config.watermark_content?.include_custom === true ||
-                          config.watermark_content?.include_custom === 'true',
-        }
-    };
 
     // 水印信息生成器
     class WatermarkInfo {
@@ -203,15 +203,15 @@ document.addEventListener('DOMContentLoaded', function() {
         constructor(config) {
             this.config = config;
             this.info = new WatermarkInfo(config.watermark_content || {});
-            this.minLength = parseInt(config.min_paragraph_length) || 20;
-            this.insertMethod = parseInt(config.insert_method) || 2;
+            this.minLength = config.min_paragraph_length || 20;
+            this.insertMethod = config.insert_method || 2;
             this.random = {
-                count_type: parseInt(config.random?.count_type) || 2,
-                custom_count: parseInt(config.random?.custom_count) || 1,
-                word_based_ratio: parseInt(config.random?.word_based_ratio) || 400
+                count_type: config.random?.count_type || 2,
+                custom_count: config.random?.custom_count || 1,
+                word_based_ratio: config.random?.word_based_ratio || 400
             };
-            this.fixed = { interval: parseInt(config.fixed?.interval) || 20 };
-            this.isDebug = config.debug_mode === '1' || config.debug_mode === 1;
+            this.fixed = { interval: config.fixed?.interval || 20 };
+            this.isDebug = config.debug_mode;
             this.maxPositionAttempts = 100;
             
             if (isDebug) {
@@ -374,6 +374,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // 使用规范化后的配置初始化处理器
     const processor = new WatermarkProcessor(normalizedConfig);
 
     async function processTextNode(node) {
@@ -437,7 +438,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 解析选择器
     function parseSelector(selector) {
-        // 处理 [tag&class] 或 [tag&id] 格式
         if (selector.startsWith('[') && selector.endsWith(']')) {
             const content = selector.slice(1, -1);
             const parts = content.split('&');
@@ -466,6 +466,7 @@ document.addEventListener('DOMContentLoaded', function() {
             deep: true
         };
     }
+
     // 处理选择器匹配的元素
     async function processSelectors(selectors) {
         if (!selectors || !selectors.trim()) return [];
@@ -515,17 +516,17 @@ document.addEventListener('DOMContentLoaded', function() {
             // 获取并规范化所有选择器
             const selectors = [];
             
-            // 处理class选择器（自动添加.前缀）
-            if (config.jsClassSelectors) {
-                selectors.push(...config.jsClassSelectors.split(',')
+            // 处理class选择器
+            if (normalizedConfig.jsClassSelectors) {
+                selectors.push(...normalizedConfig.jsClassSelectors.split(',')
                     .map(s => s.trim())
                     .filter(s => s)
                     .map(s => s.startsWith('.') ? s : `.${s}`));
             }
             
-            // 处理id选择器（自动添加#前缀）
-            if (config.jsIdSelectors) {
-                selectors.push(...config.jsIdSelectors.split(',')
+            // 处理id选择器
+            if (normalizedConfig.jsIdSelectors) {
+                selectors.push(...normalizedConfig.jsIdSelectors.split(',')
                     .map(s => s.trim())
                     .filter(s => s)
                     .map(s => s.startsWith('#') ? s : `#${s}`));
@@ -565,11 +566,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-
-
-
     // 初始化处理
     async function initProcessing() {
+        // 混合模式判断
         if (normalizedConfig.run_mode === 'hybrid' && wxs_isUserLoggedIn) {
             if (isDebug) console.log('混合模式 - 登录用户，跳过JS处理');
             return;
@@ -586,14 +585,20 @@ document.addEventListener('DOMContentLoaded', function() {
             const batchSize = 5;
             for (let i = 0; i < tags.length; i += batchSize) {
                 const batch = Array.from(tags).slice(i, i + batchSize);
-                await Promise.all(batch.map(tag => processTag(tag, false))); // 不深度处理
+                await Promise.all(batch.map(tag => processTag(tag, false)));
                 await new Promise(resolve => setTimeout(resolve, 50));
             }
         }
     
         // 全局选择器处理（非文章页面或强制启用时）
-        if (isGlobalEnabled && (!wxs_isArticlePage || config.global_force_article)) {
+        if (isGlobalEnabled && (!wxs_isArticlePage || normalizedConfig.global_force_article)) {
             await processGlobalSelectors();
+        } else if (isDebug) {
+            console.log('全局选择器不满足生效条件：', {
+                isGlobalEnabled,
+                isArticlePage: wxs_isArticlePage,
+                globalForceArticle: normalizedConfig.global_force_article
+            });
         }
     }
     
@@ -629,6 +634,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 动态监听
     function watchDynamic() {
+        // 混合模式判断
         if (normalizedConfig.run_mode === 'hybrid' && wxs_isUserLoggedIn) {
             return;
         }
@@ -651,12 +657,21 @@ document.addEventListener('DOMContentLoaded', function() {
                             
                             // 处理全局选择器动态变化
                             if (isGlobalEnabled) {
-                                const selectors = [];
-                                if (config.js_class_selectors) {
-                                    selectors.push(...config.js_class_selectors.split(',').map(s => s.trim()).filter(s => s));
+                                // 与initProcessing一致的条件：非文章页 或 强制启用
+                                const shouldProcessGlobal = !wxs_isArticlePage || normalizedConfig.global_force_article;
+                                if (!shouldProcessGlobal) {
+                                    if (isDebug) {
+                                        console.log('动态元素不满足全局选择器条件，跳过处理:', node);
+                                    }
+                                    return; // 不满足条件，跳过
                                 }
-                                if (config.js_id_selectors) {
-                                    selectors.push(...config.js_id_selectors.split(',').map(s => s.trim()).filter(s => s));
+
+                                const selectors = [];
+                                if (normalizedConfig.jsClassSelectors) { // 规范化配置
+                                    selectors.push(...normalizedConfig.jsClassSelectors.split(',').map(s => s.trim()).filter(s => s));
+                                }
+                                if (normalizedConfig.jsIdSelectors) { // 规范化配置
+                                    selectors.push(...normalizedConfig.jsIdSelectors.split(',').map(s => s.trim()).filter(s => s));
                                 }
                                 
                                 selectors.forEach(selector => {
