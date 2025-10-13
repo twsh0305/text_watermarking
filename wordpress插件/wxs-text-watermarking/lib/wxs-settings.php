@@ -119,7 +119,7 @@ function wxs_watermark_get_welcome_content() {
         <li>1.0.5 修复：CSF框架缺失样式的问题</li>
         <li>1.0.6 修复：引入文件错误</li>
         <li>1.0.7 增加：标签选择，class元素选择及id容器选择</li>
-        <li>1.0.8 修复：1.使用wp的本地时间，2.如果存在子比主题，则直接调用子比主题的CSF框架，3.修复PHP8.x的报错</li>
+        <li>1.0.8 修复：1.使用wp的本地时间，2.如果存在子比主题，则直接调用子比主题的CSF框架，3.修复PHP8.x的报错，4.修复全局js文章不生效的问题</li>
         </ul>
         <p>后台框架：<a href="https://github.com/Codestar/codestar-framework" target="_blank">Codestar Framework</a> 加密方案：<a href="https://github.com/paulgb/emoji-encoder" target="_blank">Emoji Encoder</a></p>
     </div>
