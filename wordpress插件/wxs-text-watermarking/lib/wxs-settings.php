@@ -4,7 +4,7 @@
  * 
  * @package WXS Text Watermarking
  * @author 大绵羊 天无神话
- * @version 1.0.7
+ * @version 1.0.8
  */
 
 // 防止直接访问
@@ -14,17 +14,26 @@ if (!defined('ABSPATH')) exit;
  * 初始化CSF设置面板
  */
 function wxs_watermark_init_csf_settings() {
+    
+    //只有后台才执行此代码
+    if (!is_admin()) {
+        return;
+    }
     // 检查CSF是否可用
     if (!class_exists('CSF')) {
         return false;
     }
     
+    //刷新所有缓存
+    wp_cache_flush();
+    
     $version = wxs_watermark_plugin_version();
+    $prefix = 'wxs_watermark_init_csf_options';
     
     // 创建设置页面 - 顶部信息
-    CSF::createOptions('wxs_watermark_settings', [
+    CSF::createOptions($prefix, [
         'menu_title'      => '文本水印',
-        'menu_slug'       => 'wxs-watermark',
+        'menu_slug'       => $prefix, // 使用前缀作为菜单标识
         'menu_type'       => 'menu',
         'menu_icon'       => 'dashicons-shield',
         'menu_position'   => 58,
@@ -32,23 +41,25 @@ function wxs_watermark_init_csf_settings() {
         'footer_text'     => '文本盲水印插件-<a href="https://wxsnote.cn" target="_blank">王先生笔记</a> V'.$version,
         'show_bar_menu'   => false,
         'theme'           => 'light',
+        'show_in_customizer' => false,
+        'footer_credit'   => ' 插件作者：天无神话 <i class="fa fa-fw fa-heart-o" aria-hidden="true"></i>感谢您使用文本盲水印插件 ',
     ]);
 
     // 添加各个设置面板
-    wxs_watermark_create_welcome_section();
-    wxs_watermark_create_basic_settings_section();
-    wxs_watermark_create_content_settings_section();
-    wxs_watermark_create_html_settings_section();
-    wxs_watermark_create_bot_filter_section();
+    wxs_watermark_create_welcome_section($prefix);
+    wxs_watermark_create_basic_settings_section($prefix);
+    wxs_watermark_create_content_settings_section($prefix);
+    wxs_watermark_create_html_settings_section($prefix);
+    wxs_watermark_create_bot_filter_section($prefix);
     
     return true;
 }
 
 /**
- * 创建欢迎页面
+ * 创建欢迎页面（接收前缀参数）
  */
-function wxs_watermark_create_welcome_section() {
-    CSF::createSection('wxs_watermark_settings', [
+function wxs_watermark_create_welcome_section($prefix) {
+    CSF::createSection($prefix, [
         'id'    => 'wxs_watermark_welcome',
         'title' => '欢迎使用',
         'icon'  => 'fa fa-home',
@@ -87,11 +98,12 @@ function wxs_watermark_get_welcome_content() {
         </div>
         <p>请通过左侧选项卡配置插件功能。在调试模式下，水印将以可见文本形式显示，便于测试。</p>
         <a href="https://wxsnote.cn/wbmsy" target="_blank" class="wxs-watermark-btn"><i class="fa fa-paper-plane-o"></i> 前往提取水印</a>
+        <a href="https://github.com/twsh0305/text_watermarking/releases/tag/1.0.7" target="_blank" class="wxs-watermark-btn"><i class="fa fa-cloud-upload"></i> 检测更新</a>
         <p style="color:red">小问题；例如网址，你不加超链接，你就给个代码高亮啊，纯P标签的网址，这个是无法完美适配的</p>
         <p>插件作者：天无神话</p>
         <p>作者QQ：2031301686</p>
         <p>作者博客：<a href="https://wxsnote.cn/" target="_blank">王先生笔记</a></p>
-        <p>共同开发：<a href="https://https://dmyblog.cn/" target="_blank">大绵羊博客</a></p>
+        <p>共同开发：<a href="https://dmyblog.cn/" target="_blank">大绵羊博客</a></p>
         <p>QQ群：<a href="https://jq.qq.com/?_wv=1027&k=eiGEOg3i" target="_blank">399019539</a></p>
         <p>天无神话制作，转载请注明开源地址，谢谢合作。</p>
         <p style="color:red">开源协议主要要求：禁止移除或修改作者信息</p>
@@ -100,14 +112,14 @@ function wxs_watermark_get_welcome_content() {
         <p>插件日志：</p>
         <ul>
         <li>1.0.0 纯function钩子代码</li>
-        <li>1.0.1 创建插件</li>
-        <li>1.0.2 引入CSF框架，创建设置面板</li>
-        <li>1.0.3 新增js控制 20250806发布</li>
-        <li>1.0.4 修复部分wordpress设置面板页面空白</li>
-        <li>1.0.5 修复CSF框架缺失样式的问题</li>
-        <li>1.0.6 修复引入文件错误</li>
-        <li>1.0.7 增加标签选择，class元素选择及id容器选择 20250806发布</li>
-        <li>计划：更新时区选择，标签白名单</li>
+        <li>1.0.1 增加：创建插件</li>
+        <li>1.0.2 增加：引入CSF框架，创建设置面板</li>
+        <li>1.0.3 新增：js控制</li>
+        <li>1.0.4 修复：部分wordpress设置面板页面空白</li>
+        <li>1.0.5 修复：CSF框架缺失样式的问题</li>
+        <li>1.0.6 修复：引入文件错误</li>
+        <li>1.0.7 增加：标签选择，class元素选择及id容器选择</li>
+        <li>1.0.8 修复：1.使用wp的本地时间，2.如果存在子比主题，则直接调用子比主题的CSF框架，3.修复PHP8.x的报错</li>
         </ul>
         <p>后台框架：<a href="https://github.com/Codestar/codestar-framework" target="_blank">Codestar Framework</a> 加密方案：<a href="https://github.com/paulgb/emoji-encoder" target="_blank">Emoji Encoder</a></p>
     </div>
@@ -157,8 +169,8 @@ function wxs_watermark_get_welcome_content() {
 /**
  * 创建基础设置面板
  */
-function wxs_watermark_create_basic_settings_section() {
-    CSF::createSection('wxs_watermark_settings', [
+function wxs_watermark_create_basic_settings_section($prefix) {
+    CSF::createSection($prefix, [
         'title'  => '基础设置',
         'icon'   => 'fa fa-cog',
         'fields' => wxs_watermark_get_basic_settings_fields(),
@@ -314,8 +326,8 @@ function wxs_watermark_get_basic_settings_fields() {
 /**
  * 创建水印内容设置面板
  */
-function wxs_watermark_create_content_settings_section() {
-    CSF::createSection('wxs_watermark_settings', [
+function wxs_watermark_create_content_settings_section($prefix) {
+    CSF::createSection($prefix, [
         'title'  => '水印内容设置',
         'icon'   => 'fa fa-file-text',
         'fields' => wxs_watermark_get_content_settings_fields()
@@ -359,7 +371,7 @@ function wxs_watermark_get_content_settings_fields() {
             'type'      => 'text',
             'title'     => '自定义文本内容',
             'desc'      => '建议包含版权信息（如"XX版权所有"）',
-            'default'   => '王先生笔记 版权所有',
+            'default'   => (get_bloginfo('name') ? get_bloginfo('name') . ' 版权所有' : '王先生笔记 版权所有'),
             'dependency' => [
                 ['include_custom', '==', 1]
             ],
@@ -367,18 +379,20 @@ function wxs_watermark_get_content_settings_fields() {
     ];
 }
 
-
-
-function wxs_watermark_create_html_settings_section() {
-    CSF::createSection('wxs_watermark_settings', [
+/**
+ * 创建高级设置面板
+ */
+function wxs_watermark_create_html_settings_section($prefix) {
+    CSF::createSection($prefix, [
         'title'  => '高级设置',
         'icon'   => 'fa fa-cogs',
         'fields' => wxs_watermark_get_html_tags_fields(),
     ]);
 }
 
-
-
+/**
+ * 获取高级设置字段配置
+ */
 function wxs_watermark_get_html_tags_fields() {
     return [
         [
@@ -409,21 +423,31 @@ function wxs_watermark_get_html_tags_fields() {
             'id'        => 'js_id_selectors',
             'type'      => 'text',
             'title'     => 'ID选择器设置',
-            'desc'      => '仅JS生效，递归标签内全部，格式示例：<code>#id1</code>,<code>#id2</code>',
+            'desc'      => '仅JS生效，递归标签内全部，格式示例：<code>#id1</code>,<code>#id2</code>，注意：CSS选择器规范不允许ID以数字开头(如<code>#123</code>)',
             'default'   => '',
             'dependency' => [
                 ['js_global_enable', '==', 1]
             ],
         ],
+        [
+            'id'        => 'global_force_article',
+            'type'      => 'switcher',
+            'title'     => '文章页强制启用全局选择器',
+            'label'     => '开启后，即使在文章页，也会对全局选择器匹配的元素生效',
+            'desc'      => '需先开启「JS全局处理开关」，否则此设置无效',
+            'default'   => 0, // 默认关闭
+            'dependency' => [
+                ['js_global_enable', '==', 1] // 仅当全局处理开启时显示
+            ],
+        ],
     ];
 }
-
 
 /**
  * 创建爬虫过滤设置面板
  */
-function wxs_watermark_create_bot_filter_section() {
-    CSF::createSection('wxs_watermark_settings', [
+function wxs_watermark_create_bot_filter_section($prefix) {
+    CSF::createSection($prefix, [
         'title'  => '爬虫过滤白名单',
         'icon'   => 'fa fa-bug',
         'fields' => wxs_watermark_get_bot_filter_fields()
