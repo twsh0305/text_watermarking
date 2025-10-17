@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) exit;
  */
 function wxs_watermark_init_csf_settings() {
     
-    //只有后台才执行此代码
+    // 只有后台才执行此代码
     if (!is_admin()) {
         return;
     }
@@ -24,7 +24,7 @@ function wxs_watermark_init_csf_settings() {
         return false;
     }
     
-    //刷新所有缓存
+    // 刷新所有缓存
     wp_cache_flush();
     
     $version = wxs_watermark_plugin_version();
@@ -32,17 +32,20 @@ function wxs_watermark_init_csf_settings() {
     
     // 创建设置页面 - 顶部信息
     CSF::createOptions($prefix, [
-        'menu_title'      => '文本水印',
+        'menu_title'      => __('Text Watermark', 'wxs-text-watermarking'),
         'menu_slug'       => $prefix, // 使用前缀作为菜单标识
         'menu_type'       => 'menu',
         'menu_icon'       => 'dashicons-shield',
         'menu_position'   => 58,
-        'framework_title' => '文本盲水印配置 <small style="color: #fff;">v'.$version.'</small>',
-        'footer_text'     => '文本盲水印插件-<a href="https://wxsnote.cn" target="_blank">王先生笔记</a> V'.$version,
+        /* translators: %s indicates plugin version number */
+        'framework_title' => sprintf(__('Text Blind Watermark Configuration %s', 'wxs-text-watermarking'), '<small style="color: #fff;">v'.$version.'</small>'),
+        /* translators: 第一个 %s 是插件作者的网站链接，第二个 %s 是插件版本号 */
+        'footer_text'     => sprintf(__('Text Blind Watermark Plugin-<a href="%s" target="_blank">Mr. Wang\'s Notes</a> V%s', 'wxs-text-watermarking'), 'https://wxsnote.cn', $version),
         'show_bar_menu'   => false,
         'theme'           => 'light',
         'show_in_customizer' => false,
-        'footer_credit'   => ' 插件作者：天无神话 <i class="fa fa-fw fa-heart-o" aria-hidden="true"></i>感谢您使用文本盲水印插件 ',
+        /* translators: %s 表示图标 */
+        'footer_credit'   => sprintf(__(' Plugin Author: Tianwu Shenhua %sThank you for using the Text Blind Watermark Plugin ', 'wxs-text-watermarking'), '<i class="fa fa-fw fa-heart-o" aria-hidden="true"></i>'),
     ]);
 
     // 添加各个设置面板
@@ -61,7 +64,7 @@ function wxs_watermark_init_csf_settings() {
 function wxs_watermark_create_welcome_section($prefix) {
     CSF::createSection($prefix, [
         'id'    => 'wxs_watermark_welcome',
-        'title' => '欢迎使用',
+        'title' => __('Welcome', 'wxs-text-watermarking'),
         'icon'  => 'fa fa-home',
         'fields' => [
             [
@@ -77,51 +80,52 @@ function wxs_watermark_create_welcome_section($prefix) {
  * 获取欢迎页面内容
  */
 function wxs_watermark_get_welcome_content() {
-    return '
+    ob_start();
+    ?>
     <div class="wxs-welcome-panel">
-        <h3 style="color:#fd4c73;"><i class="fa fa-heart fa-fw"></i> 感谢您使用文本盲水印插件</h3>
+        <h3 style="color:#fd4c73;"><i class="fa fa-heart fa-fw"></i> <?php _e('Thank you for using the Text Blind Watermark Plugin', 'wxs-text-watermarking'); ?></h3>
         
-        <p>插件功能：该插件可以在文章内容中嵌入不可见的盲水印，帮助您保护原创内容。</p>
+        <p><?php _e('Plugin Features: This plugin can embed invisible blind watermarks in article content to help you protect original content.', 'wxs-text-watermarking'); ?></p>
         <div class="wxs-features">
             <div class="feature-box">
-                <h4>多种插入方式</h4>
-                <p>支持段落末尾、随机位置和固定字数三种水印插入方式</p>
+                <h4><?php _e('Multiple Insertion Methods', 'wxs-text-watermarking'); ?></h4>
+                <p><?php _e('Supports three watermark insertion methods: end of paragraph, random positions, and fixed character intervals', 'wxs-text-watermarking'); ?></p>
             </div>
             <div class="feature-box">
-                <h4>自定义水印内容</h4>
-                <p>可包含访问者IP、用户ID、时间戳和自定义文本</p>
+                <h4><?php _e('Custom Watermark Content', 'wxs-text-watermarking'); ?></h4>
+                <p><?php _e('Can include visitor IP, user ID, timestamp, and custom text', 'wxs-text-watermarking'); ?></p>
             </div>
             <div class="feature-box">
-                <h4>爬虫过滤</h4>
-                <p>可设置不向搜索引擎爬虫插入水印</p>
+                <h4><?php _e('Crawler Filtering', 'wxs-text-watermarking'); ?></h4>
+                <p><?php _e('Can be set to not insert watermarks for search engine crawlers', 'wxs-text-watermarking'); ?></p>
             </div>
         </div>
-        <p>请通过左侧选项卡配置插件功能。在调试模式下，水印将以可见文本形式显示，便于测试。</p>
-        <a href="https://wxsnote.cn/wbmsy" target="_blank" class="wxs-watermark-btn"><i class="fa fa-paper-plane-o"></i> 前往提取水印</a>
-        <a href="https://github.com/twsh0305/text_watermarking/releases/tag/1.0.7" target="_blank" class="wxs-watermark-btn"><i class="fa fa-cloud-upload"></i> 检测更新</a>
-        <p style="color:red">小问题；例如网址，你不加超链接，你就给个代码高亮啊，纯P标签的网址，这个是无法完美适配的</p>
-        <p>插件作者：天无神话</p>
-        <p>作者QQ：2031301686</p>
-        <p>作者博客：<a href="https://wxsnote.cn/" target="_blank">王先生笔记</a></p>
-        <p>共同开发：<a href="https://dmyblog.cn/" target="_blank">大绵羊博客</a></p>
-        <p>QQ群：<a href="https://jq.qq.com/?_wv=1027&k=eiGEOg3i" target="_blank">399019539</a></p>
-        <p>天无神话制作，转载请注明开源地址，谢谢合作。</p>
-        <p style="color:red">开源协议主要要求：禁止移除或修改作者信息</p>
-        <p>原理介绍：<a href="https://wxsnote.cn/6395.html" target="_blank">https://wxsnote.cn/6395.html</a></p>
-        <p>开源地址：<a href="https://github.com/twsh0305/text_watermarking" target="_blank">https://github.com/twsh0305/text_watermarking</a></p>
-        <p>插件日志：</p>
+        <p><?php _e('Please configure plugin functions through the left tabs. In debug mode, watermarks will be displayed as visible text for testing purposes.', 'wxs-text-watermarking'); ?></p>
+        <a href="https://wxsnote.cn/wbmsy" target="_blank" class="wxs-watermark-btn"><i class="fa fa-paper-plane-o"></i> <?php _e('Go to Extract Watermark', 'wxs-text-watermarking'); ?></a>
+        <a href="https://github.com/twsh0305/text_watermarking/releases/tag/1.0.7" target="_blank" class="wxs-watermark-btn"><i class="fa fa-cloud-upload"></i> <?php _e('Check for Updates', 'wxs-text-watermarking'); ?></a>
+        <p style="color:red"><?php _e('Minor issue; for example, URLs, if you don\'t add hyperlinks, you should give code highlighting, pure P tag URLs cannot be perfectly adapted', 'wxs-text-watermarking'); ?></p>
+        <p><?php _e('Plugin Author: Tianwu Shenhua', 'wxs-text-watermarking'); ?></p>
+        <p><?php _e('Author QQ: 2031301686', 'wxs-text-watermarking'); ?></p>
+        <p><?php _e('Author Blog: ', 'wxs-text-watermarking'); ?><a href="https://wxsnote.cn/" target="_blank"><?php _e('Mr. Wang\'s Notes', 'wxs-text-watermarking'); ?></a></p>
+        <p><?php _e('Co-development: ', 'wxs-text-watermarking'); ?><a href="https://dmyblog.cn/" target="_blank"><?php _e('Big Sheep Blog', 'wxs-text-watermarking'); ?></a></p>
+        <p><?php _e('QQ Group: ', 'wxs-text-watermarking'); ?><a href="https://jq.qq.com/?_wv=1027&k=eiGEOg3i" target="_blank">399019539</a></p>
+        <p><?php _e('Produced by Tianwu Shenhua, please indicate the open source address when reposting, thank you for your cooperation.', 'wxs-text-watermarking'); ?></p>
+        <p style="color:red"><?php _e('Main open source license requirement: Prohibits removal or modification of author information', 'wxs-text-watermarking'); ?></p>
+        <p><?php _e('Principle Introduction: ', 'wxs-text-watermarking'); ?><a href="https://wxsnote.cn/6395.html" target="_blank">https://wxsnote.cn/6395.html</a></p>
+        <p><?php _e('Open Source Address: ', 'wxs-text-watermarking'); ?><a href="https://github.com/twsh0305/text_watermarking" target="_blank">https://github.com/twsh0305/text_watermarking</a></p>
+        <p><?php _e('Plugin Changelog: ', 'wxs-text-watermarking'); ?></p>
         <ul>
-        <li>1.0.0 纯function钩子代码</li>
-        <li>1.0.1 增加：创建插件</li>
-        <li>1.0.2 增加：引入CSF框架，创建设置面板</li>
-        <li>1.0.3 新增：js控制</li>
-        <li>1.0.4 修复：部分wordpress设置面板页面空白</li>
-        <li>1.0.5 修复：CSF框架缺失样式的问题</li>
-        <li>1.0.6 修复：引入文件错误</li>
-        <li>1.0.7 增加：标签选择，class元素选择及id容器选择</li>
-        <li>1.0.8 修复：1.使用wp的本地时间，2.如果存在子比主题，则直接调用子比主题的CSF框架，3.修复PHP8.x的报错，4.修复全局js文章不生效的问题</li>
+        <li>1.0.0 <?php _e('Pure function hook code', 'wxs-text-watermarking'); ?></li>
+        <li>1.0.1 <?php _e('Added: Created plugin', 'wxs-text-watermarking'); ?></li>
+        <li>1.0.2 <?php _e('Added: Introduced CSF framework, created settings panel', 'wxs-text-watermarking'); ?></li>
+        <li>1.0.3 <?php _e('Added: JS control', 'wxs-text-watermarking'); ?></li>
+        <li>1.0.4 <?php _e('Fixed: Some WordPress settings panel pages blank', 'wxs-text-watermarking'); ?></li>
+        <li>1.0.5 <?php _e('Fixed: Missing CSF framework styles issue', 'wxs-text-watermarking'); ?></li>
+        <li>1.0.6 <?php _e('Fixed: File import error', 'wxs-text-watermarking'); ?></li>
+        <li>1.0.7 <?php _e('Added: Tag selection, class element selection and ID container selection', 'wxs-text-watermarking'); ?></li>
+        <li>1.0.8 <?php _e('Fixed: 1.Use WordPress local time, 2.If Zibll theme exists, directly use Zibll theme\'s CSF framework, 3.Fixed PHP 8.x errors, 4.Fixed global JS not working in articles issue', 'wxs-text-watermarking'); ?></li>
         </ul>
-        <p>后台框架：<a href="https://github.com/Codestar/codestar-framework" target="_blank">Codestar Framework</a> 加密方案：<a href="https://github.com/paulgb/emoji-encoder" target="_blank">Emoji Encoder</a></p>
+        <p><?php _e('Admin Framework: ', 'wxs-text-watermarking'); ?><a href="https://github.com/Codestar/codestar-framework" target="_blank">Codestar Framework</a> <?php _e('Encryption Solution: ', 'wxs-text-watermarking'); ?><a href="https://github.com/paulgb/emoji-encoder" target="_blank">Emoji Encoder</a></p>
     </div>
     <style>
         .wxs-welcome-panel { padding: 20px; background: #fff; border-radius: 4px; }
@@ -132,16 +136,16 @@ function wxs_watermark_get_welcome_content() {
         .wxs-watermark-btn {
           display: inline-block;
           padding: 12px 24px;          /* 内边距，控制按钮大小 */
-          background-color: #2196F3;   /* 主色：蓝色 */
+          background-color: #2196F3;   /* 主色调：蓝色 */
           color: #ffffff;              /* 文字颜色：白色 */
-          font-size: 14px;             /* 文字大小 */
-          font-weight: 500;            /* 文字加粗，提升辨识度 */
+          font-size: 14px;             /* 字体大小 */
+          font-weight: 500;            /* 字体粗细，增强可读性 */
           text-align: center;          /* 文字居中 */
           text-decoration: none;       /* 去除下划线 */
           border-radius: 4px;          /* 圆角 */
           border: none;                /* 隐藏边框 */
-          cursor: pointer;             /* 鼠标悬停显示手型 */
-          transition: all 0.3s ease;   /* 过渡动画，提升交互感 */
+          cursor: pointer;             /* 悬停时显示手型光标 */
+          transition: all 0.3s ease;   /* 过渡动画，增强交互感 */
         }
         
         /* 图标与文字对齐 */
@@ -150,20 +154,22 @@ function wxs_watermark_get_welcome_content() {
           vertical-align: middle;      /* 垂直居中对齐 */
         }
         
-        /* 悬停效果（加深颜色） */
+        /* 悬停效果（颜色变深） */
         .wxs-watermark-btn:hover {
-          background-color: #1976D2;   /*  hover 色：更深的蓝色 */
+          background-color: #1976D2;   /* 悬停颜色：深蓝色 */
           color: #ffffff;              /* 文字颜色：白色 */
           text-decoration: none;       /* 确保无下划线 */
-          box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3); /* 可选：添加阴影增强层次感 */
+          box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3); /* 可选：添加阴影增强立体感 */
         }
         
-        /* 聚焦效果（适配辅助设备） */
+        /* 聚焦效果（用于可访问性） */
         .wxs-watermark-btn:focus {
           outline: none;               /* 隐藏默认聚焦边框 */
-          box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2); /* 聚焦时显示浅色外框 */
+          box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2); /* 聚焦时显示浅色轮廓 */
         }
-    </style>';
+    </style>
+    <?php
+    return ob_get_clean();
 }
 
 /**
@@ -171,7 +177,7 @@ function wxs_watermark_get_welcome_content() {
  */
 function wxs_watermark_create_basic_settings_section($prefix) {
     CSF::createSection($prefix, [
-        'title'  => '基础设置',
+        'title'  => __('Basic Settings', 'wxs-text-watermarking'),
         'icon'   => 'fa fa-cog',
         'fields' => wxs_watermark_get_basic_settings_fields(),
     ]);
@@ -182,18 +188,18 @@ function wxs_watermark_create_basic_settings_section($prefix) {
  */
 function wxs_watermark_get_basic_settings_fields() {
     return [
-        // 基本设置标题
+        // 基础设置标题
         [
             'type'    => 'heading',
-            'content' => '基本设置',
+            'content' => __('Basic Settings', 'wxs-text-watermarking'),
         ],
         
         // 启用盲水印开关
         [
             'id'      => 'enable',
             'type'    => 'switcher',
-            'title'   => '启用盲水印',
-            'label'   => '开启后将在文章内容中插入盲水印',
+            'title'   => __('Enable Blind Watermark', 'wxs-text-watermarking'),
+            'label'   => __('When enabled, blind watermarks will be inserted into article content', 'wxs-text-watermarking'),
             'default' => 0,
         ],
         
@@ -201,23 +207,23 @@ function wxs_watermark_get_basic_settings_fields() {
         [
             'id'      => 'run_mode',
             'type'    => 'select',
-            'title'   => '运行模式',
+            'title'   => __('Run Mode', 'wxs-text-watermarking'),
             'options' => [
-                'dynamic' => '动态（纯PHP）',
-                'static'  => '静态（纯JS）',
-                'hybrid'  => '动静混合',
+                'dynamic' => __('Dynamic (Pure PHP)', 'wxs-text-watermarking'),
+                'static'  => __('Static (Pure JS)', 'wxs-text-watermarking'),
+                'hybrid'  => __('Dynamic-Static Hybrid', 'wxs-text-watermarking'),
             ],
             'default' => 'hybrid',
-            'desc'    => '动态：纯PHP处理，推荐，确保没有安装如super cache页面缓存类似插件<br>静态：纯JS处理，不是很推荐，可被绕过<br>动静混合：登录用户用PHP，未登录用户用JS（适合有缓存的网站）<br>若开启JS模式或混合模式下，请开启WAF拦截假蜘蛛',
+            'desc'    => __('Dynamic: Pure PHP processing, recommended, ensures no page caching plugins like super cache are installed<br>Static: Pure JS processing, not highly recommended, can be bypassed<br>Dynamic-Static Hybrid: PHP for logged-in users, JS for non-logged-in users (suitable for websites with caching)<br>If JS mode or hybrid mode is enabled, please enable WAF to block fake crawlers', 'wxs-text-watermarking'),
             'dependency' => ['enable', '==', 1],
         ],
         
-        // 最小段落字数
+        // 最小段落长度
         [
             'id'      => 'min_paragraph_length',
             'type'    => 'number',
-            'title'   => '最小段落字数',
-            'desc'    => '少于此字数的段落不插入水印（建议15-30）',
+            'title'   => __('Minimum Paragraph Length', 'wxs-text-watermarking'),
+            'desc'    => __('Paragraphs with fewer than this number of characters will not have watermarks inserted (recommended 15-30)', 'wxs-text-watermarking'),
             'default' => 20,
             'min'     => 1,
             'dependency' => ['enable', '==', 1],
@@ -227,21 +233,21 @@ function wxs_watermark_get_basic_settings_fields() {
         [
             'id'      => 'insert_method',
             'type'    => 'select',
-            'title'   => '插入方式',
+            'title'   => __('Insertion Method', 'wxs-text-watermarking'),
             'options' => [
-                1 => '段落末尾插入',
-                2 => '随机位置插入',
-                3 => '固定字数插入',
+                1 => __('Insert at Paragraph End', 'wxs-text-watermarking'),
+                2 => __('Insert at Random Positions', 'wxs-text-watermarking'),
+                3 => __('Insert at Fixed Character Intervals', 'wxs-text-watermarking'),
             ],
             'default' => 2,
-            'desc'    => '选择水印在文章中的插入方式',
+            'desc'    => __('Select how watermarks are inserted into articles', 'wxs-text-watermarking'),
             'dependency' => ['enable', '==', 1],
         ],
         
         // 随机位置插入设置
         [
             'type'    => 'heading',
-            'content' => '随机位置插入设置',
+            'content' => __('Random Position Insertion Settings', 'wxs-text-watermarking'),
             'dependency' => [
                 ['enable', '==', 1],
                 ['insert_method', '==', 2]
@@ -250,10 +256,10 @@ function wxs_watermark_get_basic_settings_fields() {
         [
             'id'        => 'random_count_type',
             'type'      => 'select',
-            'title'     => '插入次数模式',
+            'title'     => __('Insertion Count Mode', 'wxs-text-watermarking'),
             'options'   => [
-                1 => '自定义次数',
-                2 => '按字数自动计算',
+                1 => __('Custom Count', 'wxs-text-watermarking'),
+                2 => __('Auto-calculate by Word Count', 'wxs-text-watermarking'),
             ],
             'default'   => 2,
             'dependency' => [
@@ -264,8 +270,8 @@ function wxs_watermark_get_basic_settings_fields() {
         [
             'id'        => 'random_custom_count',
             'type'      => 'number',
-            'title'     => '自定义插入次数',
-            'desc'      => '每段固定插入的水印次数',
+            'title'     => __('Custom Insertion Count', 'wxs-text-watermarking'),
+            'desc'      => __('Fixed number of watermark insertions per paragraph', 'wxs-text-watermarking'),
             'default'   => 1,
             'min'       => 1,
             'dependency' => [
@@ -277,8 +283,8 @@ function wxs_watermark_get_basic_settings_fields() {
         [
             'id'        => 'random_word_ratio',
             'type'      => 'number',
-            'title'     => '字数比例',
-            'desc'      => '每多少字增加1次插入（例：400=每400字插入1次）',
+            'title'     => __('Word Count Ratio', 'wxs-text-watermarking'),
+            'desc'      => __('Add 1 insertion per how many words (e.g., 400 = 1 insertion per 400 words)', 'wxs-text-watermarking'),
             'default'   => 400,
             'min'       => 50,
             'dependency' => [
@@ -291,7 +297,7 @@ function wxs_watermark_get_basic_settings_fields() {
         // 固定位置插入设置
         [
             'type'    => 'heading',
-            'content' => '固定字数插入设置',
+            'content' => __('Fixed Character Interval Insertion Settings', 'wxs-text-watermarking'),
             'dependency' => [
                 ['enable', '==', 1],
                 ['insert_method', '==', 3]
@@ -300,8 +306,8 @@ function wxs_watermark_get_basic_settings_fields() {
         [
             'id'      => 'fixed_interval',
             'type'    => 'number',
-            'title'   => '插入间隔',
-            'desc'    => '每多少字插入1次水印',
+            'title'   => __('Insertion Interval', 'wxs-text-watermarking'),
+            'desc'    => __('Insert watermark every how many characters', 'wxs-text-watermarking'),
             'default' => 20,
             'min'     => 5,
             'dependency' => [
@@ -314,10 +320,10 @@ function wxs_watermark_get_basic_settings_fields() {
         [
             'id'      => 'debug_mode',
             'type'    => 'switcher',
-            'title'   => '调试模式',
-            'label'   => '启用后水印将以可见文本形式显示（[水印调试:...]）',
+            'title'   => __('Debug Mode', 'wxs-text-watermarking'),
+            'label'   => __('When enabled, watermarks will be displayed as visible text ([Watermark Debug:...])', 'wxs-text-watermarking'),
             'default' => 0,
-            'desc'    => '用于测试水印效果，正式环境建议关闭',
+            'desc'    => __('Used for testing watermark effects, recommended to disable in production environment', 'wxs-text-watermarking'),
             'dependency' => ['enable', '==', 1],
         ],
     ];
@@ -328,7 +334,7 @@ function wxs_watermark_get_basic_settings_fields() {
  */
 function wxs_watermark_create_content_settings_section($prefix) {
     CSF::createSection($prefix, [
-        'title'  => '水印内容设置',
+        'title'  => __('Watermark Content Settings', 'wxs-text-watermarking'),
         'icon'   => 'fa fa-file-text',
         'fields' => wxs_watermark_get_content_settings_fields()
     ]);
@@ -342,36 +348,36 @@ function wxs_watermark_get_content_settings_fields() {
         [
             'id'      => 'include_ip',
             'type'    => 'switcher',
-            'title'   => '包含访问者IP',
-            'label'   => '访客的IP地址，用户溯源定位',
+            'title'   => __('Include Visitor IP', 'wxs-text-watermarking'),
+            'label'   => __('Visitor\'s IP address, for user traceability and positioning', 'wxs-text-watermarking'),
             'default' => 1,
         ],
         [
             'id'      => 'include_user',
             'type'    => 'switcher',
-            'title'   => '包含用户ID',
-            'label'   => '登录用户显示ID，游客显示"guest"',
+            'title'   => __('Include User ID', 'wxs-text-watermarking'),
+            'label'   => __('Show ID for logged-in users, show "guest" for visitors', 'wxs-text-watermarking'),
             'default' => 1,
         ],
         [
             'id'      => 'include_time',
             'type'    => 'switcher',
-            'title'   => '包含时间戳',
-            'label'   => '水印生成时的时间（YYYY-MM-DD HH:MM:SS）',
+            'title'   => __('Include Timestamp', 'wxs-text-watermarking'),
+            'label'   => __('Time when watermark was generated (YYYY-MM-DD HH:MM:SS)', 'wxs-text-watermarking'),
             'default' => 1,
         ],
         [
             'id'      => 'include_custom',
             'type'    => 'switcher',
-            'title'   => '包含自定义文本',
+            'title'   => __('Include Custom Text', 'wxs-text-watermarking'),
             'default' => 1,
         ],
         [
             'id'        => 'custom_text',
             'type'      => 'text',
-            'title'     => '自定义文本内容',
-            'desc'      => '建议包含版权信息（如"XX版权所有"）',
-            'default'   => (get_bloginfo('name') ? get_bloginfo('name') . ' 版权所有' : '王先生笔记 版权所有'),
+            'title'     => __('Custom Text Content', 'wxs-text-watermarking'),
+            'desc'      => __('Recommended to include copyright information (e.g., "XX All Rights Reserved")', 'wxs-text-watermarking'),
+            'default'   => (get_bloginfo('name') ? get_bloginfo('name') . __(' All Rights Reserved', 'wxs-text-watermarking') : __('Mr. Wang\'s Notes All Rights Reserved', 'wxs-text-watermarking')),
             'dependency' => [
                 ['include_custom', '==', 1]
             ],
@@ -384,7 +390,7 @@ function wxs_watermark_get_content_settings_fields() {
  */
 function wxs_watermark_create_html_settings_section($prefix) {
     CSF::createSection($prefix, [
-        'title'  => '高级设置',
+        'title'  => __('Advanced Settings', 'wxs-text-watermarking'),
         'icon'   => 'fa fa-cogs',
         'fields' => wxs_watermark_get_html_tags_fields(),
     ]);
@@ -398,22 +404,22 @@ function wxs_watermark_get_html_tags_fields() {
         [
             'id'      => 'html_tags',
             'type'    => 'text',
-            'title'   => '处理的HTML标签',
-            'desc'    => '输入要处理的HTML标签，用逗号<code>,</code>分隔，仅文章，不递归，仅一层，默认是<code>p</code>,<code>li</code><br>文章常见标签：<code>h2</code>到<code>h6</code>,<code>p</code>,<code>li</code>,<code>span</code>,<code>strong</code>,<code>em</code>,<code>b</code>,<code>i</code>,<code>blockquote</code>,<code>q</code>,等<br>不推荐：<code>code</code>,<code>pre</code>',
+            'title'   => __('Processed HTML Tags', 'wxs-text-watermarking'),
+            'desc'    => __('Enter HTML tags to process, separated by commas <code>,</code>, articles only, not recursive, only one level, defaults to <code>p</code>,<code>li</code><br>Common article tags: <code>h2</code> to <code>h6</code>,<code>p</code>,<code>li</code>,<code>span</code>,<code>strong</code>,<code>em</code>,<code>b</code>,<code>i</code>,<code>blockquote</code>,<code>q</code>, etc.<br>Not recommended: <code>code</code>,<code>pre</code>', 'wxs-text-watermarking'),
             'default' => 'p,li',
         ],
         [
             'id'      => 'js_global_enable',
             'type'    => 'switcher',
-            'title'   => 'JS全局处理开关',
-            'label'   => '开启后将根据下方选择器处理文章以外的内容，默认关闭',
+            'title'   => __('JS Global Processing Switch', 'wxs-text-watermarking'),
+            'label'   => __('When enabled, content outside articles will be processed based on the selectors below, disabled by default', 'wxs-text-watermarking'),
             'default' => 0,
         ],
         [
             'id'        => 'js_class_selectors',
             'type'      => 'text',
-            'title'     => 'Class选择器设置',
-            'desc'      => '仅JS生效，递归标签内全部，格式示例：<code>.css1</code>,<code>.css2</code>,<code>p.css3</code>,<code>span.css4</code>',
+            'title'     => __('Class Selector Settings', 'wxs-text-watermarking'),
+            'desc'      => __('JS only, recursively processes all within tags, format example: <code>.css1</code>,<code>.css2</code>,<code>p.css3</code>,<code>span.css4</code>', 'wxs-text-watermarking'),
             'default'   => '',
             'dependency' => [
                 ['js_global_enable', '==', 1]
@@ -422,8 +428,8 @@ function wxs_watermark_get_html_tags_fields() {
         [
             'id'        => 'js_id_selectors',
             'type'      => 'text',
-            'title'     => 'ID选择器设置',
-            'desc'      => '仅JS生效，递归标签内全部，格式示例：<code>#id1</code>,<code>#id2</code>，注意：CSS选择器规范不允许ID以数字开头(如<code>#123</code>)',
+            'title'     => __('ID Selector Settings', 'wxs-text-watermarking'),
+            'desc'      => __('JS only, recursively processes all within tags, format example: <code>#id1</code>,<code>#id2</code>, note: CSS selector specification does not allow IDs starting with numbers (like <code>#123</code>)', 'wxs-text-watermarking'),
             'default'   => '',
             'dependency' => [
                 ['js_global_enable', '==', 1]
@@ -432,12 +438,12 @@ function wxs_watermark_get_html_tags_fields() {
         [
             'id'        => 'global_force_article',
             'type'      => 'switcher',
-            'title'     => '文章页强制启用全局选择器',
-            'label'     => '开启后，即使在文章页，也会对全局选择器匹配的元素生效',
-            'desc'      => '需先开启「JS全局处理开关」，否则此设置无效',
-            'default'   => 0, // 默认关闭
+            'title'     => __('Force Enable Global Selectors on Article Pages', 'wxs-text-watermarking'),
+            'label'     => __('When enabled, even on article pages, global selector matched elements will take effect', 'wxs-text-watermarking'),
+            'desc'      => __('Requires "JS Global Processing Switch" to be enabled first, otherwise this setting has no effect', 'wxs-text-watermarking'),
+            'default'   => 0, // 默认禁用
             'dependency' => [
-                ['js_global_enable', '==', 1] // 仅当全局处理开启时显示
+                ['js_global_enable', '==', 1] // 只有全局处理启用时才显示
             ],
         ],
     ];
@@ -448,7 +454,7 @@ function wxs_watermark_get_html_tags_fields() {
  */
 function wxs_watermark_create_bot_filter_section($prefix) {
     CSF::createSection($prefix, [
-        'title'  => '爬虫过滤白名单',
+        'title'  => __('Crawler Filter Whitelist', 'wxs-text-watermarking'),
         'icon'   => 'fa fa-bug',
         'fields' => wxs_watermark_get_bot_filter_fields()
     ]);
@@ -465,8 +471,8 @@ function wxs_watermark_get_bot_filter_fields() {
             'attributes'  => array(
                     'rows' => 5,
                 ),
-            'title'   => '爬虫UA列表',
-            'desc'    => '每行一个爬虫标识，匹配时不插入水印，清空时不匹配，用于防止搜索引擎抓取错误，建议配合WAF使用，拦截假蜘蛛。',
+            'title'   => __('Crawler UA List', 'wxs-text-watermarking'),
+            'desc'    => __('One crawler identifier per line, no watermarks inserted when matched, no matching when empty, used to prevent search engines from crawling incorrectly, recommended to use with WAF to block fake crawlers.', 'wxs-text-watermarking'),
             'default' => "googlebot\nbingbot\nbaiduspider\nsogou web spider\n360spider\nyisouspider\nbytespider\nduckduckbot\nyandexbot\nyahoo",
         ],
     ];
