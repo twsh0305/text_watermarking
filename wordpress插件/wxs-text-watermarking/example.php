@@ -1,11 +1,10 @@
 <?php
 /**
  * @author: https://github.com/twsh0305
- * @description: 文本水印功能
+ * @description: 文本水印功能，该功能在文本内容中插入盲水印
  * @version: 1.0.5
  * 文章地址：https://wxsnote.cn/
  * 开源地址：https://github.com/twsh0305/text_watermarking
- * 说明：该功能在文本内容中插入盲水印
  */
 // 变体选择器块定义
 define('VARIATION_SELECTOR_START', 0xfe00);
