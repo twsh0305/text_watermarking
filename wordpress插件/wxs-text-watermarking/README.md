@@ -2,6 +2,14 @@
 
 一款专为WordPress博客设计的文本版权保护工具，通过在文章内容中嵌入不可见的盲水印信息，实现原创内容的版权追溯与侵权取证。
 
+[中文文档](https://github.com/twsh0305/text_watermarking/blob/main/README.md) | [English document](https://github.com/twsh0305/text_watermarking/blob/main/README_EN.md)
+
+## 截图
+<img width="2539" height="1085" alt="image" src="https://github.com/user-attachments/assets/371b429b-2885-48db-ba43-98280b972307" />
+<img width="2538" height="983" alt="image" src="https://github.com/user-attachments/assets/55a8dd33-7ec9-4a59-a189-6092d190b4fb" />
+<img width="2536" height="968" alt="image" src="https://github.com/user-attachments/assets/cc79e343-edca-428f-9654-44ed14973540" />
+<img width="2312" height="564" alt="image" src="https://github.com/user-attachments/assets/7ab6fa68-6f22-4f0e-b5f2-4f6348cb4015" />
+
 
 ## 核心功能
 
@@ -92,11 +100,10 @@
 ## 插件基于以下开源项目
 后台框架：[Codestar Framework](https://github.com/Codestar/codestar-framework) 加密方案：[Emoji Encoder](https://github.com/paulgb/emoji-encoder)
 
-## 开源协议
-
-本项目采用MIT协议开源，简述要求：
-- 禁止移除或修改作者信息
-- 转载转载请注明开源地址
+## 许可证
+本插件基于GPLv3许可证发布（详见LICENSE文件）。  
+- 允许自用、修改，但**必须保留原始版权声明**（禁止移除或修改代码中的作者信息）。  
+- 若分发修改后的版本，必须以GPLv3或更高版本开源，并提供完整源代码。
 
 ## 作者信息
 
