@@ -1,4 +1,4 @@
-# Text Blind Watermark (WordPress Plugin)
+# Text Blind Watermark
 
 A specialized text copyright protection tool designed for WordPress blogs. It enables copyright tracing and infringement evidence collection of original content by embedding invisible blind watermark information in article content.
 
@@ -10,6 +10,17 @@ A specialized text copyright protection tool designed for WordPress blogs. It en
 <img width="2536" height="968" alt="image" src="https://github.com/user-attachments/assets/cc79e343-edca-428f-9654-44ed14973540" />
 <img width="2312" height="564" alt="image" src="https://github.com/user-attachments/assets/4516b880-1ded-434d-a560-f31e1756a2ea" />
 
+## update log
+- 1.0.0 Pure function hook code
+- 1.0.1 Added: Plugin creation
+- 1.0.2 Added: Introduced CSF framework and created settings panel
+- 1.0.3 New: JS control
+- 1.0.4 Fixed: Blank pages on some WordPress settings panel pages
+- 1.0.5 Fixed: Missing styles issue with CSF framework
+- 1.0.6 Fixed: File import errors
+- 1.0.7 Added: Tag selection, class element selection and ID container selection
+- 1.0.8 Fixed: 1. Use WP local time; 2. Directly call the CSF framework of Zibi Theme if Zibi Theme exists; 3. Fixed PHP 8.x errors; 4. Fixed the issue where global JS doesn’t work on articles
+- 1.0.9 Fixed: Internationalization for multilingual translation
 
 ## Core Features
 
