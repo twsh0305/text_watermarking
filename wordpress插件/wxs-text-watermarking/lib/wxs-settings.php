@@ -4,7 +4,7 @@
  * 
  * @package WXS Text Watermarking
  * @author 大绵羊 天无神话
- * @version 1.0.8
+ * @version 1.0.9
  */
 
 // 防止直接访问
@@ -101,8 +101,8 @@ function wxs_watermark_get_welcome_content() {
             </div>
         </div>
         <p><?php _e('Please configure plugin functions through the left tabs. In debug mode, watermarks will be displayed as visible text for testing purposes.', 'wxs-text-watermarking'); ?></p>
-        <a href="https://wxsnote.cn/wbmsy" target="_blank" class="wxs-watermark-btn"><i class="fa fa-paper-plane-o"></i> <?php _e('Go to Extract Watermark', 'wxs-text-watermarking'); ?></a>
-        <a href="https://github.com/twsh0305/text_watermarking/releases/tag/1.0.7" target="_blank" class="wxs-watermark-btn"><i class="fa fa-cloud-upload"></i> <?php _e('Check for Updates', 'wxs-text-watermarking'); ?></a>
+        <a href="https://wxsnote.cn/wbmsy" target="_blank" class="wxs-watermark-btn"><i class="fa fa-paper-plane"></i> <?php _e('Go to Extract Watermark', 'wxs-text-watermarking'); ?></a>
+        <a href="https://github.com/twsh0305/text_watermarking/releases/latest" target="_blank" class="wxs-watermark-btn"><i class="fa fa-cloud-upload"></i> <?php _e('Check for Updates', 'wxs-text-watermarking'); ?></a>
         <p style="color:red"><?php _e('Minor issue; for example, URLs, if you don\'t add hyperlinks, you should give code highlighting, pure P tag URLs cannot be perfectly adapted', 'wxs-text-watermarking'); ?></p>
         <p><?php _e('Plugin Author: Tianwu Shenhua', 'wxs-text-watermarking'); ?></p>
         <p><?php _e('Author QQ: 2031301686', 'wxs-text-watermarking'); ?></p>
@@ -124,6 +124,7 @@ function wxs_watermark_get_welcome_content() {
         <li>1.0.6 <?php _e('Fixed: File import error', 'wxs-text-watermarking'); ?></li>
         <li>1.0.7 <?php _e('Added: Tag selection, class element selection and ID container selection', 'wxs-text-watermarking'); ?></li>
         <li>1.0.8 <?php _e('Fixed: 1.Use WordPress local time, 2.If Zibll theme exists, directly use Zibll theme\'s CSF framework, 3.Fixed PHP 8.x errors, 4.Fixed global JS not working in articles issue', 'wxs-text-watermarking'); ?></li>
+        <li>1.0.9 <?php _e('Fixed: Internationalization of multilingual translation', 'wxs-text-watermarking'); ?></li>
         </ul>
         <p><?php _e('Admin Framework: ', 'wxs-text-watermarking'); ?><a href="https://github.com/Codestar/codestar-framework" target="_blank">Codestar Framework</a> <?php _e('Encryption Solution: ', 'wxs-text-watermarking'); ?><a href="https://github.com/paulgb/emoji-encoder" target="_blank">Emoji Encoder</a></p>
     </div>
