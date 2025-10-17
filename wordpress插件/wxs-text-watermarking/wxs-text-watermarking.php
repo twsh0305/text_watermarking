@@ -727,7 +727,7 @@ add_action("wp_enqueue_scripts", function () {
     if ($load_js) {
         wp_enqueue_script(
             "wxs-watermark-script",
-            WXS_WATERMARK_PLUGIN_URL . "lib/assets/js/index.js",
+            WXS_WATERMARK_PLUGIN_URL . "lib/assets/js/index.min.js",
             [],
             $version,
             true
