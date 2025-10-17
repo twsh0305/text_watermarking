@@ -6,7 +6,10 @@ Description: 为文章内容添加盲水印，支持多种插入方式和自定�
 Version: 1.0.8
 Author: 天无神话
 Author URI: https://wxsnote.cn/
-License: MIT
+License: GPLv3 or later
+License URI: https://www.gnu.org/licenses/gpl-3.0.html
+Copyright (C) 2025 天无神话
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
 */
 
 if (!defined("ABSPATH")) {
