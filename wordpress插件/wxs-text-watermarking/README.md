@@ -1,4 +1,4 @@
-# 文本盲水印（WordPress插件）
+# 文本盲水印
 
 一款专为WordPress博客设计的文本版权保护工具，通过在文章内容中嵌入不可见的盲水印信息，实现原创内容的版权追溯与侵权取证。
 
@@ -10,6 +10,17 @@
 <img width="2536" height="968" alt="image" src="https://github.com/user-attachments/assets/cc79e343-edca-428f-9654-44ed14973540" />
 <img width="2312" height="564" alt="image" src="https://github.com/user-attachments/assets/7ab6fa68-6f22-4f0e-b5f2-4f6348cb4015" />
 
+## 更新记录
+- 1.0.0 纯function钩子代码
+- 1.0.1 增加：创建插件
+- 1.0.2 增加：引入CSF框架，创建设置面板
+- 1.0.3 新增：js控制
+- 1.0.4 修复：部分wordpress设置面板页面空白
+- 1.0.5 修复：CSF框架缺失样式的问题
+- 1.0.6 修复：引入文件错误
+- 1.0.7 增加：标签选择，class元素选择及id容器选择
+- 1.0.8 修复：1.使用wp的本地时间，2.如果存在子比主题，则直接调用子比主题的CSF框架，3.修复PHP8.x的报错，4.修复全局js文章不生效的问题
+- 1.0.9 修复：多语言翻译的国际化
 
 ## 核心功能
 
