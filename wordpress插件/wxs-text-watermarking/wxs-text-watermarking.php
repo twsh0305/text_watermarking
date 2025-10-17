@@ -3,7 +3,7 @@
 Plugin Name: Blind text watermarking
 Plugin URI: https://github.com/twsh0305/text_watermarking
 Description: Add blind watermark to article content, support multiple insertion methods and custom configurations, filter UA whitelist
-Version: 1.0.8
+Version: 1.0.9
 Author: 天无神话
 Author URI: https://wxsnote.cn/
 Text Domain: wxs-text-watermarking
@@ -20,7 +20,7 @@ if (!defined("ABSPATH")) {
 // Plugin unified version // 插件统一版本
 function wxs_watermark_plugin_version()
 {
-    return "1.0.8";
+    return "1.0.9";
 }
 $version = wxs_watermark_plugin_version();
 
