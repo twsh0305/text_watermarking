@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: Blind text watermarking
+Plugin Name: Text Blind Watermark
 Plugin URI: https://github.com/twsh0305/text_watermarking
 Description: Add blind watermark to article content, support multiple insertion methods and custom configurations, filter UA whitelist
 Version: 1.0.9
@@ -27,7 +27,7 @@ $version = wxs_watermark_plugin_version();
 // Check mbstring PHP extension // 检查mbstring的PHP扩展
 if (!extension_loaded("mbstring")) {
     add_action("admin_notices", function () {
-        echo '<div class="error"><p>【Text Blind Watermarking】Plugin depends on mbstring PHP extension, please enable or install this PHP extension.</p></div>';
+        echo '<div class="error"><p>' . esc_html__('【Text Blind Watermarking】Plugin depends on mbstring PHP extension, please enable or install this PHP extension.', 'wxs-text-watermarking') . '</p></div>';
     });
     return;
 }
@@ -183,7 +183,7 @@ if (is_zibll_themes()) {
             require_once $full_path;
         } else {
             // Use original Chinese before text domain is loaded // 在文本域加载前使用原始中文
-            error_log("Text Blind Watermarking Plugin Error: Missing necessary file - {$full_path}");
+            error_log(esc_html__("Text Blind Watermarking Plugin Error: Missing necessary file - ", 'wxs-text-watermarking') . $full_path);
         }
     }
 }
@@ -207,9 +207,9 @@ function wxs_watermark_output_js_vars()
 
     // Output variables to page // 输出变量到页面
     echo "<script type='text/javascript'>\n";
-    echo "window.wxs_isUserLoggedIn = {$is_user_logged_in};\n";
-    echo "window.wxs_current_user_id = {$current_user_id};\n";
-    echo "window.wxs_isArticlePage = {$is_article_page};\n";
+    echo "window.wxs_isUserLoggedIn = " . esc_js($is_user_logged_in) . ";\n";
+    echo "window.wxs_current_user_id = " . esc_js($current_user_id) . ";\n";
+    echo "window.wxs_isArticlePage = " . esc_js($is_article_page) . ";\n";
     echo "</script>\n";
 }
 
@@ -221,8 +221,8 @@ function wxs_watermark_add_fallback_menu()
     $prefix = "wxs_watermark_init_csf_options"; // Use new prefix // 使用新前缀
     // Add top-level menu // 添加顶级菜单
     add_menu_page(
-        __("Text Blind Watermark Configuration", 'wxs-text-watermarking'),
-        __("Text Watermark", 'wxs-text-watermarking'),
+        esc_html__("Text Blind Watermark Configuration", 'wxs-text-watermarking'),
+        esc_html__("Text Watermark", 'wxs-text-watermarking'),
         "manage_options",
         $prefix, // Menu identifier uses new prefix // 菜单标识使用新前缀
         "wxs_watermark_fallback_page",
@@ -233,8 +233,8 @@ function wxs_watermark_add_fallback_menu()
     // Add submenu // 添加子菜单
     add_submenu_page(
         $prefix,
-        __("Text Blind Watermark Configuration", 'wxs-text-watermarking'),
-        __("Settings", 'wxs-text-watermarking'),
+        esc_html__("Text Blind Watermark Configuration", 'wxs-text-watermarking'),
+        esc_html__("Settings", 'wxs-text-watermarking'),
         "manage_options",
         $prefix,
         "wxs_watermark_fallback_page"
@@ -247,19 +247,19 @@ function wxs_watermark_add_fallback_menu()
 function wxs_watermark_fallback_page()
 {
     if (!current_user_can("manage_options")) {
-        wp_die(__("You do not have sufficient permissions to access this page.", 'wxs-text-watermarking'));
+        wp_die(esc_html__("You do not have sufficient permissions to access this page.", 'wxs-text-watermarking'));
     }
 
     // Check if CSF is loaded // 检查CSF是否加载
-    $csf_loaded = class_exists("CSF") ? __("Loaded", 'wxs-text-watermarking') : __("Not Loaded", 'wxs-text-watermarking');
+    $csf_loaded = class_exists("CSF") ? esc_html__("Loaded", 'wxs-text-watermarking') : esc_html__("Not Loaded", 'wxs-text-watermarking');
 
     echo '<div class="wrap">';
-    echo "<h1>" . __("Text Blind Watermark Configuration", 'wxs-text-watermarking') . "</h1>";
+    echo "<h1>" . esc_html__("Text Blind Watermark Configuration", 'wxs-text-watermarking') . "</h1>";
     echo '<div class="notice notice-warning">';
-    echo "<p>" . __("Detected that the configuration panel framework did not load properly, possibly due to missing or corrupted files.", 'wxs-text-watermarking') . "</p>";
-    echo "<p>" . __("CSF Framework Status: ", 'wxs-text-watermarking') . $csf_loaded . "</p>";
-    echo "<p>" . __("Please check if the ", 'wxs-text-watermarking') . "<code>inc/codestar-framework/</code> " . __("folder exists and is complete.", 'wxs-text-watermarking') . "</p>";
-    echo "<p>" . __("If the problem persists, please reinstall the plugin.", 'wxs-text-watermarking') . "</p>";
+    echo "<p>" . esc_html__("Detected that the configuration panel framework did not load properly, possibly due to missing or corrupted files.", 'wxs-text-watermarking') . "</p>";
+    echo "<p>" . esc_html__("CSF Framework Status: ", 'wxs-text-watermarking') . esc_html($csf_loaded) . "</p>"; // Fixed: Escaped output
+    echo "<p>" . esc_html__("Please check if the ", 'wxs-text-watermarking') . "<code>inc/codestar-framework/</code> " . esc_html__("folder exists and is complete.", 'wxs-text-watermarking') . "</p>";
+    echo "<p>" . esc_html__("If the problem persists, please reinstall the plugin.", 'wxs-text-watermarking') . "</p>";
     echo "</div>";
     echo "</div>";
 }
@@ -295,13 +295,18 @@ function wxs_toVariationSelector($byte)
  */
 function wxs_get_client_ip()
 {
-    $ip = $_SERVER["REMOTE_ADDR"] ?? "unknown";
-    if (!empty($_SERVER["HTTP_X_FORWARDED_FOR"])) {
-        $ip_list = explode(",", $_SERVER["HTTP_X_FORWARDED_FOR"]);
-        $ip = trim($ip_list[0]); // Take first valid IP // 取第一个有效IP
-    } elseif (!empty($_SERVER["HTTP_CLIENT_IP"])) {
-        $ip = trim($_SERVER["HTTP_CLIENT_IP"]);
+    $ip = 'unknown';
+    
+    // Sanitize and validate IP from various headers // 消毒和验证来自各种标头的IP
+    if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        $ip_list = explode(',', wp_unslash($_SERVER['HTTP_X_FORWARDED_FOR']));
+        $ip = sanitize_text_field(trim($ip_list[0])); // Take first valid IP and sanitize // 取第一个有效IP并消毒
+    } elseif (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+        $ip = sanitize_text_field(trim(wp_unslash($_SERVER['HTTP_CLIENT_IP'])));
+    } elseif (!empty($_SERVER['REMOTE_ADDR'])) {
+        $ip = sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR']));
     }
+    
     return filter_var($ip, FILTER_VALIDATE_IP) ? $ip : "unknown";
 }
 
@@ -322,7 +327,7 @@ function wxs_generate_watermark_raw()
         function_exists("wp_get_current_user")
     ) {
         $user = wp_get_current_user();
-        $parts[] = "USER:" . ($user->exists() ? $user->ID : __("guest", 'wxs-text-watermarking'));
+        $parts[] = "USER:" . ($user->exists() ? $user->ID : esc_html__("guest", 'wxs-text-watermarking'));
     }
 
     if (!empty($wxs_watermark_config["include_time"])) {
@@ -449,7 +454,7 @@ function wxs_process_paragraph($text, $watermark)
 
             for ($i = 0; $i < $insert_count; $i++) {
                 do {
-                    $pos = rand(1, $text_length - 1);
+                    $pos = wp_rand(1, $text_length - 1);
                 } while (in_array($pos, $positions));
                 $positions[] = $pos;
             }
@@ -516,7 +521,7 @@ function wxs_process_html_content($content)
     $isDebug = !empty($wxs_watermark_config["debug_mode"]);
     $rawWatermark = wxs_generate_watermark_raw();
     $watermark = $isDebug
-        ? "[" . __("Watermark Debug PHP Mode:", 'wxs-text-watermarking') . "{$rawWatermark}]"
+        ? "[" . esc_html__("Watermark Debug PHP Mode:", 'wxs-text-watermarking') . "{$rawWatermark}]"
         : wxs_generate_watermark_selector();
 
     if (empty($watermark)) {
@@ -576,6 +581,16 @@ function wxs_process_html_content($content)
 }
 
 /**
+ * Get sanitized user agent // 获取消毒后的用户代理
+ */
+function wxs_get_sanitized_user_agent() {
+    if (isset($_SERVER['HTTP_USER_AGENT'])) {
+        return sanitize_text_field(wp_unslash($_SERVER['HTTP_USER_AGENT']));
+    }
+    return '';
+}
+
+/**
  * Main processing function - decide processing method based on run mode // 主处理函数 - 根据运行模式决定处理方式
  */
 function wxs_watermark_main($content)
@@ -593,7 +608,7 @@ function wxs_watermark_main($content)
         : "hybrid";
 
     // Crawler filtering // 爬虫过滤
-    $user_agent = strtolower($_SERVER["HTTP_USER_AGENT"] ?? "");
+    $user_agent = strtolower(wxs_get_sanitized_user_agent());
     $bot_ua_list = [];
     if (!empty($wxs_watermark_config["bot_ua"])) {
         // Filter empty values and spaces // 过滤空值和空格
@@ -632,8 +647,8 @@ function wxs_watermark_main($content)
             $is_logged_in = is_user_logged_in();
             if (!empty($wxs_watermark_config["debug_mode"])) {
                 error_log(
-                    __("Hybrid Mode Processing - User Login Status: ", 'wxs-text-watermarking') .
-                        ($is_logged_in ? __("Logged in (PHP processing)", 'wxs-text-watermarking') : __("Not logged in (JS processing)", 'wxs-text-watermarking'))
+                    esc_html__("Hybrid Mode Processing - User Login Status: ", 'wxs-text-watermarking') .
+                        ($is_logged_in ? esc_html__("Logged in (PHP processing)", 'wxs-text-watermarking') : esc_html__("Not logged in (JS processing)", 'wxs-text-watermarking'))
                 );
             }
             return $is_logged_in
@@ -672,7 +687,7 @@ add_action("wp_enqueue_scripts", function () {
         : "hybrid";
 
     // Crawler detection // 爬虫检测
-    $user_agent = strtolower($_SERVER["HTTP_USER_AGENT"] ?? "");
+    $user_agent = strtolower(wxs_get_sanitized_user_agent());
     $bot_ua_list = [];
     if (!empty($wxs_watermark_config["bot_ua"])) {
         $bot_ua_list = array_filter(
@@ -699,7 +714,7 @@ add_action("wp_enqueue_scripts", function () {
         $load_js = true;
         // Record loading information in debug mode // 调试模式下记录加载信息
         if (!empty($wxs_watermark_config["debug_mode"])) {
-            error_log(__("Pure JS mode enabled, loading watermark script", 'wxs-text-watermarking'));
+            error_log(esc_html__("Pure JS mode enabled, loading watermark script", 'wxs-text-watermarking'));
         }
     } elseif ($run_mode === "dynamic") {
         $load_js = false;
@@ -712,7 +727,7 @@ add_action("wp_enqueue_scripts", function () {
     if ($load_js) {
         wp_enqueue_script(
             "wxs-watermark-script",
-            WXS_WATERMARK_PLUGIN_URL . "lib/assets/js/index.min.js",
+            WXS_WATERMARK_PLUGIN_URL . "lib/assets/js/index.js",
             [],
             $version,
             true
@@ -737,7 +752,7 @@ function wxs_output_watermark_config()
     $is_debug = !empty($wxs_watermark_config["debug_mode"]);
     if ($is_debug) {
         error_log(
-            __("Watermark Debug Mode Enabled - Configuration Information: ", 'wxs-text-watermarking') .
+            esc_html__("Watermark Debug Mode Enabled - Configuration Information: ", 'wxs-text-watermarking') .
                 print_r($wxs_watermark_config, true)
         );
     }
@@ -756,7 +771,7 @@ function wxs_output_watermark_config()
         "enable" => isset($wxs_watermark_config["enable"])
             ? $wxs_watermark_config["enable"]
             : 0,
-        "ip_endpoint" => WXS_WATERMARK_PLUGIN_URL . "fuckip.php",
+        "ip_endpoint" => esc_js(WXS_WATERMARK_PLUGIN_URL . "obtain-an-ip.php"),
         "min_paragraph_length" => isset(
             $wxs_watermark_config["min_paragraph_length"]
         )
@@ -799,19 +814,19 @@ function wxs_output_watermark_config()
                 ? $wxs_watermark_config["include_custom"]
                 : 1,
             "custom_text" => isset($wxs_watermark_config["custom_text"])
-                ? $wxs_watermark_config["custom_text"]
-                : __("Mr. Wang's Notes All Rights Reserved", 'wxs-text-watermarking'),
+                ? esc_js($wxs_watermark_config["custom_text"])
+                : esc_js(esc_html__("Mr. Wang's Notes All Rights Reserved", 'wxs-text-watermarking')),
         ],
         // New configuration items // 新增配置项
-        "htmlTags" => $html_tags,
+        "htmlTags" => array_map('esc_js', $html_tags),
         "jsGlobalEnable" => isset($wxs_watermark_config["js_global_enable"])
             ? $wxs_watermark_config["js_global_enable"]
             : 0,
         "jsClassSelectors" => isset($wxs_watermark_config["js_class_selectors"])
-            ? $wxs_watermark_config["js_class_selectors"]
+            ? esc_js($wxs_watermark_config["js_class_selectors"])
             : "",
         "jsIdSelectors" => isset($wxs_watermark_config["js_id_selectors"])
-            ? $wxs_watermark_config["js_id_selectors"]
+            ? esc_js($wxs_watermark_config["js_id_selectors"])
             : "",
         "global_force_article" => isset(
             $wxs_watermark_config["global_force_article"]
@@ -820,11 +835,11 @@ function wxs_output_watermark_config()
             : 0,
 
         "bot_ua" => isset($wxs_watermark_config["bot_ua"])
-            ? explode("\n", $wxs_watermark_config["bot_ua"])
+            ? array_map('esc_js', array_filter(explode("\n", $wxs_watermark_config["bot_ua"])))
             : [],
         "debug_mode" => $is_debug ? 1 : 0, // Ensure it's numeric type // 确保是数字类型
         "run_mode" => isset($wxs_watermark_config["run_mode"])
-            ? $wxs_watermark_config["run_mode"]
+            ? esc_js($wxs_watermark_config["run_mode"])
             : "hybrid", // Pass run mode // 传递运行模式
     ];
 
