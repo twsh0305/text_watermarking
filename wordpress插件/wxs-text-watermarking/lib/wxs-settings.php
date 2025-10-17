@@ -4,7 +4,7 @@
  * 
  * @package WXS Text Watermarking
  * @author 大绵羊 天无神话
- * @version 1.0.9
+ * @version 1.0.8
  */
 
 // 防止直接访问
