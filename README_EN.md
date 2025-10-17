@@ -101,11 +101,10 @@ To detect watermark information in text, you can use two methods:
 ## Plugin based on the following open-source projects
 background frame：[Codestar Framework](https://github.com/Codestar/codestar-framework) encryption scheme：[Emoji Encoder](https://github.com/paulgb/emoji-encoder)
 
-## open source protocol
-
-This project uses MIT protocol open source, brief description of requirements：
-- Do not remove or modify author information
-- Please indicate the open source address.
+## License
+This plug-in is released under the GPLv3 license (see LICENSE file for details).  
+- Use and modification are permitted, but **the original copyright notice** must be retained (removal or modification of author information in the code is prohibited).  
+- If a modified version is distributed, it must be open-sourced as GPLv3 or later, and the full source code must be available.
 
 ## information of the author
 
