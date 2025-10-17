@@ -100,11 +100,10 @@
 ## 插件基于以下开源项目
 后台框架：[Codestar Framework](https://github.com/Codestar/codestar-framework) 加密方案：[Emoji Encoder](https://github.com/paulgb/emoji-encoder)
 
-## 开源协议
-
-本项目采用MIT协议开源，简述要求：
-- 禁止移除或修改作者信息
-- 转载转载请注明开源地址
+## 许可证
+本插件基于GPLv3许可证发布（详见LICENSE文件）。  
+- 允许自用、修改，但**必须保留原始版权声明**（禁止移除或修改代码中的作者信息）。  
+- 若分发修改后的版本，必须以GPLv3或更高版本开源，并提供完整源代码。
 
 ## 作者信息
 
