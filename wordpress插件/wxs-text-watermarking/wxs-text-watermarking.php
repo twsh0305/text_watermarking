@@ -258,7 +258,7 @@ function wxs_watermark_fallback_page()
     echo '<div class="notice notice-warning">';
     echo "<p>" . esc_html__("Detected that the configuration panel framework did not load properly, possibly due to missing or corrupted files.", 'wxs-text-watermarking') . "</p>";
     echo "<p>" . esc_html__("CSF Framework Status: ", 'wxs-text-watermarking') . esc_html($csf_loaded) . "</p>"; // Fixed: Escaped output
-    echo "<p>" . esc_html__("Please check if the ", 'wxs-text-watermarking') . "<code>inc/codestar-framework/</code> " . esc_html__("folder exists and is complete.", 'wxs-text-watermarking') . "</p>";
+    echo "<p>" . esc_html__("Please check if the ", 'wxs-text-watermarking') . "<code>lib/codestar-framework/</code> " . esc_html__("folder exists and is complete.", 'wxs-text-watermarking') . "</p>";
     echo "<p>" . esc_html__("If the problem persists, please reinstall the plugin.", 'wxs-text-watermarking') . "</p>";
     echo "</div>";
     echo "</div>";
