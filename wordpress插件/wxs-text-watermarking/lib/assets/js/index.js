@@ -241,11 +241,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 ? Math.max(1, this.random.custom_count) 
                 : Math.max(1, Math.floor(textLength / this.random.word_based_ratio));
             
-            const maxPossibleCount = Math.floor(textLength / 50);
+            // 修复：确保至少能插入1次水印
+            const maxPossibleCount = Math.max(1, Math.floor(textLength / 10)); // 降低分母，确保至少1次
             count = Math.min(count, maxPossibleCount);
             
             if (isDebug) {
-                console.log(`插入次数: 配置=${this.random.custom_count}, 实际=${count}`);
+                console.log(`插入次数计算: 文本长度=${textLength}, 理论计算=${count}, 最大可能=${maxPossibleCount}`);
             }
             return count;
         }
@@ -253,18 +254,20 @@ document.addEventListener('DOMContentLoaded', function() {
         getRandomPositions(textLength) {
             const positions = [];
             const count = this.getInsertCount(textLength);
+            
+            // 如果计算出的插入次数为0，强制插入1次
+            const actualCount = count <= 0 ? 1 : count;
+            
             const safeStart = 5;
-            const safeEnd = textLength - 5;
+            const safeEnd = Math.max(safeStart + 1, textLength - 5); // 确保有足够的空间
             
             if (safeStart >= safeEnd) {
+                // 如果文本太短，就在中间插入
                 return [Math.floor(textLength / 2)];
             }
             
-            const maxPossiblePositions = Math.floor((safeEnd - safeStart) / 30);
-            const actualCount = Math.min(count, maxPossiblePositions);
-            
             if (isDebug) {
-                console.log(`生成随机位置: 需求=${count}, 实际=${actualCount}, 范围=[${safeStart}, ${safeEnd}]`);
+                console.log(`生成随机位置: 需求=${actualCount}, 文本长度=${textLength}, 范围=[${safeStart}, ${safeEnd}]`);
             }
             
             for (let i = 0; i < actualCount; i++) {
@@ -278,13 +281,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     attempts++;
                     
                     if (attempts >= this.maxPositionAttempts) {
-                        if (isDebug) {
-                            console.warn(`生成位置${i+1}超过最大尝试次数(${this.maxPositionAttempts})，可能继续位置`);
-                        }
+                        // 如果尝试次数过多，使用备选位置
+                        pos = safeStart + Math.floor(i * (safeEnd - safeStart) / actualCount);
+                        foundValidPosition = true;
                         break;
                     }
                     
-                    if (!positions.some(p => Math.abs(p - pos) < 30)) {
+                    // 降低最小间隔要求，从30降到10，适应短文本
+                    if (!positions.some(p => Math.abs(p - pos) < 10)) {
                         foundValidPosition = true;
                         break;
                     }
@@ -294,10 +298,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     positions.push(pos);
                     if (isDebug) {
                         console.log(`生成位置 ${i+1}: ${pos} (尝试${attempts}次)`);
-                    }
-                } else {
-                    if (isDebug) {
-                        console.warn(`无法为位置${i+1}找到合适位置，跳过`);
                     }
                 }
             }
@@ -318,21 +318,35 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log(`处理文本: 长度=${textLength}, 最小要求=${this.minLength}`);
             }
             
-            if (textLength < this.minLength) {
-                return text;
+            // 修复：即使文本长度小于最小值，也尝试插入水印（但只在文本足够长时）
+            if (textLength < 5) {
+                return text; // 太短的文本不处理
             }
             
             let watermark;
             try {
                 watermark = await this.generateWatermark();
                 if (!watermark) return text;
+                
+                if (isDebug) {
+                    console.log(`水印长度: ${watermark.length}, 内容: ${watermark}`);
+                }
             } catch (e) {
                 if (isDebug) {
-                    console.error('水印印生成失败:', e);
+                    console.error('水印生成失败:', e);
                 }
                 return text;
             }
-
+        
+            // 根据文本长度选择插入策略
+            if (textLength < this.minLength) {
+                // 短文本处理：只在末尾插入
+                if (isDebug) {
+                    console.log('短文本，使用末尾插入策略');
+                }
+                return text + watermark;
+            }
+        
             switch (this.insertMethod) {
                 case 1: 
                     return text + watermark;
@@ -343,11 +357,19 @@ document.addEventListener('DOMContentLoaded', function() {
                         console.log(`随机插入位置: ${JSON.stringify(positions)}`);
                     }
                     
+                    // 修复：如果没有生成位置，使用末尾插入
+                    if (positions.length === 0) {
+                        if (isDebug) {
+                            console.log('未生成插入位置，使用末尾插入');
+                        }
+                        return text + watermark;
+                    }
+                    
                     let result = '';
                     let lastPos = 0;
                     
                     for (const pos of positions) {
-                        const currentPos = Math.max(lastPos, pos);
+                        const currentPos = Math.max(lastPos, Math.min(pos, textLength));
                         result += text.substring(lastPos, currentPos);
                         result += watermark;
                         lastPos = currentPos;
@@ -359,9 +381,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 case 3: {
                     let result = '';
+                    const interval = Math.max(5, this.fixed.interval); // 确保间隔不要太长
                     for (let i = 0; i < textLength; i++) {
                         result += text[i];
-                        if ((i + 1) % this.fixed.interval === 0 && i < textLength - 1) {
+                        if ((i + 1) % interval === 0 && i < textLength - 1) {
                             result += watermark;
                         }
                     }
