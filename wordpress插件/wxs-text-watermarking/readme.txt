@@ -24,8 +24,8 @@ Working Principle:
 Based on Variation Selectors in the Unicode character set (U+FE00-U+FE0F, U+E0100-U+E01EF) which are visually invisible. Watermark generation converts info (IP, user ID, etc.) to byte sequences, then to variation selector characters via mapping algorithm. Invisible characters are embedded per rules and restored via reverse parsing during extraction.
 
 Installation Requirements:
-- Server environment: PHP 7.0+
-- WordPress version: 4.7+
+- Server environment: PHP 7.4
+- WordPress version: 6.3
 
 Installation Steps:
 1. Download the plugin source code zip package.
@@ -92,8 +92,9 @@ The plugin automatically clears all configuration data during uninstallation, le
 
 == Changelog ==
 = 1.0.9 =
-* Fixed: Internationalization for multilingual translation
-* Updated: Unified lowercase naming for all core files (e.g., renamed "Extract.php" to "extract.php") to resolve case-sensitive file system conflicts
+* Added: Multilingual internationalization, 
+* Fixed: External resource localization
+* Fixed: Compliance with WordPress plugin development specifications, using WP functions
 
 = 1.0.8 =
 * Fixed: Use WP local time
@@ -127,7 +128,7 @@ The plugin automatically clears all configuration data during uninstallation, le
 
 == Upgrade Notice ==
 = 1.0.9 =
-1. Fixed multilingual translation internationalization issues, ensuring proper display in different language environments.
+Fixed multilingual translation internationalization issues, ensuring proper display in different language environments.
 
 = 1.0.8 =
 Resolved 4 key issues: WP local time usage, Zibi Theme CSF Framework compatibility, PHP 8.x errors, and global JS article ineffectiveness. Critical for PHP 8.x users.
