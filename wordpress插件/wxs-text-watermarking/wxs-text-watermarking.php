@@ -7,8 +7,8 @@
  * Requires PHP: 7.4
  * Version: 1.0.9
  * Author: 天无神话
- * License: GPLv3 or later
- * License URI: https://www.gnu.org/licenses/gpl-3.0.html
+ * License: GPLv2 or later
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: wxs-text-watermarking
  * Domain Path: /languages
  */
