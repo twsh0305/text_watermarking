@@ -20,7 +20,7 @@ A specialized text copyright protection tool designed for WordPress blogs. It en
 - 1.0.6 Fixed: File import errors
 - 1.0.7 Added: Tag selection, class element selection and ID container selection
 - 1.0.8 Fixed: 1. Use WP local time; 2. Directly call the CSF framework of Zibi Theme if Zibi Theme exists; 3. Fixed PHP 8.x errors; 4. Fixed the issue where global JS doesn’t work on articles
-- 1.0.9 Fixed: Internationalization for multilingual translation, External resource localization
+- 1.0.9 Added: 1. Multilingual internationalization, 2. External resource localization, 3. Compliance with WordPress plugin development specifications, using WP functions
 
 ## Core Features
 
@@ -113,7 +113,7 @@ To detect watermark information in text, you can use two methods:
 background frame：[Codestar Framework](https://github.com/Codestar/codestar-framework) encryption scheme：[Emoji Encoder](https://github.com/paulgb/emoji-encoder)
 
 ## License
-This plug-in is released under the GPLv3 license (see LICENSE file for details).  
+This plug-in is released under the GPLv2 license (see LICENSE file for details).  
 - Use and modification are permitted, but **the original copyright notice** must be retained (removal or modification of author information in the code is prohibited).  
 - If a modified version is distributed, it must be open-sourced as GPLv3 or later, and the full source code must be available.
 
