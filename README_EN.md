@@ -20,7 +20,7 @@ A specialized text copyright protection tool designed for WordPress blogs. It en
 - 1.0.6 Fixed: File import errors
 - 1.0.7 Added: Tag selection, class element selection and ID container selection
 - 1.0.8 Fixed: 1. Use WP local time; 2. Directly call the CSF framework of Zibi Theme if Zibi Theme exists; 3. Fixed PHP 8.x errors; 4. Fixed the issue where global JS doesn’t work on articles
-- 1.0.9 Fixed: Internationalization for multilingual translation
+- 1.0.9 Fixed: Internationalization for multilingual translation, External resource localization
 
 ## Core Features
 
