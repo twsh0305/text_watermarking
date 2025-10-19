@@ -11,13 +11,7 @@ if (!defined('WP_UNINSTALL_PLUGIN')) {
 }
 
 
-
-// 删除插件存储的所有选项数据
-$options_to_delete = [
-    'wxs_watermark_init_csf_options'
-];
-
-delete_option($option);
+delete_option('wxs_watermark_init_csf_options');
 
 ?>
     
