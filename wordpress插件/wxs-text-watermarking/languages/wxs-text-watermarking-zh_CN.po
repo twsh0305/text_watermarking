@@ -1,0 +1,463 @@
+# Copyright (C) 2025 天无神话
+# This file is distributed under the GPLv3 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Wxs Text Watermarking 1.0.9\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wxs-text-watermarking\n"
+"POT-Creation-Date: 2025-10-18T10:42:38+08:00\n"
+"PO-Revision-Date: 2025-10-18 10:49+0800\n"
+"Last-Translator: 天无神话 <2031301686@qq.com>\n"
+"Language-Team: 中文 <LL@li.org>\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.7\n"
+"X-Domain: wxs-text-watermarking\n"
+
+#. Plugin Name of the plugin
+#: wxs-text-watermarking.php
+msgid "Wxs Text Watermarking"
+msgstr "文本盲水印"
+
+#. Plugin URI of the plugin
+#: wxs-text-watermarking.php
+msgid "https://github.com/WordPress/plugin-check"
+msgstr "https://github.com/twsh0305/text_watermarking"
+
+#. Description of the plugin
+#: wxs-text-watermarking.php
+msgid "Add blind watermark to article content, support multiple insertion methods and custom configurations, filter UA whitelist"
+msgstr "为文章内容添加盲水印，支持多种插入方式和自定义配置，过滤UA白名单"
+
+#. Author of the plugin
+#: wxs-text-watermarking.php
+msgid "天无神话"
+msgstr "天无神话"
+
+#: lib/wxs-settings.php:35 wxs-text-watermarking.php:195
+msgid "Text Watermark"
+msgstr "文本水印"
+
+#. translators: %s: 插件版本号
+#: lib/wxs-settings.php:41
+#, php-format
+msgid "Text Blind Watermark Configuration %s"
+msgstr "文本盲水印配置 %s"
+
+#. translators: %1$s: 插件作者网站链接, %2$s: 插件版本号
+#: lib/wxs-settings.php:45
+#, php-format
+msgid "Text Blind Watermark Plugin-<a href=\"%1$s\" target=\"_blank\">Mr. Wang's Notes</a> V%2$s"
+msgstr "文本盲水印插件-<a href=\"%1$s\" target=\"_blank\">王先生笔记</a> V%2$s"
+
+#. translators: %s: 心形图标
+#: lib/wxs-settings.php:61
+#, php-format
+msgid " Plugin Author: Tianwu Shenhua %sThank you for using the Text Blind Watermark Plugin "
+msgstr " 插件作者：天无神话 %s感谢您使用文本盲水印插件 "
+
+#: lib/wxs-settings.php:82
+msgid "Welcome"
+msgstr "欢迎使用"
+
+#: lib/wxs-settings.php:101
+msgid "Thank you for using the Text Blind Watermark Plugin"
+msgstr "感谢您使用文本盲水印插件"
+
+#: lib/wxs-settings.php:103
+msgid "Plugin Features: This plugin can embed invisible blind watermarks in article content to help you protect original content."
+msgstr "插件功能：该插件可以在文章内容中嵌入不可见的盲水印，帮助您保护原创内容。"
+
+#: lib/wxs-settings.php:106
+msgid "Multiple Insertion Methods"
+msgstr "多种插入方式"
+
+#: lib/wxs-settings.php:107
+msgid "Supports three watermark insertion methods: end of paragraph, random positions, and fixed character intervals"
+msgstr "支持段落末尾、随机位置和固定字数三种水印插入方式"
+
+#: lib/wxs-settings.php:110
+msgid "Custom Watermark Content"
+msgstr "自定义水印内容"
+
+#: lib/wxs-settings.php:111
+msgid "Can include visitor IP, user ID, timestamp, and custom text"
+msgstr "可包含访问者IP、用户ID、时间戳和自定义文本"
+
+#: lib/wxs-settings.php:114
+msgid "Crawler Filtering"
+msgstr "爬虫过滤"
+
+#: lib/wxs-settings.php:115
+msgid "Can be set to not insert watermarks for search engine crawlers"
+msgstr "可设置不向搜索引擎爬虫插入水印"
+
+#: lib/wxs-settings.php:118
+msgid "Please configure plugin functions through the left tabs. In debug mode, watermarks will be displayed as visible text for testing purposes."
+msgstr "请通过左侧选项卡配置插件功能。在调试模式下，水印将以可见文本形式显示，便于测试。"
+
+#: lib/wxs-settings.php:119
+msgid "Go to Extract Watermark"
+msgstr "前往提取水印"
+
+#: lib/wxs-settings.php:120
+msgid "Check for Updates"
+msgstr "检测更新"
+
+#: lib/wxs-settings.php:121
+msgid "Minor issue; for example, URLs, if you don't add hyperlinks, you should give code highlighting, pure P tag URLs cannot be perfectly adapted"
+msgstr "小问题；例如网址，你不加超链接，你就给个代码高亮啊，纯P标签的网址，这个是无法完美适配的"
+
+#: lib/wxs-settings.php:122
+msgid "Plugin Author: Tianwu Shenhua"
+msgstr "插件作者：天无神话"
+
+#: lib/wxs-settings.php:123
+msgid "Author QQ: 2031301686"
+msgstr "作者QQ：2031301686"
+
+#: lib/wxs-settings.php:124
+msgid "Author Blog: "
+msgstr "作者博客："
+
+#: lib/wxs-settings.php:124
+msgid "Mr. Wang's Notes"
+msgstr "王先生笔记"
+
+#: lib/wxs-settings.php:125
+msgid "Co-development: "
+msgstr "共同开发："
+
+#: lib/wxs-settings.php:125
+msgid "Big Sheep Blog"
+msgstr "大绵羊博客"
+
+#: lib/wxs-settings.php:126
+msgid "QQ Group: "
+msgstr "QQ群："
+
+#: lib/wxs-settings.php:127
+msgid "Produced by Tianwu Shenhua, please indicate the open source address when reposting, thank you for your cooperation."
+msgstr "天无神话制作，转载请注明开源地址，谢谢合作。"
+
+#: lib/wxs-settings.php:128
+msgid "Main open source license requirement: Prohibits removal or modification of author information"
+msgstr "开源协议主要要求：禁止移除或修改作者信息"
+
+#: lib/wxs-settings.php:129
+msgid "Principle Introduction: "
+msgstr "原理介绍："
+
+#: lib/wxs-settings.php:130
+msgid "Open Source Address: "
+msgstr "开源地址："
+
+#: lib/wxs-settings.php:131
+msgid "Admin Framework: "
+msgstr "后台框架："
+
+#: lib/wxs-settings.php:131
+msgid "Encryption Solution: "
+msgstr "加密方案："
+
+#: lib/wxs-settings.php:183 lib/wxs-settings.php:197
+msgid "Basic Settings"
+msgstr "基础设置"
+
+#: lib/wxs-settings.php:204
+msgid "Enable Blind Watermark"
+msgstr "启用盲水印"
+
+#: lib/wxs-settings.php:205
+msgid "When enabled, blind watermarks will be inserted into article content"
+msgstr "开启后将在文章内容中插入盲水印"
+
+#: lib/wxs-settings.php:213
+msgid "Run Mode"
+msgstr "运行模式"
+
+#: lib/wxs-settings.php:215
+msgid "Dynamic (Pure PHP)"
+msgstr "动态（纯PHP）"
+
+#: lib/wxs-settings.php:216
+msgid "Static (Pure JS)"
+msgstr "静态（纯JS）"
+
+#: lib/wxs-settings.php:217
+msgid "Dynamic-Static Hybrid"
+msgstr "动静混合"
+
+#: lib/wxs-settings.php:221
+msgid "Dynamic: Pure PHP processing, recommended, ensures no page caching plugins like super cache are installed<br>Static: Pure JS processing, not highly recommended, can be bypassed<br>Dynamic-Static Hybrid: PHP for logged-in users, JS for non-logged-in users (suitable for websites with caching)<br>If JS mode or hybrid mode is enabled, please enable WAF to block fake crawlers"
+msgstr "动态：纯PHP处理，推荐，确保没有安装如super cache页面缓存类似插件<br>静态：纯JS处理，不是很推荐，可被绕过<br>动静混合：登录用户用PHP，未登录用户用JS（适合有缓存的网站）<br>若开启JS模式或混合模式下，请开启WAF拦截假蜘蛛"
+
+#: lib/wxs-settings.php:231
+msgid "Minimum Paragraph Length"
+msgstr "最小段落字数"
+
+#: lib/wxs-settings.php:232
+msgid "Paragraphs with fewer than this number of characters will not have watermarks inserted (recommended 15-30)"
+msgstr "少于此字数的段落不插入水印（建议15-30）"
+
+#: lib/wxs-settings.php:242
+msgid "Insertion Method"
+msgstr "插入方式"
+
+#: lib/wxs-settings.php:244
+msgid "Insert at Paragraph End"
+msgstr "段落末尾插入"
+
+#: lib/wxs-settings.php:245
+msgid "Insert at Random Positions"
+msgstr "随机位置插入"
+
+#: lib/wxs-settings.php:246
+msgid "Insert at Fixed Character Intervals"
+msgstr "固定字数插入"
+
+#: lib/wxs-settings.php:249
+msgid "Select how watermarks are inserted into articles"
+msgstr "选择水印在文章中的插入方式"
+
+#: lib/wxs-settings.php:256
+msgid "Random Position Insertion Settings"
+msgstr "随机位置插入设置"
+
+#: lib/wxs-settings.php:265
+msgid "Insertion Count Mode"
+msgstr "插入次数模式"
+
+#: lib/wxs-settings.php:267
+msgid "Custom Count"
+msgstr "自定义次数"
+
+#: lib/wxs-settings.php:268
+msgid "Auto-calculate by Word Count"
+msgstr "按字数自动计算"
+
+#: lib/wxs-settings.php:279
+msgid "Custom Insertion Count"
+msgstr "自定义插入次数"
+
+#: lib/wxs-settings.php:280
+msgid "Fixed number of watermark insertions per paragraph"
+msgstr "每段固定插入的水印次数"
+
+#: lib/wxs-settings.php:292
+msgid "Word Count Ratio"
+msgstr "字数比例"
+
+#: lib/wxs-settings.php:293
+msgid "Add 1 insertion per how many words (e.g., 400 = 1 insertion per 400 words)"
+msgstr "每多少字增加1次插入（例：400=每400字插入1次）"
+
+#: lib/wxs-settings.php:306
+msgid "Fixed Character Interval Insertion Settings"
+msgstr "固定字数插入设置"
+
+#: lib/wxs-settings.php:315
+msgid "Insertion Interval"
+msgstr "插入间隔"
+
+#: lib/wxs-settings.php:316
+msgid "Insert watermark every how many characters"
+msgstr "每多少字插入1次水印"
+
+#: lib/wxs-settings.php:329
+msgid "Debug Mode"
+msgstr "调试模式"
+
+#: lib/wxs-settings.php:330
+msgid "When enabled, watermarks will be displayed as visible text ([Watermark Debug:...])"
+msgstr "启用后水印将以可见文本形式显示（[水印调试:...]）"
+
+#: lib/wxs-settings.php:332
+msgid "Used for testing watermark effects, recommended to disable in production environment"
+msgstr "用于测试水印效果，正式环境建议关闭"
+
+#: lib/wxs-settings.php:343
+msgid "Watermark Content Settings"
+msgstr "水印内容设置"
+
+#: lib/wxs-settings.php:357
+msgid "Include Visitor IP"
+msgstr "包含访问者IP"
+
+#: lib/wxs-settings.php:358
+msgid "Visitor's IP address, for user traceability and positioning"
+msgstr "访客的IP地址，用户溯源定位"
+
+#: lib/wxs-settings.php:364
+msgid "Include User ID"
+msgstr "包含用户ID"
+
+#: lib/wxs-settings.php:365
+msgid "Show ID for logged-in users, show \"guest\" for visitors"
+msgstr "登录用户显示ID，游客显示\"guest\""
+
+#: lib/wxs-settings.php:371
+msgid "Include Timestamp"
+msgstr "包含时间戳"
+
+#: lib/wxs-settings.php:372
+msgid "Time when watermark was generated (YYYY-MM-DD HH:MM:SS)"
+msgstr "水印生成时的时间（YYYY-MM-DD HH:MM:SS）"
+
+#: lib/wxs-settings.php:378
+msgid "Include Custom Text"
+msgstr "包含自定义文本"
+
+#: lib/wxs-settings.php:384
+msgid "Custom Text Content"
+msgstr "自定义文本内容"
+
+#: lib/wxs-settings.php:385
+msgid "Recommended to include copyright information (e.g., \"XX All Rights Reserved\")"
+msgstr "建议包含版权信息（如\"XX版权所有\"）"
+
+#: lib/wxs-settings.php:386
+msgid " All Rights Reserved"
+msgstr " 版权所有"
+
+#: lib/wxs-settings.php:386 wxs-text-watermarking.php:753
+msgid "Mr. Wang's Notes All Rights Reserved"
+msgstr "王先生笔记 版权所有"
+
+#: lib/wxs-settings.php:399
+msgid "Advanced Settings"
+msgstr "高级设置"
+
+#: lib/wxs-settings.php:413
+msgid "Processed HTML Tags"
+msgstr "处理的HTML标签"
+
+#: lib/wxs-settings.php:415
+msgid "Enter HTML tags to process, separated by commas <code>,</code>, articles only, not recursive, only one level, defaults to <code>p</code>,<code>li</code><br>Common article tags: <code>h2</code> to <code>h6</code>,<code>p</code>,<code>li</code>,<code>span</code>,<code>strong</code>,<code>em</code>,<code>b</code>,<code>i</code>,<code>blockquote</code>,<code>q</code>, etc.<br>Not recommended: <code>code</code>,<code>pre</code>"
+msgstr "输入要处理的HTML标签，用逗号<code>,</code>分隔，仅文章，不递归，仅一层，默认是<code>p</code>,<code>li</code><br>文章常见标签：<code>h2</code>到<code>h6</code>,<code>p</code>,<code>li</code>,<code>span</code>,<code>strong</code>,<code>em</code>,<code>b</code>,<code>i</code>,<code>blockquote</code>,<code>q</code>,等<br>不推荐：<code>code</code>,<code>pre</code>"
+
+#: lib/wxs-settings.php:426
+msgid "JS Global Processing Switch"
+msgstr "JS全局处理开关"
+
+#: lib/wxs-settings.php:427
+msgid "When enabled, content outside articles will be processed based on the selectors below, disabled by default"
+msgstr "开启后将根据下方选择器处理文章以外的内容，默认关闭"
+
+#: lib/wxs-settings.php:433
+msgid "Class Selector Settings"
+msgstr "Class选择器设置"
+
+#: lib/wxs-settings.php:435
+msgid "JS only, recursively processes all within tags, format example: <code>.css1</code>,<code>.css2</code>,<code>p.css3</code>,<code>span.css4</code>"
+msgstr "仅JS生效，递归标签内全部，格式示例：<code>.css1</code>,<code>.css2</code>,<code>p.css3</code>,<code>span.css4</code>"
+
+#: lib/wxs-settings.php:446
+msgid "ID Selector Settings"
+msgstr "ID选择器设置"
+
+#: lib/wxs-settings.php:448
+msgid "JS only, recursively processes all within tags, format example: <code>#id1</code>,<code>#id2</code>, note: CSS selector specification does not allow IDs starting with numbers (like <code>#123</code>)"
+msgstr "仅JS生效，递归标签内全部，格式示例：<code>#id1</code>,<code>#id2</code>，注意：CSS选择器规范不允许ID以数字开头(如<code>#123</code>)"
+
+#: lib/wxs-settings.php:459
+msgid "Force Enable Global Selectors on Article Pages"
+msgstr "文章页强制启用全局选择器"
+
+#: lib/wxs-settings.php:460
+msgid "When enabled, even on article pages, global selector matched elements will take effect"
+msgstr "开启后，即使在文章页，也会对全局选择器匹配的元素生效"
+
+#: lib/wxs-settings.php:461
+msgid "Requires \"JS Global Processing Switch\" to be enabled first, otherwise this setting has no effect"
+msgstr "需先开启「JS全局处理开关」，否则此设置无效"
+
+#: lib/wxs-settings.php:475
+msgid "Crawler Filter Whitelist"
+msgstr "爬虫过滤白名单"
+
+#: lib/wxs-settings.php:492
+msgid "Crawler UA List"
+msgstr "爬虫UA列表"
+
+#: lib/wxs-settings.php:493
+msgid "One crawler identifier per line, no watermarks inserted when matched, no matching when empty, used to prevent search engines from crawling incorrectly, recommended to use with WAF to block fake crawlers."
+msgstr "每行一个爬虫标识，匹配时不插入水印，清空时不匹配，用于防止搜索引擎抓取错误，建议配合WAF使用，拦截假蜘蛛。"
+
+#: wxs-text-watermarking.php:31
+msgid "【Text Blind Watermarking】Plugin depends on mbstring PHP extension, please enable or install this PHP extension."
+msgstr "【文本盲水印】插件依赖 mbstring PHP 扩展，请启用或安装此 PHP 扩展。"
+
+#: wxs-text-watermarking.php:161
+msgid "Text Blind Watermarking Plugin Error: Missing necessary file - "
+msgstr "文本盲水印插件错误：缺少必要文件 - "
+
+#: wxs-text-watermarking.php:194 wxs-text-watermarking.php:206
+#: wxs-text-watermarking.php:224
+msgid "Text Blind Watermark Configuration"
+msgstr "文本盲水印配置"
+
+#: wxs-text-watermarking.php:207
+msgid "Settings"
+msgstr "设置"
+
+#: wxs-text-watermarking.php:218
+msgid "You do not have sufficient permissions to access this page."
+msgstr "您没有足够的权限访问此页面。"
+
+#: wxs-text-watermarking.php:222
+msgid "Loaded"
+msgstr "已加载"
+
+#: wxs-text-watermarking.php:222
+msgid "Not Loaded"
+msgstr "未加载"
+
+#: wxs-text-watermarking.php:226
+msgid "Detected that the configuration panel framework did not load properly, possibly due to missing or corrupted files."
+msgstr "检测到配置面板框架未正常加载，可能是文件缺失或损坏。"
+
+#: wxs-text-watermarking.php:227
+msgid "CSF Framework Status: "
+msgstr "CSF框架状态："
+
+#: wxs-text-watermarking.php:228
+msgid "Please check if the "
+msgstr "请检查"
+
+#: wxs-text-watermarking.php:228
+msgid "folder exists and is complete."
+msgstr "文件夹是否存在且完整。"
+
+#: wxs-text-watermarking.php:229
+msgid "If the problem persists, please reinstall the plugin."
+msgstr "如果问题仍然存在，请重新安装插件。"
+
+#: wxs-text-watermarking.php:291
+msgid "guest"
+msgstr "游客"
+
+#: wxs-text-watermarking.php:472
+msgid "Watermark Debug PHP Mode:"
+msgstr "水印调试PHP模式："
+
+#: wxs-text-watermarking.php:594
+msgid "Hybrid Mode Processing - User Login Status: "
+msgstr "混合模式处理 - 用户登录状态："
+
+#: wxs-text-watermarking.php:595
+msgid "Logged in (PHP processing)"
+msgstr "已登录（PHP处理）"
+
+#: wxs-text-watermarking.php:595
+msgid "Not logged in (JS processing)"
+msgstr "未登录（JS处理）"
+
+#: wxs-text-watermarking.php:659
+msgid "Pure JS mode enabled, loading watermark script"
+msgstr "纯JS模式已启用，加载水印脚本"
+
+#: wxs-text-watermarking.php:693
+msgid "Watermark Debug Mode Enabled - Configuration Information: "
+msgstr "水印调试模式已启用 - 配置信息："
