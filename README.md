@@ -112,9 +112,9 @@
 后台框架：[Codestar Framework](https://github.com/Codestar/codestar-framework) 加密方案：[Emoji Encoder](https://github.com/paulgb/emoji-encoder)
 
 ## 许可证
-本插件基于GPLv3许可证发布（详见LICENSE文件）。  
+本插件基于GPLv2许可证发布（详见LICENSE文件）。  
 - 允许自用、修改，但**必须保留原始版权声明**（禁止移除或修改代码中的作者信息）。  
-- 若分发修改后的版本，必须以GPLv3或更高版本开源，并提供完整源代码。
+- 若分发修改后的版本，必须以GPLv2版本开源，并提供完整源代码。
 
 ## 作者信息
 
