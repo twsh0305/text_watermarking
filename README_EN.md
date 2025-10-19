@@ -65,8 +65,8 @@ Based on **Variation Selectors** in the Unicode character set to implement blind
 
 ## Installation Requirements
 
-- Server environment: PHP 7.0+
-- WordPress version: 4.7+
+- Server environment: PHP 7.4+
+- WordPress version: 6.3+
 
 
 ## Installation Steps
