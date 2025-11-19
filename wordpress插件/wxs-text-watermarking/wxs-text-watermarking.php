@@ -256,7 +256,7 @@ function wxs_toVariationSelector($byte)
 }
 
 // 获取客户端IP
-function wxs_get_client_ip()
+function wxs_get_watermark_client_ip()
 {
     $ip = 'unknown';
     
@@ -280,7 +280,7 @@ function wxs_generate_watermark_raw()
     $parts = [];
 
     if (!empty($wxs_watermark_config["include_ip"])) {
-        $parts[] = "IP:" . wxs_get_client_ip();
+        $parts[] = "IP:" . wxs_get_watermark_client_ip();
     }
 
     if (
