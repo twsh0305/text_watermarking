@@ -48,7 +48,7 @@ if (!function_exists("wxs_watermark_get_setting")) {
 }
 
 // 判断当前主题是否是zibll主题或其子主题
-function is_zibll_themes()
+function wxs_watermark_plugin_is_zibll_themes()
 {
 // 获取当前主题对象
     $current_theme = wp_get_theme();
@@ -117,13 +117,13 @@ function wxs_watermark_init_translated_functions() {
 
     // 添加备用菜单注册方式，确保在CSF无法正常工作时仍能显示插件入口
     if (!$csf_initialized) {
-        if (!is_zibll_themes()) {
+        if (!wxs_watermark_plugin_is_zibll_themes()) {
             add_action("admin_menu", "wxs_watermark_add_fallback_menu");
         }
     }
     
     // 挂钩到后台样式加载钩子
-    if (!is_zibll_themes()) {
+    if (!wxs_watermark_plugin_is_zibll_themes()) {
         add_action(
             "admin_enqueue_scripts",
             "wxs_watermark_enqueue_admin_styles",
@@ -133,7 +133,7 @@ function wxs_watermark_init_translated_functions() {
 }
 add_action('init', 'wxs_watermark_init_translated_functions');
 
-if (is_zibll_themes()) {
+if (wxs_watermark_plugin_is_zibll_themes()) {
     // 使用子比函数挂载
     require_once WXS_WATERMARK_PLUGIN_DIR . "/lib/wxs-settings.php";
     add_action("zib_require_end", "wxs_watermark_init_csf_settings");
