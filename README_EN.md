@@ -124,4 +124,4 @@ This plug-in is released under the GPLv2 license (see LICENSE file for details).
 - introduction of the principle：[implementation of text blind watermark technology](https://wxsnote.cn/6395.html)
 - QQ groups：[399019539](https://jq.qq.com/?_wv=1027&k=eiGEOg3i)
 - Open Source Address：[GitHub](https://github.com/twsh0305/text_watermarking)
-
+- Telegram groups：[https://t.me/+mRFcDJGSk_A4NjNl](https://t.me/+mRFcDJGSk_A4NjNl)
