@@ -12,15 +12,16 @@ A specialized copyright protection tool for WordPress blogs that embeds invisibl
 
 ## Changelog
 - 1.0.0 Pure function hook code
-- 1.0.1 Added: Plugin creation
-- 1.0.2 Added: Introduced CSF framework, created settings panel
-- 1.0.3 Added: JS control
-- 1.0.4 Fixed: Blank settings panel on some WordPress pages
-- 1.0.5 Fixed: Missing CSS for CSF framework
-- 1.0.6 Fixed: Incorrect file inclusion
-- 1.0.7 Added: Tag selection, class element selection, and ID container selection
-- 1.0.8 Fixed: 1. Use WordPress local time, 2. Directly use the CSF framework if the Zibai theme exists, 3. Fixed PHP 8.x errors, 4. Fixed global JS not working on articles
-- 1.0.9 Added: 1. Multilingual internationalization, 2. Localization of external resources, 3. Complies with WordPress plugin development standards, uses WP functions
+- 1.0.1 Plugin creation
+- 1.0.2 Introduced CSF framework, created settings panel
+- 1.0.3 JS control
+- 1.0.4 Blank settings panel on some WordPress pages
+- 1.0.5 Missing CSS for CSF framework
+- 1.0.6 Incorrect file inclusion
+- 1.0.7 Tag selection, class element selection, and ID container selection
+- 1.0.8 1. Use WordPress local time, 2. Directly use the CSF framework if the Zibai theme exists, 3. Fixed PHP 8.x errors, 4. Fixed global JS not working on articles
+- 1.0.9 1. Multilingual internationalization, 2. Localization of external resources, 3. Complies with WordPress plugin development standards, uses WP functions
+- 1.1.0 1. Fix js text confusion, 2. Add user group judgment
 
 ## Core Features
 
@@ -117,3 +118,4 @@ This plug-in is released under the GPLv2 license (see LICENSE file for details).
 - QQ groups：[399019539](https://jq.qq.com/?_wv=1027&k=eiGEOg3i)
 - Open Source Address：[GitHub](https://github.com/twsh0305/text_watermarking)
 - Telegram groups：[https://t.me/+mRFcDJGSk_A4NjNl](https://t.me/+mRFcDJGSk_A4NjNl)
+- Plugin address：[WordPress Plugin](https://wordpress.org/plugins/wxs-text-watermarking/)
