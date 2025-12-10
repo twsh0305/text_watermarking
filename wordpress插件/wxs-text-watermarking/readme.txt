@@ -3,8 +3,8 @@ Contributors: twsh0305
 Donate link: https://wxsnote.cn/zanzhu
 Tags: blind, watermark, copyright, protection, text
 Requires at least: 6.3
-Tested up to: 6.8
-Stable tag: 1.0.9
+Tested up to: 6.9
+Stable tag: 1.1.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -62,7 +62,7 @@ License Details:
 Use and modification permitted, but original copyright notice must be retained (prohibits removing/modifying author info in code). Modified versions must be open-sourced as GPLv3 or later with full source code available.
 
 Author Information:
-- Author: There is no myth
+- Author: twsh0305
 - Blog: Mr. Wang's Notes (https://wxsnote.cn/)
 - Principle Introduction: Implementation of text blind watermark technology (https://wxsnote.cn/6395.html)
 - QQ Group: 399019539 (https://jq.qq.com/?_wv=1027&k=eiGEOg3i)
@@ -91,6 +91,10 @@ The plugin automatically clears all configuration data during uninstallation, le
 4. Online watermark extraction tool interface
 
 == Changelog ==
+= 1.1.0 =
+* Added: User Rights Control
+* Fixed: js code causes content location disorder
+
 = 1.0.9 =
 * Added: Multilingual internationalization, 
 * Fixed: External resource localization
@@ -127,6 +131,10 @@ The plugin automatically clears all configuration data during uninstallation, le
 * Pure function hook code
 
 == Upgrade Notice ==
+
+= 1.1.0 =
+Fixed js code to avoid displaying text confusion, added user group judgment to decide whether to insert text blind watermarking for specified users according to user permissions, and loaded custom function judgment to judge whether to insert text blind watermarking according to your theme or plug-in user group
+
 = 1.0.9 =
 Fixed multilingual translation internationalization issues, ensuring proper display in different language environments.
 
