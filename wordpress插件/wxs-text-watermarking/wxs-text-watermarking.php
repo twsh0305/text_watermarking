@@ -1,13 +1,13 @@
 <?php
 /**
  * Plugin Name: Wxs Text Watermarking
- * Plugin URI: https://github.com/WordPress/plugin-check
+ * Plugin URI: https://wordpress.org/plugins/wxs-text-watermarking/
  * Description: Add blind watermark to article content, support multiple insertion methods and custom configurations, filter UA whitelist
  * Requires at least: 6.3
  * Requires PHP: 7.4
- * Version: 1.0.9
- * Author: 天无神话
- * Author URI:https://wxsnote.cn/
+ * Version: 1.1.0
+ * Author: twsh0305
+ * Author URI: https://wxsnote.cn
  * License: GPLv2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: wxs-text-watermarking
@@ -22,14 +22,14 @@ if (!defined("ABSPATH")) {
 // 插件统一版本
 function wxs_watermark_plugin_version()
 {
-    return "1.0.9";
+    return "1.1.0";
 }
 $version = wxs_watermark_plugin_version();
 
 // 检查mbstring的PHP扩展
 if (!extension_loaded("mbstring")) {
     add_action("admin_notices", function () {
-        echo '<div class="error"><p>' . esc_html__('【Text Blind Watermarking】Plugin depends on mbstring PHP extension, please enable or install this PHP extension.', 'wxs-text-watermarking') . '</p></div>';
+        echo '<div class="error"><p>' . esc_html__('Text Blind Watermarking Plugin depends on mbstring PHP extension, please enable or install this PHP extension.', 'wxs-text-watermarking') . '</p></div>';
     });
     return;
 }
@@ -37,6 +37,12 @@ if (!extension_loaded("mbstring")) {
 // 定义插件根目录路径
 define("WXS_WATERMARK_PLUGIN_DIR", plugin_dir_path(__FILE__));
 define("WXS_WATERMARK_PLUGIN_URL", plugin_dir_url(__FILE__));
+
+//  加载插件目录下的func.php（核心：提前加载，确保函数全局可用）
+$wxs_func_file = WXS_WATERMARK_PLUGIN_DIR . '/lib/func.php';
+if (file_exists($wxs_func_file)) {
+    require_once $wxs_func_file;
+}
 
 // 配置获取
 if (!function_exists("wxs_watermark_get_setting")) {
@@ -170,18 +176,28 @@ function wxs_watermark_output_js_vars()
 {
     // 获取用户登录状态
     $is_user_logged_in = is_user_logged_in() ? "true" : "false";
+    
     // 获取当前用户ID
     $current_user_id = "false";
+    $current_user_roles = "[]";
+    
     if (is_user_logged_in()) {
         $user = wp_get_current_user();
         $current_user_id = $user->ID ? (string) $user->ID : "false";
+        // 获取用户角色数组
+        $user_roles = $user->roles;
+        // 转换为JSON格式
+        $current_user_roles = json_encode(array_values($user_roles));
     }
+    
     // 检查是否为文章页面
     $is_article_page = is_single() ? "true" : "false";
+    
     // 输出变量到页面
     echo "<script type='text/javascript'>\n";
     echo "window.wxs_isUserLoggedIn = " . esc_js($is_user_logged_in) . ";\n";
     echo "window.wxs_current_user_id = " . esc_js($current_user_id) . ";\n";
+    echo "window.wxs_current_user_roles = " . $current_user_roles . ";\n";
     echo "window.wxs_isArticlePage = " . esc_js($is_article_page) . ";\n";
     echo "</script>\n";
 }
@@ -230,6 +246,69 @@ function wxs_watermark_fallback_page()
     echo "<p>" . esc_html__("If the problem persists, please reinstall the plugin.", 'wxs-text-watermarking') . "</p>";
     echo "</div>";
     echo "</div>";
+}
+
+// 检查当前用户是否允许插入水印
+if (!function_exists('wxs_watermark_check_user_permission')) {
+    /**
+     * 检查当前用户是否允许插入水印
+     * 
+     * @return bool True表示允许插入水印，False表示跳过
+     */
+    function wxs_watermark_check_user_permission() {
+        global $wxs_watermark_config;
+        
+        // 如果用户组控制未启用，则默认允许所有用户
+        if (empty($wxs_watermark_config['user_group_enable'])) {
+            return true;
+        }
+        
+        $user_group_type = isset($wxs_watermark_config['user_group_type']) 
+            ? $wxs_watermark_config['user_group_type'] 
+            : 'wordpress';
+        
+        // 获取当前用户
+        $current_user = wp_get_current_user();
+        $user_id = $current_user->ID;
+        
+        // 处理游客（未登录用户）
+        if (!$user_id) {
+            // 对于游客，可以根据需要处理
+            // 如果用户组控制启用，我们通常对游客也应用水印
+            // 但可以在这里添加特殊逻辑
+            return true;
+        }
+        
+        switch ($user_group_type) {
+            case 'wordpress':
+                // WordPress内置用户组检测
+                $allowed_roles = isset($wxs_watermark_config['wordpress_user_roles']) 
+                    ? $wxs_watermark_config['wordpress_user_roles'] 
+                    : [];
+                
+                // 如果用户角色在允许的列表中，则插入水印
+                foreach ($current_user->roles as $role) {
+                    if (in_array($role, $allowed_roles)) {
+                        return true;
+                    }
+                }
+                return false;
+                
+            case 'custom':
+                // 自定义用户组检测
+                if (function_exists('wxs_watermark_op_custom')) {
+                    // 使用用户自定义的函数
+                    return wxs_watermark_op_custom($user_id);
+                } else {
+                    // 如果自定义函数不存在，记录警告并默认插入水印
+                    error_log(esc_html__('Text Blind Watermark Warning: wxs_watermark_op_custom() function not found, watermark will be inserted for all users.', 'wxs-text-watermarking'));
+                    return true;
+                }
+                
+            default:
+                return true;
+        }
+    }
 }
 
 // 变体选择器定义
@@ -546,6 +625,17 @@ function wxs_watermark_main($content)
     if (empty($wxs_watermark_config["enable"])) {
         return $content;
     }
+    
+    // 检查用户权限
+    if (!wxs_watermark_check_user_permission()) {
+        // 调试模式下记录跳过信息
+        if (!empty($wxs_watermark_config["debug_mode"])) {
+            $current_user = wp_get_current_user();
+            $user_info = $current_user->ID ? "User ID: {$current_user->ID}" : "Guest";
+            error_log(esc_html__("Watermark skipped for user (user group control): ", 'wxs-text-watermarking') . $user_info);
+        }
+        return $content;
+    }
 
     // 获取运行模式
     $run_mode = isset($wxs_watermark_config["run_mode"])
@@ -621,6 +711,11 @@ add_action("wp_enqueue_scripts", function () {
 
     // 检查是否启用
     if (empty($wxs_watermark_config["enable"])) {
+        return;
+    }
+    
+    // 检查用户权限
+    if (!wxs_watermark_check_user_permission()) {
         return;
     }
 
@@ -707,6 +802,15 @@ function wxs_output_watermark_config()
         "enable" => isset($wxs_watermark_config["enable"])
             ? $wxs_watermark_config["enable"]
             : 0,
+        "user_group_enable" => isset($wxs_watermark_config["user_group_enable"])
+            ? $wxs_watermark_config["user_group_enable"]
+            : 0,
+        "user_group_type" => isset($wxs_watermark_config["user_group_type"])
+            ? esc_js($wxs_watermark_config["user_group_type"])
+            : "wordpress",
+        "wordpress_user_roles" => isset($wxs_watermark_config["wordpress_user_roles"])
+            ? array_map('esc_js', $wxs_watermark_config["wordpress_user_roles"])
+            : [],
         "ip_endpoint" => esc_js(WXS_WATERMARK_PLUGIN_URL . "obtain-an-ip.php"),
         "min_paragraph_length" => isset(
             $wxs_watermark_config["min_paragraph_length"]
