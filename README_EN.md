@@ -1,6 +1,6 @@
 # Text Blind Watermark
 
-A specialized text copyright protection tool designed for WordPress blogs. It enables copyright tracing and infringement evidence collection of original content by embedding invisible blind watermark information in article content.
+A specialized copyright protection tool for WordPress blogs that embeds invisible blind watermark information into article content, enabling copyright traceability and infringement evidence collection for original works.
 
 [中文文档](https://github.com/twsh0305/text_watermarking/blob/main/README.md) | [English document](https://github.com/twsh0305/text_watermarking/blob/main/README_EN.md)
 
@@ -8,100 +8,92 @@ A specialized text copyright protection tool designed for WordPress blogs. It en
 <img width="2539" height="1085" alt="image" src="https://github.com/user-attachments/assets/371b429b-2885-48db-ba43-98280b972307" />
 <img width="2538" height="983" alt="image" src="https://github.com/user-attachments/assets/55a8dd33-7ec9-4a59-a189-6092d190b4fb" />
 <img width="2536" height="968" alt="image" src="https://github.com/user-attachments/assets/cc79e343-edca-428f-9654-44ed14973540" />
-<img width="2312" height="564" alt="image" src="https://github.com/user-attachments/assets/4516b880-1ded-434d-a560-f31e1756a2ea" />
+<img width="2312" height="564" alt="image" src="https://github.com/user-attachments/assets/7ab6fa68-6f22-4f0e-b5f2-4f6348cb4015" />
 
-## update log
+## Changelog
 - 1.0.0 Pure function hook code
 - 1.0.1 Added: Plugin creation
-- 1.0.2 Added: Introduced CSF framework and created settings panel
-- 1.0.3 New: JS control
-- 1.0.4 Fixed: Blank pages on some WordPress settings panel pages
-- 1.0.5 Fixed: Missing styles issue with CSF framework
-- 1.0.6 Fixed: File import errors
-- 1.0.7 Added: Tag selection, class element selection and ID container selection
-- 1.0.8 Fixed: 1. Use WP local time; 2. Directly call the CSF framework of Zibi Theme if Zibi Theme exists; 3. Fixed PHP 8.x errors; 4. Fixed the issue where global JS doesn’t work on articles
-- 1.0.9 Added: 1. Multilingual internationalization, 2. External resource localization, 3. Compliance with WordPress plugin development specifications, using WP functions
+- 1.0.2 Added: Introduced CSF framework, created settings panel
+- 1.0.3 Added: JS control
+- 1.0.4 Fixed: Blank settings panel on some WordPress pages
+- 1.0.5 Fixed: Missing CSS for CSF framework
+- 1.0.6 Fixed: Incorrect file inclusion
+- 1.0.7 Added: Tag selection, class element selection, and ID container selection
+- 1.0.8 Fixed: 1. Use WordPress local time, 2. Directly use the CSF framework if the Zibai theme exists, 3. Fixed PHP 8.x errors, 4. Fixed global JS not working on articles
+- 1.0.9 Added: 1. Multilingual internationalization, 2. Localization of external resources, 3. Complies with WordPress plugin development standards, uses WP functions
 
 ## Core Features
 
 ### Flexible Watermark Embedding Methods
-- **Insert at paragraph end**: Add watermarks at the end of paragraphs that meet length requirements, balancing invisibility and integrity
-- **Random position insertion**: Distribute watermarks randomly in paragraphs (supports custom insertion count or automatic calculation by word ratio)
-- **Fixed interval insertion**: Embed uniformly at set word intervals (default 20 words), suitable for long text scenarios
-
+- **Insert at Paragraph End**: Adds watermark at the end of paragraphs meeting length requirements, balancing concealment and completeness
+- **Insert at Random Positions**: Distributes watermarks randomly within paragraphs (supports custom insertion frequency or automatic calculation based on word count ratio)
+- **Insert at Fixed Intervals**: Embeds watermarks evenly at set character intervals (default 20 characters), suitable for long text scenarios
 
 ### Rich Watermark Information Dimensions
-Customizable traceability information in watermarks (supports combined configuration):
-- Visitor IP address (supports proxy scenario recognition, ensuring accuracy through multi-source IP detection)
-- User identification (displays ID for logged-in users, marks "guest" for visitors)
-- Timestamp (watermark generation time accurate to seconds, format: YYYY-MM-DD HH:MM:SS)
-- Custom text (supports adding copyright statements, website identifiers, and other personalized content)
-
+Customizable watermark traceability information (supports combined configuration):
+- Visitor IP Address (Supports proxy scenario identification, ensures accuracy through multi-source IP detection)
+- User ID (Logged-in users display ID, guests marked as "guest")
+- Timestamp (Watermark generation time accurate to the second, format: YYYY-MM-DD HH:MM:SS)
+- Custom Text (Supports adding personalized content like copyright notices, website identifiers)
 
 ### Intelligent Adaptation Mechanism
-- **Short paragraph filtering**: Configurable minimum paragraph word count (default 20 words) to avoid watermark exposure in short texts
-- **Crawler recognition**: Built-in search engine crawler UA filtering rules, no watermarks inserted for crawlers to avoid affecting SEO
-- **Dual-end processing modes**:
-  - Dynamic mode (PHP-only): Server-side processing, suitable for non-cached scenarios
-  - Static mode (JS-only): Client-side processing, suitable for fully cached pages
-  - Hybrid mode: PHP processing for logged-in users, JS processing for visitors (recommended for websites with caching)
+- **Short Paragraph Filtering**: Configurable minimum paragraph length (default 20 characters) to avoid exposing watermarks in short text
+- **Crawler Identification**: Built-in search engine crawler UA filtering rules; no watermark insertion for crawlers, does not affect SEO
+- **Dual-End Processing Modes**:
+  - Dynamic Mode (Pure PHP): Server-side processing, suitable for non-cached scenarios
+  - Static Mode (Pure JS): Client-side processing, suitable for fully cached pages
+  - Mixed Mode: PHP processing for logged-in users, JS processing for guests (recommended for websites with caching)
 
+### Convenient Debugging & Management
+- **Debug Mode**: When enabled, watermarks are displayed as visible text (format: `[Watermark Debug:...]`), facilitating effect testing
+- **Intuitive Configuration Panel**: Full-feature configuration via WordPress backend "Text Watermark" menu, supports real-time effect
+- **Data Cleanup**: Automatically clears all configuration data upon plugin uninstallation, avoiding residual data
 
-### Convenient Debugging and Management
-- **Debug mode**: When enabled, watermarks are displayed as visible text (format: `[Watermark Debug:...]`) for easy effect testing
-- **Intuitive configuration panel**: Full-function configuration through the WordPress backend "Text Watermark" menu, supporting real-time activation
-- **Data cleaning**: Automatically clears all configuration data when uninstalling the plugin to avoid redundant residues
+## How It Works
 
-
-## Working Principle
-
-Based on **Variation Selectors** in the Unicode character set to implement blind watermarks:
-1. These special characters (such as U+FE00-U+FE0F, U+E0100-U+E01EF) are visually invisible and do not affect text reading experience
+Based on **Variation Selectors** in the Unicode character set to implement blind watermarking:
+1. These special characters (e.g., U+FE00-U+FE0F, U+E0100-U+E01EF) are visually invisible and do not affect the reading experience
 2. Watermark generation process:
-   - Convert original information (IP, user ID, etc.) into byte sequences
-   - Convert bytes into corresponding variation selector characters through a mapping algorithm
-3. During embedding, invisible characters are mixed into the text according to configured insertion rules; original information is restored through reverse parsing during extraction
-
+   - Converts original information (IP, user ID, etc.) into a byte sequence
+   - Maps bytes to corresponding variation selector characters via an algorithm
+3. Embeds invisible characters into text according to configured insertion rules; extraction reverses the process to restore original information
 
 ## Installation Requirements
 
-- Server environment: PHP 7.4+
-- WordPress version: 6.3+
-
+- Server Environment: PHP 7.4+
+- WordPress Version: 6.3+
 
 ## Installation Steps
 
-1. Download the plugin source code zip package
-2. Log in to the WordPress backend, go to "Plugins" → "Add New" → "Upload Plugin"
-3. After activating the plugin, access the configuration page through the left menu "Text Watermark"
-4. Enable the plugin and configure watermark parameters as needed (it is recommended to enable debug mode first for testing)
+1. Download the plugin source code zip file
+2. Log in to WordPress admin, go to "Plugins" → "Add New" → "Upload Plugin"
+3. After activation, access the configuration page via the left menu "Text Watermark"
+4. Enable the plugin and configure watermark parameters as needed (recommend enabling debug mode first for testing)
 
-
-## User Guide
+## Usage Guide
 
 ### Basic Configuration
-1. Enable blind watermark in "Basic Settings", select operation mode (hybrid mode recommended)
-2. Configure minimum paragraph word count (15-30 words recommended) and watermark insertion method
-3. Set detailed parameters for random insertion/fixed interval insertion as needed
+1. Enable blind watermark in "Basic Settings", select operation mode (recommended: mixed mode)
+2. Configure minimum paragraph length (suggested: 15-30 characters) and watermark insertion method
+3. Set detailed parameters for random/fixed interval insertion as needed
 
 ### Watermark Content Configuration
-Check the information to be included in "Watermark Content Settings":
-- Visitor IP (enabled by default, used to locate propagation sources)
-- User ID (enabled by default, distinguishes between logged-in users and visitors)
+Select information to include in "Watermark Content Settings":
+- Visitor IP (enabled by default, used to locate propagation source)
+- User ID (enabled by default, distinguishes logged-in users from guests)
 - Timestamp (enabled by default, records watermark generation time)
-- Custom text (supports adding website domain, copyright statement, etc.)
+- Custom Text (supports adding website domain, copyright notice, etc.)
 
-### Debugging and Verification
-1. Enable "Debug Mode", view content after publishing articles; visible watermarks will display in the form of `[Watermark Debug:...]`
-2. After confirming the watermark insertion positions and content are correct, turn off debug mode
-
+### Debugging & Verification
+1. Enable "Debug Mode", publish an article, and view the content; watermarks will be visible as `[Watermark Debug:...]`
+2. After confirming correct watermark insertion position and content, disable debug mode
 
 ## Watermark Extraction
 
-To detect watermark information in text, you can use two methods:
+To detect watermark information in text, use either method:
 
-1. **Online extraction tool**: Visit the [official watermark extraction page](https://wxsnote.cn/wbmsy), paste the watermarked text for parsing
-2. **Code extraction**: Use the extraction function provided by the project (example):
+1. **Online Extraction Tool**: Visit the [official watermark extraction page](https://wxsnote.cn/wbmsy), paste watermarked text for parsing
+2. **Code Extraction**: Use the provided extraction function (example):
    ```php
    require 'path/to/extract.php'; // Import extraction tool
    $textWithWatermark = "Text content containing blind watermark...";
@@ -119,7 +111,7 @@ This plug-in is released under the GPLv2 license (see LICENSE file for details).
 
 ## information of the author
 
-- author：There is no myth
+- author：天无神话
 - blog：[Mr. Wang's Notes](https://wxsnote.cn/)
 - introduction of the principle：[implementation of text blind watermark technology](https://wxsnote.cn/6395.html)
 - QQ groups：[399019539](https://jq.qq.com/?_wv=1027&k=eiGEOg3i)
