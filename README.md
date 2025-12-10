@@ -12,15 +12,16 @@
 
 ## 更新记录
 - 1.0.0 纯function钩子代码
-- 1.0.1 增加：创建插件
-- 1.0.2 增加：引入CSF框架，创建设置面板
-- 1.0.3 新增：js控制
-- 1.0.4 修复：部分wordpress设置面板页面空白
-- 1.0.5 修复：CSF框架缺失样式的问题
-- 1.0.6 修复：引入文件错误
-- 1.0.7 增加：标签选择，class元素选择及id容器选择
-- 1.0.8 修复：1.使用wp的本地时间，2.如果存在子比主题，则直接调用子比主题的CSF框架，3.修复PHP8.x的报错，4.修复全局js文章不生效的问题
-- 1.0.9 增加：1.多语言国际化，2.外部资源本地化，3.遵守WordPress插件开发规范，使用WP函数
+- 1.0.1 创建插件
+- 1.0.2 引入CSF框架，创建设置面板
+- 1.0.3 js控制
+- 1.0.4 部分wordpress设置面板页面空白
+- 1.0.5 CSF框架缺失样式的问题
+- 1.0.6 引入文件错误
+- 1.0.7 标签选择，class元素选择及id容器选择
+- 1.0.8 1.使用wp的本地时间，2.如果存在子比主题，则直接调用子比主题的CSF框架，3.修复PHP8.x的报错，4.修复全局js文章不生效的问题
+- 1.0.9 1.多语言国际化，2.外部资源本地化，3.遵守WordPress插件开发规范，使用WP函数
+- 1.1.0 1.修复js导致的文字错乱，2.增加用户组判断
 
 ## 核心功能
 
@@ -123,4 +124,4 @@
 - 原理介绍：[文本盲水印技术实现](https://wxsnote.cn/6395.html)
 - QQ群：[399019539](https://jq.qq.com/?_wv=1027&k=eiGEOg3i)
 - 开源地址：[GitHub仓库](https://github.com/twsh0305/text_watermarking)
-- Telegram群组：[https://t.me/+mRFcDJGSk_A4NjNl](https://t.me/+mRFcDJGSk_A4NjNl)
+- 插件地址：[wordpress插件目录](https://wordpress.org/plugins/wxs-text-watermarking/)
