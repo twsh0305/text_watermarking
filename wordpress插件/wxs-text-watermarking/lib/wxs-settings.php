@@ -4,7 +4,7 @@
  * 
  * @package WXS Text Watermarking
  * @author 大绵羊 天无神话
- * @version 1.0.9
+ * @version 1.1.0
  */
 
 // 防止直接访问
@@ -58,7 +58,7 @@ function wxs_watermark_init_csf_settings() {
         'show_in_customizer' => false,
         'footer_credit'   => sprintf(
             /* translators: %s: 心形图标 */
-            esc_html__(' Plugin Author: Tianwu Shenhua %sThank you for using the Text Blind Watermark Plugin ', 'wxs-text-watermarking'),
+            esc_html__(' Plugin Author: 天无神话 %sThank you for using the Text Blind Watermark Plugin ', 'wxs-text-watermarking'),
             '<i class="fa fa-fw fa-heart-o" aria-hidden="true"></i>'
         ),
     ]);
@@ -114,17 +114,22 @@ function wxs_watermark_get_welcome_content() {
                 <h4><?php echo esc_html__('Crawler Filtering', 'wxs-text-watermarking'); ?></h4>
                 <p><?php echo esc_html__('Can be set to not insert watermarks for search engine crawlers', 'wxs-text-watermarking'); ?></p>
             </div>
+            <div class="feature-box">
+                <h4><?php echo esc_html__('User Group Control', 'wxs-text-watermarking'); ?></h4>
+                <p><?php echo esc_html__('Can control watermark insertion for specific user groups or custom user permissions', 'wxs-text-watermarking'); ?></p>
+            </div>
         </div>
         <p><?php echo esc_html__('Please configure plugin functions through the left tabs. In debug mode, watermarks will be displayed as visible text for testing purposes.', 'wxs-text-watermarking'); ?></p>
         <a href="https://wxsnote.cn/wbmsy" target="_blank" class="wxs-watermark-btn"><i class="fa fa-paper-plane"></i> <?php echo esc_html__('Go to Extract Watermark', 'wxs-text-watermarking'); ?></a>
         <a href="https://github.com/twsh0305/text_watermarking/releases/latest" target="_blank" class="wxs-watermark-btn"><i class="fa fa-cloud-upload"></i> <?php echo esc_html__('Check for Updates', 'wxs-text-watermarking'); ?></a>
         <p style="color:red"><?php echo esc_html__('Minor issue; for example, URLs, if you don\'t add hyperlinks, you should give code highlighting, pure P tag URLs cannot be perfectly adapted', 'wxs-text-watermarking'); ?></p>
-        <p><?php echo esc_html__('Plugin Author: Tianwu Shenhua', 'wxs-text-watermarking'); ?></p>
-        <p><?php echo esc_html__('Author QQ: 2031301686', 'wxs-text-watermarking'); ?></p>
+        <p><?php echo esc_html__('Plugin Author home: ', 'wxs-text-watermarking'); ?><a href="https://profiles.wordpress.org/twsh0305/" target="_blank">twsh0305</a></p>
+        <p><?php echo esc_html__('Plugin Author: 天无神话', 'wxs-text-watermarking'); ?></p>
+        <p><?php echo esc_html__('Author Email: admin@wxsnote.cn', 'wxs-text-watermarking'); ?></p>
         <p><?php echo esc_html__('Author Blog: ', 'wxs-text-watermarking'); ?><a href="https://wxsnote.cn/" target="_blank"><?php echo esc_html__('Mr. Wang\'s Notes', 'wxs-text-watermarking'); ?></a></p>
         <p><?php echo esc_html__('Co-development: ', 'wxs-text-watermarking'); ?><a href="https://dmyblog.cn/" target="_blank"><?php echo esc_html__('Big Sheep Blog', 'wxs-text-watermarking'); ?></a></p>
         <p><?php echo esc_html__('QQ Group: ', 'wxs-text-watermarking'); ?><a href="https://jq.qq.com/?_wv=1027&k=eiGEOg3i" target="_blank">399019539</a></p>
-        <p><?php echo esc_html__('Produced by Tianwu Shenhua, please indicate the open source address when reposting, thank you for your cooperation.', 'wxs-text-watermarking'); ?></p>
+        <p><?php echo esc_html__('Produced by 天无神话, please indicate the open source address when reposting, thank you for your cooperation.', 'wxs-text-watermarking'); ?></p>
         <p style="color:red"><?php echo esc_html__('Main open source license requirement: Prohibits removal or modification of author information', 'wxs-text-watermarking'); ?></p>
         <p><?php echo esc_html__('Principle Introduction: ', 'wxs-text-watermarking'); ?><a href="https://wxsnote.cn/6395.html" target="_blank">https://wxsnote.cn/6395.html</a></p>
         <p><?php echo esc_html__('Open Source Address: ', 'wxs-text-watermarking'); ?><a href="https://github.com/twsh0305/text_watermarking" target="_blank">https://github.com/twsh0305/text_watermarking</a></p>
@@ -204,6 +209,60 @@ function wxs_watermark_get_basic_settings_fields() {
             'title'   => esc_html__('Enable Blind Watermark', 'wxs-text-watermarking'),
             'label'   => esc_html__('When enabled, blind watermarks will be inserted into article content', 'wxs-text-watermarking'),
             'default' => 0,
+        ],
+        
+        // 用户组开关
+        [
+            'id'      => 'user_group_enable',
+            'type'    => 'switcher',
+            'title'   => esc_html__('Enable User Group Control', 'wxs-text-watermarking'),
+            'label'   => esc_html__('When enabled, watermarks can be configured for specific user groups', 'wxs-text-watermarking'),
+            'default' => 0,
+            'dependency' => ['enable', '==', 1],
+        ],
+        
+        // 用户组类型选择
+        [
+            'id'      => 'user_group_type',
+            'type'    => 'select',
+            'title'   => esc_html__('User Group Type', 'wxs-text-watermarking'),
+            'options' => [
+                'wordpress' => esc_html__('WordPress Built-in User Groups', 'wxs-text-watermarking'),
+                'custom'    => esc_html__('Custom User Groups', 'wxs-text-watermarking'),
+            ],
+            'default' => 'wordpress',
+            'desc'    => esc_html__('Select user group type for watermark control', 'wxs-text-watermarking'),
+            'dependency' => [
+                ['enable', '==', 1],
+                ['user_group_enable', '==', 1]
+            ],
+        ],
+        
+        // WordPress用户组选择
+        [
+            'id'      => 'wordpress_user_roles',
+            'type'    => 'checkbox',
+            'title'   => esc_html__('WordPress User Groups', 'wxs-text-watermarking'),
+            'desc'    => esc_html__('Select WordPress user groups that should have watermarks inserted', 'wxs-text-watermarking'),
+            'options' => 'roles',
+            'default' => ['administrator', 'editor', 'author', 'contributor', 'subscriber'],
+            'dependency' => [
+                ['enable', '==', 1],
+                ['user_group_enable', '==', 1],
+                ['user_group_type', '==', 'wordpress']
+            ],
+        ],
+        
+        // 自定义用户组检测函数
+        [
+            'type'    => 'submessage',
+            'style'   => 'info',
+            'content' => wxs_watermark_get_custom_user_group_info(),
+            'dependency' => [
+                ['enable', '==', 1],
+                ['user_group_enable', '==', 1],
+                ['user_group_type', '==', 'custom']
+            ],
         ],
         
         // 运行模式选择
@@ -333,6 +392,157 @@ function wxs_watermark_get_basic_settings_fields() {
             'dependency' => ['enable', '==', 1],
         ],
     ];
+}
+
+/**
+ * 获取自定义用户组信息
+ */
+function wxs_watermark_get_custom_user_group_info() {
+    // 1. 定义插件目录下func.php的绝对路径（核心：获取当前插件的真实目录）
+    $plugin_dir = plugin_dir_path(__FILE__); // 当前函数所在插件的根目录
+    $func_file = $plugin_dir . 'func.php';   // func.php的完整路径
+    $func_file_url = plugin_dir_url(__FILE__) . 'func.php'; // 用于前端显示的路径（仅提示）
+    
+    // 2. 加载func.php（如果文件存在）
+    $file_exists = file_exists($func_file);
+    if ($file_exists && !function_exists('wxs_watermark_op_custom')) {
+        require_once $func_file; // 加载文件（避免重复加载用require_once）
+    }
+
+    // 3. 最终检测函数是否存在
+    $function_exists = function_exists('wxs_watermark_op_custom');
+
+    ob_start();
+    ?>
+    <div class="wxs-user-group-info">
+        <h4><?php echo esc_html__('Custom User Group Configuration', 'wxs-text-watermarking'); ?></h4>
+        
+        <?php if ($function_exists): ?>
+            <div class="notice notice-success">
+                <p><?php echo esc_html__('Success! Custom function detected:', 'wxs-text-watermarking'); ?> <code>wxs_watermark_op_custom()</code></p>
+                <p><?php echo esc_html__('The plugin will use this function to determine whether to insert watermarks for the current user.', 'wxs-text-watermarking'); ?></p>
+            </div>
+        <?php else: ?>
+            <div class="notice notice-warning">
+                <p><strong><?php echo esc_html__('Warning: Custom function not found!', 'wxs-text-watermarking'); ?></strong></p>
+                <?php if (!$file_exists): ?>
+                    <p><?php 
+                    /* translators: %s: plugin目录中func.php文件的完整路径 */
+                    echo sprintf(esc_html__('The file %s does not exist in your plugin directory.', 'wxs-text-watermarking'), '<code>' . esc_html($func_file) . '</code>'); 
+                    ?></p>
+                    <p><?php echo esc_html__('Please create this file and add the required function code below.', 'wxs-text-watermarking'); ?></p>
+                <?php else: ?>
+                    <p><?php 
+                    /* translators: 1：func.php文件的完整路径，2：所需函数的名称（wxs_watermark_op_custom()） */
+                    echo sprintf(esc_html__('The file %1$s exists, but the function %2$s is not defined in it.', 'wxs-text-watermarking'), 
+                        '<code>' . esc_html($func_file) . '</code>', 
+                        '<code>wxs_watermark_op_custom()</code>'
+                    ); 
+                    ?></p>
+                <?php endif; ?>
+                <p><?php echo esc_html__('Without this function, watermarks will be inserted for all users when custom user group mode is selected.', 'wxs-text-watermarking'); ?></p>
+            </div>
+        <?php endif; ?>
+        
+        <div class="usage-example">
+            <h5><?php echo esc_html__('Step 1: Create/Edit File', 'wxs-text-watermarking'); ?></h5>
+            <p><?php 
+            /* translators: %s: 所需文件的名称 (func.php) */
+            echo sprintf(esc_html__('Create a file named %s in the following directory:', 'wxs-text-watermarking'), '<code>func.php</code>'); 
+            ?></p>
+            <pre><code><?php echo esc_html($func_file); ?></code></pre>
+            
+            <h5><?php echo esc_html__('Step 2: Add the following code to func.php', 'wxs-text-watermarking'); ?></h5>
+            <pre><code><?php echo esc_html('<?php
+/**
+ * Custom 用户组水印控制功能 User Group Watermark Control Function
+ * 
+ * @param int|null $user_id 当前用户ID，访客为空 Current user ID, visitor is empty
+ * @return bool True插入水印，False跳过 True Insert watermark, False Skip
+ * 非开发者请勿使用，此处是自定义的演示，请勿直接使用，要配合其它用户组函数使用的，此方案可免更新覆盖
+ * Non-developers do not use, here is a custom demo, do not use directly, to cooperate with other user group functions, this scheme can be updated free of coverage
+ */
+function wxs_watermark_op_custom($user_id = null) {
+    // 示例1：跳过特定用户级别的水印 (主题用户级别1)，Example 1: Skip watermark for a specific user level (subject user level 1)
+    if (function_exists(\'your_theme_get_user_level\')) {
+        $user_level = your_theme_get_user_level($user_id);
+        if ($user_level == 1) {
+            return false; // 跳过1级用户的水印，Skip watermark for level 1 users
+        }
+    }
+    
+    // 示例2：跳过具有特定Meta值的用户的水印，Example 2: Skipping watermarks for users with specific Meta values
+    if ($user_id) {
+        $user_meta = get_user_meta($user_id, \'your_custom_field\', true);
+        if ($user_meta == \'skip_watermark\') {
+            return false;
+        }
+    }
+    
+    // 示例3：跳过VIP用户的水印，Example 3: Skip the watermark for VIP users
+    if (function_exists(\'is_user_vip\') && is_user_vip($user_id)) {
+        return false;
+    }
+    
+    // 示例4：仅为特定角色插入水印（替代方法），示例4：仅为特定角色插入水印（替代方法）
+    if ($user_id) {
+        $user = get_user_by(\'id\', $user_id);
+        $allowed_roles = [\'subscriber\', \'customer\']; // 为这些角色插入水印，Insert watermarks for these characters
+        $disallowed_roles = [\'administrator\', \'editor\']; // 跳过这些角色，Skip these characters
+        
+        $user_roles = $user->roles;
+        foreach ($disallowed_roles as $role) {
+            if (in_array($role, $user_roles)) {
+                return false;
+            }
+        }
+    }
+    
+    // 默认值：插入水印，Default: Insert watermark
+    return true;
+}'); ?></code></pre>
+            
+            <p><strong><?php echo esc_html__('Return value explanation:', 'wxs-text-watermarking'); ?></strong></p>
+            <ul>
+                <li><?php echo esc_html__('Return TRUE: Insert watermark for this user', 'wxs-text-watermarking'); ?></li>
+                <li><?php echo esc_html__('Return FALSE: Skip watermark for this user', 'wxs-text-watermarking'); ?></li>
+            </ul>
+        </div>
+    </div>
+    <style>
+        .wxs-user-group-info {
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .usage-example {
+            margin-top: 20px;
+            padding: 15px;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .usage-example pre {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+        .usage-example code {
+            font-family: 'Consolas', 'Monaco', monospace;
+            line-height: 1.5;
+        }
+        .usage-example h5 {
+            margin-top: 15px;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #2d3748;
+        }
+    </style>
+    <?php
+    return ob_get_clean();
 }
 
 /**
