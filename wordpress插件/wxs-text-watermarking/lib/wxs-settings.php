@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) exit;
 /**
  * 初始化CSF设置面板
  */
-function wxs_watermark_init_csf_settings() {
+function wxstbw_init_csf_settings() {
     
     // 只有后台才执行此代码
     if (!is_admin()) {
@@ -27,8 +27,8 @@ function wxs_watermark_init_csf_settings() {
     // 刷新所有缓存
     wp_cache_flush();
     
-    $version = wxs_watermark_plugin_version();
-    $prefix = 'wxs_watermark_init_csf_options';
+    $version = wxstbw_plugin_version();
+    $prefix = 'wxstbw_init_csf_options';
     
     // 创建设置页面 - 顶部信息
     CSF::createOptions($prefix, [
@@ -64,28 +64,31 @@ function wxs_watermark_init_csf_settings() {
     ]);
 
     // 添加各个设置面板
-    wxs_watermark_create_welcome_section($prefix);
-    wxs_watermark_create_basic_settings_section($prefix);
-    wxs_watermark_create_content_settings_section($prefix);
-    wxs_watermark_create_html_settings_section($prefix);
-    wxs_watermark_create_bot_filter_section($prefix);
+    wxstbw_create_welcome_section($prefix);
+    wxstbw_create_basic_settings_section($prefix);
+    wxstbw_create_content_settings_section($prefix);
+    wxstbw_create_html_settings_section($prefix);
+    wxstbw_create_bot_filter_section($prefix);
     
     return true;
 }
 
+
+
+
 /**
  * 创建欢迎页面（接收前缀参数）
  */
-function wxs_watermark_create_welcome_section($prefix) {
+function wxstbw_create_welcome_section($prefix) {
     CSF::createSection($prefix, [
-        'id'    => 'wxs_watermark_welcome',
+        'id'    => 'wxstbw_welcome',
         'title' => esc_html__('Welcome', 'wxs-text-watermarking'),
         'icon'  => 'fa fa-home',
         'fields' => [
             [
                 'type'    => 'submessage',
                 'style'   => 'warning',
-                'content' => wxs_watermark_get_welcome_content(),
+                'content' => wxstbw_get_welcome_content(),
             ],
         ]
     ]);
@@ -94,34 +97,34 @@ function wxs_watermark_create_welcome_section($prefix) {
 /**
  * 获取欢迎页面内容
  */
-function wxs_watermark_get_welcome_content() {
+function wxstbw_get_welcome_content() {
     ob_start();
     ?>
-    <div class="wxs-welcome-panel">
+    <div class="wxstbw-welcome-panel">
         <h3 style="color:#fd4c73;"><i class="fa fa-heart fa-fw"></i> <?php echo esc_html__('Thank you for using the Text Blind Watermark Plugin', 'wxs-text-watermarking'); ?></h3>
         
         <p><?php echo esc_html__('Plugin Features: This plugin can embed invisible blind watermarks in article content to help you protect original content.', 'wxs-text-watermarking'); ?></p>
-        <div class="wxs-features">
-            <div class="feature-box">
+        <div class="wxstbw-features">
+            <div class="wxstbw-feature-box">
                 <h4><?php echo esc_html__('Multiple Insertion Methods', 'wxs-text-watermarking'); ?></h4>
                 <p><?php echo esc_html__('Supports three watermark insertion methods: end of paragraph, random positions, and fixed character intervals', 'wxs-text-watermarking'); ?></p>
             </div>
-            <div class="feature-box">
+            <div class="wxstbw-feature-box">
                 <h4><?php echo esc_html__('Custom Watermark Content', 'wxs-text-watermarking'); ?></h4>
                 <p><?php echo esc_html__('Can include visitor IP, user ID, timestamp, and custom text', 'wxs-text-watermarking'); ?></p>
             </div>
-            <div class="feature-box">
+            <div class="wxstbw-feature-box">
                 <h4><?php echo esc_html__('Crawler Filtering', 'wxs-text-watermarking'); ?></h4>
                 <p><?php echo esc_html__('Can be set to not insert watermarks for search engine crawlers', 'wxs-text-watermarking'); ?></p>
             </div>
-            <div class="feature-box">
+            <div class="wxstbw-feature-box">
                 <h4><?php echo esc_html__('User Group Control', 'wxs-text-watermarking'); ?></h4>
                 <p><?php echo esc_html__('Can control watermark insertion for specific user groups or custom user permissions', 'wxs-text-watermarking'); ?></p>
             </div>
         </div>
         <p><?php echo esc_html__('Please configure plugin functions through the left tabs. In debug mode, watermarks will be displayed as visible text for testing purposes.', 'wxs-text-watermarking'); ?></p>
-        <a href="https://wxsnote.cn/wbmsy" target="_blank" class="wxs-watermark-btn"><i class="fa fa-paper-plane"></i> <?php echo esc_html__('Go to Extract Watermark', 'wxs-text-watermarking'); ?></a>
-        <a href="https://github.com/twsh0305/text_watermarking/releases/latest" target="_blank" class="wxs-watermark-btn"><i class="fa fa-cloud-upload"></i> <?php echo esc_html__('Check for Updates', 'wxs-text-watermarking'); ?></a>
+        <a href="https://wxsnote.cn/wbmsy" target="_blank" class="wxstbw-watermark-btn"><i class="fa fa-paper-plane"></i> <?php echo esc_html__('Go to Extract Watermark', 'wxs-text-watermarking'); ?></a>
+        <a href="https://github.com/twsh0305/text_watermarking/releases/latest" target="_blank" class="wxstbw-watermark-btn"><i class="fa fa-cloud-upload"></i> <?php echo esc_html__('Check for Updates', 'wxs-text-watermarking'); ?></a>
         <p style="color:red"><?php echo esc_html__('Minor issue; for example, URLs, if you don\'t add hyperlinks, you should give code highlighting, pure P tag URLs cannot be perfectly adapted', 'wxs-text-watermarking'); ?></p>
         <p><?php echo esc_html__('Plugin Author home: ', 'wxs-text-watermarking'); ?><a href="https://profiles.wordpress.org/twsh0305/" target="_blank">twsh0305</a></p>
         <p><?php echo esc_html__('Plugin Author: 天无神话', 'wxs-text-watermarking'); ?></p>
@@ -135,47 +138,6 @@ function wxs_watermark_get_welcome_content() {
         <p><?php echo esc_html__('Open Source Address: ', 'wxs-text-watermarking'); ?><a href="https://github.com/twsh0305/text_watermarking" target="_blank">https://github.com/twsh0305/text_watermarking</a></p>
         <p><?php echo esc_html__('Admin Framework: ', 'wxs-text-watermarking'); ?><a href="https://github.com/Codestar/codestar-framework" target="_blank">Codestar Framework</a> <?php echo esc_html__('Encryption Solution: ', 'wxs-text-watermarking'); ?><a href="https://github.com/paulgb/emoji-encoder" target="_blank">Emoji Encoder</a></p>
     </div>
-    <style>
-        .wxs-welcome-panel { padding: 20px; background: #fff; border-radius: 4px; }
-        .wxs-features { display: flex; flex-wrap: wrap; gap: 20px; margin: 20px 0; }
-        .feature-box { flex: 1; min-width: 200px; padding: 15px; background: #f9f9f9; border-radius: 4px; }
-        html body .csf-theme-light .csf-header-inner::before { content: "WXS" !important; }
-        /* 基础按钮样式 */
-        .wxs-watermark-btn {
-          display: inline-block;
-          padding: 12px 24px;          /* 内边距，控制按钮大小 */
-          background-color: #2196F3;   /* 主色调：蓝色 */
-          color: #ffffff;              /* 文字颜色：白色 */
-          font-size: 14px;             /* 字体大小 */
-          font-weight: 500;            /* 字体粗细，增强可读性 */
-          text-align: center;          /* 文字居中 */
-          text-decoration: none;       /* 去除下划线 */
-          border-radius: 4px;          /* 圆角 */
-          border: none;                /* 隐藏边框 */
-          cursor: pointer;             /* 悬停时显示手型光标 */
-          transition: all 0.3s ease;   /* 过渡动画，增强交互感 */
-        }
-        
-        /* 图标与文字对齐 */
-        .wxs-watermark-btn i {
-          margin-right: 8px;           /* 图标与文字间距 */
-          vertical-align: middle;      /* 垂直居中对齐 */
-        }
-        
-        /* 悬停效果（颜色变深） */
-        .wxs-watermark-btn:hover {
-          background-color: #1976D2;   /* 悬停颜色：深蓝色 */
-          color: #ffffff;              /* 文字颜色：白色 */
-          text-decoration: none;       /* 确保无下划线 */
-          box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3); /* 可选：添加阴影增强立体感 */
-        }
-        
-        /* 聚焦效果（用于可访问性） */
-        .wxs-watermark-btn:focus {
-          outline: none;               /* 隐藏默认聚焦边框 */
-          box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2); /* 聚焦时显示浅色轮廓 */
-        }
-    </style>
     <?php
     return ob_get_clean();
 }
@@ -183,18 +145,18 @@ function wxs_watermark_get_welcome_content() {
 /**
  * 创建基础设置面板
  */
-function wxs_watermark_create_basic_settings_section($prefix) {
+function wxstbw_create_basic_settings_section($prefix) {
     CSF::createSection($prefix, [
         'title'  => esc_html__('Basic Settings', 'wxs-text-watermarking'),
         'icon'   => 'fa fa-cog',
-        'fields' => wxs_watermark_get_basic_settings_fields(),
+        'fields' => wxstbw_get_basic_settings_fields(),
     ]);
 }
 
 /**
  * 获取基础设置字段配置
  */
-function wxs_watermark_get_basic_settings_fields() {
+function wxstbw_get_basic_settings_fields() {
     return [
         // 基础设置标题
         [
@@ -257,7 +219,7 @@ function wxs_watermark_get_basic_settings_fields() {
         [
             'type'    => 'submessage',
             'style'   => 'info',
-            'content' => wxs_watermark_get_custom_user_group_info(),
+            'content' => wxstbw_get_custom_user_group_info(),
             'dependency' => [
                 ['enable', '==', 1],
                 ['user_group_enable', '==', 1],
@@ -397,7 +359,7 @@ function wxs_watermark_get_basic_settings_fields() {
 /**
  * 获取自定义用户组信息
  */
-function wxs_watermark_get_custom_user_group_info() {
+function wxstbw_get_custom_user_group_info() {
     // 1. 定义插件目录下func.php的绝对路径（核心：获取当前插件的真实目录）
     $plugin_dir = plugin_dir_path(__FILE__); // 当前函数所在插件的根目录
     $func_file = $plugin_dir . 'func.php';   // func.php的完整路径
@@ -405,21 +367,21 @@ function wxs_watermark_get_custom_user_group_info() {
     
     // 2. 加载func.php（如果文件存在）
     $file_exists = file_exists($func_file);
-    if ($file_exists && !function_exists('wxs_watermark_op_custom')) {
+    if ($file_exists && !function_exists('wxstbw_op_custom')) {
         require_once $func_file; // 加载文件（避免重复加载用require_once）
     }
 
     // 3. 最终检测函数是否存在
-    $function_exists = function_exists('wxs_watermark_op_custom');
+    $function_exists = function_exists('wxstbw_op_custom');
 
     ob_start();
     ?>
-    <div class="wxs-user-group-info">
+    <div class="wxstbw-user-group-info">
         <h4><?php echo esc_html__('Custom User Group Configuration', 'wxs-text-watermarking'); ?></h4>
         
         <?php if ($function_exists): ?>
             <div class="notice notice-success">
-                <p><?php echo esc_html__('Success! Custom function detected:', 'wxs-text-watermarking'); ?> <code>wxs_watermark_op_custom()</code></p>
+                <p><?php echo esc_html__('Success! Custom function detected:', 'wxs-text-watermarking'); ?> <code>wxstbw_op_custom()</code></p>
                 <p><?php echo esc_html__('The plugin will use this function to determine whether to insert watermarks for the current user.', 'wxs-text-watermarking'); ?></p>
             </div>
         <?php else: ?>
@@ -433,10 +395,10 @@ function wxs_watermark_get_custom_user_group_info() {
                     <p><?php echo esc_html__('Please create this file and add the required function code below.', 'wxs-text-watermarking'); ?></p>
                 <?php else: ?>
                     <p><?php 
-                    /* translators: 1：func.php文件的完整路径，2：所需函数的名称（wxs_watermark_op_custom()） */
+                    /* translators: 1：func.php文件的完整路径，2：所需函数的名称（wxstbw_op_custom()） */
                     echo sprintf(esc_html__('The file %1$s exists, but the function %2$s is not defined in it.', 'wxs-text-watermarking'), 
                         '<code>' . esc_html($func_file) . '</code>', 
-                        '<code>wxs_watermark_op_custom()</code>'
+                        '<code>wxstbw_op_custom()</code>'
                     ); 
                     ?></p>
                 <?php endif; ?>
@@ -462,7 +424,7 @@ function wxs_watermark_get_custom_user_group_info() {
  * 非开发者请勿使用，此处是自定义的演示，请勿直接使用，要配合其它用户组函数使用的，此方案可免更新覆盖
  * Non-developers do not use, here is a custom demo, do not use directly, to cooperate with other user group functions, this scheme can be updated free of coverage
  */
-function wxs_watermark_op_custom($user_id = null) {
+function wxstbw_op_custom($user_id = null) {
     // 示例1：跳过特定用户级别的水印 (主题用户级别1)，Example 1: Skip watermark for a specific user level (subject user level 1)
     if (function_exists(\'your_theme_get_user_level\')) {
         $user_level = your_theme_get_user_level($user_id);
@@ -484,7 +446,7 @@ function wxs_watermark_op_custom($user_id = null) {
         return false;
     }
     
-    // 示例4：仅为特定角色插入水印（替代方法），示例4：仅为特定角色插入水印（替代方法）
+    // 示例4：仅为特定角色插入水印（替代方法），Example 4: Watermarks inserted only for specific characters (alternative)
     if ($user_id) {
         $user = get_user_by(\'id\', $user_id);
         $allowed_roles = [\'subscriber\', \'customer\']; // 为这些角色插入水印，Insert watermarks for these characters
@@ -509,38 +471,7 @@ function wxs_watermark_op_custom($user_id = null) {
             </ul>
         </div>
     </div>
-    <style>
-        .wxs-user-group-info {
-            padding: 15px;
-            background: #f9f9f9;
-            border-radius: 4px;
-            margin: 10px 0;
-        }
-        .usage-example {
-            margin-top: 20px;
-            padding: 15px;
-            background: #fff;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        .usage-example pre {
-            background: #f5f5f5;
-            padding: 15px;
-            border-radius: 4px;
-            overflow-x: auto;
-            font-size: 12px;
-        }
-        .usage-example code {
-            font-family: 'Consolas', 'Monaco', monospace;
-            line-height: 1.5;
-        }
-        .usage-example h5 {
-            margin-top: 15px;
-            margin-bottom: 8px;
-            font-size: 14px;
-            color: #2d3748;
-        }
-    </style>
+
     <?php
     return ob_get_clean();
 }
@@ -548,18 +479,18 @@ function wxs_watermark_op_custom($user_id = null) {
 /**
  * 创建水印内容设置面板
  */
-function wxs_watermark_create_content_settings_section($prefix) {
+function wxstbw_create_content_settings_section($prefix) {
     CSF::createSection($prefix, [
         'title'  => esc_html__('Watermark Content Settings', 'wxs-text-watermarking'),
         'icon'   => 'fa fa-file-text',
-        'fields' => wxs_watermark_get_content_settings_fields()
+        'fields' => wxstbw_get_content_settings_fields()
     ]);
 }
 
 /**
  * 获取水印内容设置字段配置
  */
-function wxs_watermark_get_content_settings_fields() {
+function wxstbw_get_content_settings_fields() {
     return [
         [
             'id'      => 'include_ip',
@@ -604,18 +535,18 @@ function wxs_watermark_get_content_settings_fields() {
 /**
  * 创建高级设置面板
  */
-function wxs_watermark_create_html_settings_section($prefix) {
+function wxstbw_create_html_settings_section($prefix) {
     CSF::createSection($prefix, [
         'title'  => esc_html__('Advanced Settings', 'wxs-text-watermarking'),
         'icon'   => 'fa fa-cogs',
-        'fields' => wxs_watermark_get_html_tags_fields(),
+        'fields' => wxstbw_get_html_tags_fields(),
     ]);
 }
 
 /**
  * 获取高级设置字段配置
  */
-function wxs_watermark_get_html_tags_fields() {
+function wxstbw_get_html_tags_fields() {
     return [
         [
             'id'      => 'html_tags',
@@ -680,18 +611,18 @@ function wxs_watermark_get_html_tags_fields() {
 /**
  * 创建爬虫过滤设置面板
  */
-function wxs_watermark_create_bot_filter_section($prefix) {
+function wxstbw_create_bot_filter_section($prefix) {
     CSF::createSection($prefix, [
         'title'  => esc_html__('Crawler Filter Whitelist', 'wxs-text-watermarking'),
         'icon'   => 'fa fa-bug',
-        'fields' => wxs_watermark_get_bot_filter_fields()
+        'fields' => wxstbw_get_bot_filter_fields()
     ]);
 }
 
 /**
  * 获取爬虫过滤设置字段配置
  */
-function wxs_watermark_get_bot_filter_fields() {
+function wxstbw_get_bot_filter_fields() {
     return [
         [
             'id'      => 'bot_ua',
