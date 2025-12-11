@@ -24,7 +24,7 @@ header('Expires: Mon, 01 Jan 1990 00:00:00 GMT');
  * @param mixed $default 默认值
  * @return mixed 清理后的值
  */
-function wxs_get_server_var($key, $default = '') {
+function wxstbw_get_server_var($key, $default = '') {
     if (!isset($_SERVER[$key])) {
         return $default;
     }
@@ -49,7 +49,7 @@ function wxs_get_server_var($key, $default = '') {
  * @param mixed $default 默认值
  * @return mixed 清理后的值
  */
-function wxs_get_env_var($key, $default = '') {
+function wxstbw_get_env_var($key, $default = '') {
     $value = getenv($key);
     if ($value === false) {
         return $default;
@@ -63,7 +63,7 @@ function wxs_get_env_var($key, $default = '') {
  * 增强安全验证，防止IP伪造
  * @return string 访客的IP地址，如果无法获取则返回空字符串
  */
-function wxs_get_ip() {
+function wxstbw_get_ip() {
     $ip = '';
     
     // 按优先级检查各种IP来源
@@ -86,9 +86,9 @@ function wxs_get_ip() {
     
     foreach ($ip_sources as $source) {
         if ($source['type'] === 'env') {
-            $ip_candidate = wxs_get_env_var($source['key']);
+            $ip_candidate = wxstbw_get_env_var($source['key']);
         } else {
-            $ip_candidate = wxs_get_server_var($source['key']);
+            $ip_candidate = wxstbw_get_server_var($source['key']);
         }
         
         if (!empty($ip_candidate)) {
@@ -113,18 +113,18 @@ function wxs_get_ip() {
  * 验证请求安全性
  * @return bool 是否安全请求
  */
-function wxs_validate_request() {
+function wxstbw_validate_request() {
     // 检查请求方法
-    $request_method = wxs_get_server_var('REQUEST_METHOD');
+    $request_method = wxstbw_get_server_var('REQUEST_METHOD');
     if ($request_method !== 'GET') {
         return false;
     }
     
     // 可选的Referer检查
-    $http_referer = wxs_get_server_var('HTTP_REFERER');
+    $http_referer = wxstbw_get_server_var('HTTP_REFERER');
     if (!empty($http_referer)) {
         $referer = wp_parse_url($http_referer);
-        $host = wxs_get_server_var('HTTP_HOST');
+        $host = wxstbw_get_server_var('HTTP_HOST');
         
         if ($referer && isset($referer['host']) && $host) {
             if (strpos($referer['host'], $host) === false) {
@@ -139,20 +139,20 @@ function wxs_validate_request() {
 // 主程序逻辑
 try {
     // 验证请求
-    if (!wxs_validate_request()) {
+    if (!wxstbw_validate_request()) {
         throw new Exception('Invalid request');
     }
     
     // 获取访客IP地址
-    $visitor_ip = wxs_get_ip();
+    $visitor_ip = wxstbw_get_ip();
     
     // 构建响应数据
     $response = [
         'success' => !empty($visitor_ip),
         'ip' => $visitor_ip,
         'timestamp' => time(),
-        'server' => wxs_get_server_var('SERVER_NAME', 'unknown'),
-        'method' => wxs_get_server_var('REQUEST_METHOD', 'unknown')
+        'server' => wxstbw_get_server_var('SERVER_NAME', 'unknown'),
+        'method' => wxstbw_get_server_var('REQUEST_METHOD', 'unknown')
     ];
     
 } catch (Exception $e) {
@@ -161,8 +161,8 @@ try {
         'success' => false,
         'ip' => '',
         'timestamp' => time(),
-        'server' => wxs_get_server_var('SERVER_NAME', 'unknown'),
-        'method' => wxs_get_server_var('REQUEST_METHOD', 'unknown'),
+        'server' => wxstbw_get_server_var('SERVER_NAME', 'unknown'),
+        'method' => wxstbw_get_server_var('REQUEST_METHOD', 'unknown'),
         'error' => 'Access denied'
     ];
 }
