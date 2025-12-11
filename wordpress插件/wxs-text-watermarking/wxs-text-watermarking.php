@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: Wxs Text Watermarking
+ * Plugin Name: WXS Text Watermarking
  * Plugin URI: https://wordpress.org/plugins/wxs-text-watermarking/
  * Description: Add blind watermark to article content, support multiple insertion methods and custom configurations, filter UA whitelist
  * Requires at least: 6.3
@@ -20,11 +20,11 @@ if (!defined("ABSPATH")) {
 }
 
 // 插件统一版本
-function wxs_watermark_plugin_version()
+function wxstbw_plugin_version()
 {
     return "1.1.0";
 }
-$version = wxs_watermark_plugin_version();
+$wxstbw_version = wxstbw_plugin_version();
 
 // 检查mbstring的PHP扩展
 if (!extension_loaded("mbstring")) {
@@ -35,26 +35,26 @@ if (!extension_loaded("mbstring")) {
 }
 
 // 定义插件根目录路径
-define("WXS_WATERMARK_PLUGIN_DIR", plugin_dir_path(__FILE__));
-define("WXS_WATERMARK_PLUGIN_URL", plugin_dir_url(__FILE__));
+define("WXSTBW_PLUGIN_DIR", plugin_dir_path(__FILE__));
+define("WXSTBW_PLUGIN_URL", plugin_dir_url(__FILE__));
 
-//  加载插件目录下的func.php（核心：提前加载，确保函数全局可用）
-$wxs_func_file = WXS_WATERMARK_PLUGIN_DIR . '/lib/func.php';
-if (file_exists($wxs_func_file)) {
-    require_once $wxs_func_file;
+//  加载插件目录下的func.php，若无则不加载
+$wxstbw_func_file = WXSTBW_PLUGIN_DIR . '/lib/func.php';
+if (file_exists($wxstbw_func_file)) {
+    require_once $wxstbw_func_file;
 }
 
 // 配置获取
-if (!function_exists("wxs_watermark_get_setting")) {
-    function wxs_watermark_get_setting($key = "", $default = null)
+if (!function_exists("wxstbw_get_setting")) {
+    function wxstbw_get_setting($key = "", $default = null)
     {
-        $all_settings = get_option("wxs_watermark_init_csf_options", []);
+        $all_settings = get_option("wxstbw_init_csf_options", []);
         return isset($all_settings[$key]) ? $all_settings[$key] : $default;
     }
 }
 
 // 判断当前主题是否是zibll主题或其子主题
-function wxs_watermark_plugin_is_zibll_themes()
+function wxstbw_is_zibll_themes()
 {
 // 获取当前主题对象
     $current_theme = wp_get_theme();
@@ -69,16 +69,16 @@ function wxs_watermark_plugin_is_zibll_themes()
         return true;
     }
 
-    // Neither // 都不是
+    // 都不是
     return false;
 }
 
 // 加载插件后台样式
-function wxs_watermark_enqueue_admin_styles()
+function wxstbw_enqueue_admin_styles()
 {
     // 获取当前后台屏幕对象
     $current_screen = get_current_screen();
-    $prefix = "wxs_watermark_init_csf_options";
+    $prefix = "wxstbw_init_csf_options";
 
     // 仅在插件设置页面加载样式
     if (
@@ -87,8 +87,8 @@ function wxs_watermark_enqueue_admin_styles()
     ) {
         // 加载Font Awesome
         wp_enqueue_style(
-            "font-awesome-7",
-            WXS_WATERMARK_PLUGIN_URL . "lib/assets/css/all.min.css?ver=",
+            "wxstbw-font-awesome",
+            WXSTBW_PLUGIN_URL . "lib/assets/webfonts/css/all.min.css",
             [],
             "7.0.0",
             "all"
@@ -96,53 +96,65 @@ function wxs_watermark_enqueue_admin_styles()
 
         // 原有插件样式
         wp_enqueue_style(
-            "wxs-watermark-admin-style",
-            WXS_WATERMARK_PLUGIN_URL . "lib/assets/css/style.min.css?ver=",
+            "wxstbw-admin-style",
+            WXSTBW_PLUGIN_URL . "lib/assets/css/style.min.css",
             [],
-            wxs_watermark_plugin_version(),
+            wxstbw_plugin_version(),
             "all"
         );
     }
 }
+// 加载设置页面样式
+function wxstbw_enqueue_admin_settings_styles() {
+    wp_enqueue_style(
+        "wxstbw-settings-css",
+        WXSTBW_PLUGIN_URL . "lib/assets/css/settings.css",
+        [],
+        wxstbw_plugin_version(),
+        "all"
+    );
+}
+add_action('admin_enqueue_scripts', 'wxstbw_enqueue_admin_settings_styles');
+
 
 // 初始化所有需要翻译的功能
-function wxs_watermark_init_translated_functions() {
+function wxstbw_init_translated_functions() {
     // 全局配置变量
-    global $wxs_watermark_config;
-    $wxs_watermark_config = get_option("wxs_watermark_init_csf_options", []);
+    global $wxstbw_config;
+    $wxstbw_config = get_option("wxstbw_init_csf_options", []);
     
     // 记录CSF初始化状态的变量
     $csf_initialized = false;
 
     // 初始化CSF设置面板
     if (class_exists("CSF")) {
-        $csf_initialized = wxs_watermark_init_csf_settings();
+        $csf_initialized = wxstbw_init_csf_settings();
     } else {
         $csf_initialized = false;
     }
 
     // 添加备用菜单注册方式，确保在CSF无法正常工作时仍能显示插件入口
     if (!$csf_initialized) {
-        if (!wxs_watermark_plugin_is_zibll_themes()) {
-            add_action("admin_menu", "wxs_watermark_add_fallback_menu");
+        if (!wxstbw_is_zibll_themes()) {
+            add_action("admin_menu", "wxstbw_add_fallback_menu");
         }
     }
     
     // 挂钩到后台样式加载钩子
-    if (!wxs_watermark_plugin_is_zibll_themes()) {
+    if (!wxstbw_is_zibll_themes()) {
         add_action(
             "admin_enqueue_scripts",
-            "wxs_watermark_enqueue_admin_styles",
+            "wxstbw_enqueue_admin_styles",
             500
         );
     }
 }
-add_action('init', 'wxs_watermark_init_translated_functions');
+add_action('init', 'wxstbw_init_translated_functions');
 
-if (wxs_watermark_plugin_is_zibll_themes()) {
+if (wxstbw_is_zibll_themes()) {
     // 使用子比函数挂载
-    require_once WXS_WATERMARK_PLUGIN_DIR . "/lib/wxs-settings.php";
-    add_action("zib_require_end", "wxs_watermark_init_csf_settings");
+    require_once WXSTBW_PLUGIN_DIR . "/lib/wxs-settings.php";
+    add_action("zib_require_end", "wxstbw_init_csf_settings");
 } else {
     // 非子比引入必要文件
     $required_files = [
@@ -153,7 +165,7 @@ if (wxs_watermark_plugin_is_zibll_themes()) {
     // 检查Codestar Framework是否已存在
     $csf_exists = class_exists("CSF");
     foreach ($required_files as $file) {
-        $full_path = WXS_WATERMARK_PLUGIN_DIR . $file;
+        $full_path = WXSTBW_PLUGIN_DIR . $file;
         // 如果是Codestar框架文件且已存在，则跳过加载
         if (
             $file === "/lib/codestar-framework/codestar-framework.php" &&
@@ -170,10 +182,8 @@ if (wxs_watermark_plugin_is_zibll_themes()) {
     }
 }
 
-// 添加输出JS状态变量的动作
-add_action("wp_head", "wxs_watermark_output_js_vars");
-function wxs_watermark_output_js_vars()
-{
+// 添加输出JS状态变量的动作 - 修复：使用wp_add_inline_script
+function wxstbw_output_js_vars() {
     // 获取用户登录状态
     $is_user_logged_in = is_user_logged_in() ? "true" : "false";
     
@@ -193,26 +203,30 @@ function wxs_watermark_output_js_vars()
     // 检查是否为文章页面
     $is_article_page = is_single() ? "true" : "false";
     
-    // 输出变量到页面
-    echo "<script type='text/javascript'>\n";
-    echo "window.wxs_isUserLoggedIn = " . esc_js($is_user_logged_in) . ";\n";
-    echo "window.wxs_current_user_id = " . esc_js($current_user_id) . ";\n";
-    echo "window.wxs_current_user_roles = " . $current_user_roles . ";\n";
-    echo "window.wxs_isArticlePage = " . esc_js($is_article_page) . ";\n";
-    echo "</script>\n";
+    // 输出变量到页面 - 使用wp_add_inline_script
+    $js_vars = "window.wxstbw_isUserLoggedIn = " . esc_js($is_user_logged_in) . ";\n";
+    $js_vars .= "window.wxstbw_current_user_id = " . esc_js($current_user_id) . ";\n";
+    $js_vars .= "window.wxstbw_current_user_roles = " . $current_user_roles . ";\n";
+    $js_vars .= "window.wxstbw_isArticlePage = " . esc_js($is_article_page) . ";\n";
+    
+    // 使用wp_add_inline_script添加到已注册的脚本中
+    if (wp_script_is('wxstbw-watermark-script', 'registered')) {
+        wp_add_inline_script('wxstbw-watermark-script', $js_vars, 'before');
+    }
 }
+add_action("wp_enqueue_scripts", "wxstbw_output_js_vars", 20);
 
 // 备用菜单注册函数，当CSF无法正常工作时使用
-function wxs_watermark_add_fallback_menu()
+function wxstbw_add_fallback_menu()
 {
-    $prefix = "wxs_watermark_init_csf_options"; // 使用新前缀
+    $prefix = "wxstbw_init_csf_options"; // 使用新前缀
     // 添加顶级菜单
     add_menu_page(
         esc_html__("Text Blind Watermark Configuration", 'wxs-text-watermarking'),
         esc_html__("Text Watermark", 'wxs-text-watermarking'),
         "manage_options",
         $prefix, // 菜单标识使用新前缀
-        "wxs_watermark_fallback_page",
+        "wxstbw_fallback_page",
         "dashicons-shield",
         58
     );
@@ -224,12 +238,12 @@ function wxs_watermark_add_fallback_menu()
         esc_html__("Settings", 'wxs-text-watermarking'),
         "manage_options",
         $prefix,
-        "wxs_watermark_fallback_page"
+        "wxstbw_fallback_page"
     );
 }
 
 // 备用页面内容，当CSF无法正常工作时显示
-function wxs_watermark_fallback_page()
+function wxstbw_fallback_page()
 {
     if (!current_user_can("manage_options")) {
         wp_die(esc_html__("You do not have sufficient permissions to access this page.", 'wxs-text-watermarking'));
@@ -249,22 +263,22 @@ function wxs_watermark_fallback_page()
 }
 
 // 检查当前用户是否允许插入水印
-if (!function_exists('wxs_watermark_check_user_permission')) {
+if (!function_exists('wxstbw_check_user_permission')) {
     /**
      * 检查当前用户是否允许插入水印
      * 
      * @return bool True表示允许插入水印，False表示跳过
      */
-    function wxs_watermark_check_user_permission() {
-        global $wxs_watermark_config;
+    function wxstbw_check_user_permission() {
+        global $wxstbw_config;
         
         // 如果用户组控制未启用，则默认允许所有用户
-        if (empty($wxs_watermark_config['user_group_enable'])) {
+        if (empty($wxstbw_config['user_group_enable'])) {
             return true;
         }
         
-        $user_group_type = isset($wxs_watermark_config['user_group_type']) 
-            ? $wxs_watermark_config['user_group_type'] 
+        $user_group_type = isset($wxstbw_config['user_group_type']) 
+            ? $wxstbw_config['user_group_type'] 
             : 'wordpress';
         
         // 获取当前用户
@@ -282,8 +296,8 @@ if (!function_exists('wxs_watermark_check_user_permission')) {
         switch ($user_group_type) {
             case 'wordpress':
                 // WordPress内置用户组检测
-                $allowed_roles = isset($wxs_watermark_config['wordpress_user_roles']) 
-                    ? $wxs_watermark_config['wordpress_user_roles'] 
+                $allowed_roles = isset($wxstbw_config['wordpress_user_roles']) 
+                    ? $wxstbw_config['wordpress_user_roles'] 
                     : [];
                 
                 // 如果用户角色在允许的列表中，则插入水印
@@ -296,12 +310,12 @@ if (!function_exists('wxs_watermark_check_user_permission')) {
                 
             case 'custom':
                 // 自定义用户组检测
-                if (function_exists('wxs_watermark_op_custom')) {
+                if (function_exists('wxstbw_op_custom')) {
                     // 使用用户自定义的函数
-                    return wxs_watermark_op_custom($user_id);
+                    return wxstbw_op_custom($user_id);
                 } else {
                     // 如果自定义函数不存在，记录警告并默认插入水印
-                    error_log(esc_html__('Text Blind Watermark Warning: wxs_watermark_op_custom() function not found, watermark will be inserted for all users.', 'wxs-text-watermarking'));
+                    error_log(esc_html__('Text Blind Watermark Warning: wxstbw_op_custom() function not found, watermark will be inserted for all users.', 'wxs-text-watermarking'));
                     return true;
                 }
                 
@@ -312,23 +326,23 @@ if (!function_exists('wxs_watermark_check_user_permission')) {
 }
 
 // 变体选择器定义
-define("VARIATION_SELECTOR_START", 0xfe00);
-define("VARIATION_SELECTOR_END", 0xfe0f);
-define("VARIATION_SELECTOR_SUPPLEMENT_START", 0xe0100);
-define("VARIATION_SELECTOR_SUPPLEMENT_END", 0xe01ef);
+define("WXSTBW_VARIATION_SELECTOR_START", 0xfe00);
+define("WXSTBW_VARIATION_SELECTOR_END", 0xfe0f);
+define("WXSTBW_VARIATION_SELECTOR_SUPPLEMENT_START", 0xe0100);
+define("WXSTBW_VARIATION_SELECTOR_SUPPLEMENT_END", 0xe01ef);
 
 // 字节转换为变体选择器字符
-function wxs_toVariationSelector($byte)
+function wxstbw_toVariationSelector($byte)
 {
     if (!is_int($byte) || $byte < 0 || $byte > 255) {
         return null;
     }
 
     if ($byte >= 0 && $byte < 16) {
-        return mb_chr(VARIATION_SELECTOR_START + $byte, "UTF-8");
+        return mb_chr(WXSTBW_VARIATION_SELECTOR_START + $byte, "UTF-8");
     } elseif ($byte >= 16 && $byte < 256) {
         return mb_chr(
-            VARIATION_SELECTOR_SUPPLEMENT_START + ($byte - 16),
+            WXSTBW_VARIATION_SELECTOR_SUPPLEMENT_START + ($byte - 16),
             "UTF-8"
         );
     }
@@ -336,7 +350,7 @@ function wxs_toVariationSelector($byte)
 }
 
 // 获取客户端IP
-function wxs_get_watermark_client_ip()
+function wxstbw_get_client_ip()
 {
     $ip = 'unknown';
     
@@ -354,30 +368,30 @@ function wxs_get_watermark_client_ip()
 }
 
 // 生成水印内容
-function wxs_generate_watermark_raw()
+function wxstbw_generate_watermark_raw()
 {
-    global $wxs_watermark_config;
+    global $wxstbw_config;
     $parts = [];
 
-    if (!empty($wxs_watermark_config["include_ip"])) {
-        $parts[] = "IP:" . wxs_get_watermark_client_ip();
+    if (!empty($wxstbw_config["include_ip"])) {
+        $parts[] = "IP:" . wxstbw_get_client_ip();
     }
 
     if (
-        !empty($wxs_watermark_config["include_user"]) &&
+        !empty($wxstbw_config["include_user"]) &&
         function_exists("wp_get_current_user")
     ) {
         $user = wp_get_current_user();
         $parts[] = "USER:" . ($user->exists() ? $user->ID : esc_html__("guest", 'wxs-text-watermarking'));
     }
 
-    if (!empty($wxs_watermark_config["include_time"])) {
+    if (!empty($wxstbw_config["include_time"])) {
         // 读取 WordPress 全局时区设置
         $wp_timezone_string = get_option("timezone_string"); // 优先获取完整时区（如 Asia/Shanghai）
         $wp_gmt_offset = get_option("gmt_offset"); // 备用：GMT偏移量
         // 构建 WordPress 时区对象
         if (!empty($wp_timezone_string)) {
-            // 有完整时区标识符（推荐，如 Asia/Shanghai）
+            // 完整时区标识符
             $timezone = new DateTimeZone($wp_timezone_string);
         } else {
             // 只有GMT偏移量
@@ -402,10 +416,10 @@ function wxs_generate_watermark_raw()
     }
 
     if (
-        !empty($wxs_watermark_config["include_custom"]) &&
-        !empty($wxs_watermark_config["custom_text"])
+        !empty($wxstbw_config["include_custom"]) &&
+        !empty($wxstbw_config["custom_text"])
     ) {
-        $parts[] = sanitize_text_field($wxs_watermark_config["custom_text"]);
+        $parts[] = sanitize_text_field($wxstbw_config["custom_text"]);
     }
 
     $raw = implode("|", $parts);
@@ -413,9 +427,9 @@ function wxs_generate_watermark_raw()
 }
 
 // 生成盲水印（变体选择器序列）
-function wxs_generate_watermark_selector()
+function wxstbw_generate_watermark_selector()
 {
-    $raw = wxs_generate_watermark_raw();
+    $raw = wxstbw_generate_watermark_raw();
     if (empty($raw)) {
         return "";
     }
@@ -429,7 +443,7 @@ function wxs_generate_watermark_selector()
 
     $selector_str = "";
     foreach ($bytes as $byte) {
-        $selector = wxs_toVariationSelector($byte);
+        $selector = wxstbw_toVariationSelector($byte);
         if ($selector !== null) {
             $selector_str .= $selector;
         }
@@ -439,32 +453,32 @@ function wxs_generate_watermark_selector()
 }
 
 // 计算随机插入次数
-function wxs_calc_random_count($text_length)
+function wxstbw_calc_random_count($text_length)
 {
-    global $wxs_watermark_config;
-    $count_type = isset($wxs_watermark_config["random_count_type"])
-        ? $wxs_watermark_config["random_count_type"]
+    global $wxstbw_config;
+    $count_type = isset($wxstbw_config["random_count_type"])
+        ? $wxstbw_config["random_count_type"]
         : 2;
 
     if ($count_type == 1) {
-        $custom_count = isset($wxs_watermark_config["random_custom_count"])
-            ? $wxs_watermark_config["random_custom_count"]
+        $custom_count = isset($wxstbw_config["random_custom_count"])
+            ? $wxstbw_config["random_custom_count"]
             : 1;
         return max(1, (int) $custom_count);
     } else {
-        $ratio = isset($wxs_watermark_config["random_word_ratio"])
-            ? $wxs_watermark_config["random_word_ratio"]
+        $ratio = isset($wxstbw_config["random_word_ratio"])
+            ? $wxstbw_config["random_word_ratio"]
             : 400;
         return max(1, (int) ($text_length / $ratio));
     }
 }
 
 // 处理单个段落文本
-function wxs_process_paragraph($text, $watermark)
+function wxstbw_process_paragraph($text, $watermark)
 {
-    global $wxs_watermark_config;
-    $min_length = isset($wxs_watermark_config["min_paragraph_length"])
-        ? $wxs_watermark_config["min_paragraph_length"]
+    global $wxstbw_config;
+    $min_length = isset($wxstbw_config["min_paragraph_length"])
+        ? $wxstbw_config["min_paragraph_length"]
         : 20;
     $text_length = mb_strlen($text, "UTF-8");
 
@@ -472,15 +486,15 @@ function wxs_process_paragraph($text, $watermark)
         return $text;
     }
 
-    $method = isset($wxs_watermark_config["insert_method"])
-        ? $wxs_watermark_config["insert_method"]
+    $method = isset($wxstbw_config["insert_method"])
+        ? $wxstbw_config["insert_method"]
         : 2;
     switch ($method) {
         case 1: // 段落末尾插入
             return $text . $watermark;
 
         case 2: // 随机位置插入
-            $insert_count = wxs_calc_random_count($text_length);
+            $insert_count = wxstbw_calc_random_count($text_length);
             $positions = [];
 
             // 避免插入次数超过文本长度
@@ -510,8 +524,8 @@ function wxs_process_paragraph($text, $watermark)
             return $result;
 
         case 3: // 固定字数插入
-            $interval = isset($wxs_watermark_config["fixed_interval"])
-                ? $wxs_watermark_config["fixed_interval"]
+            $interval = isset($wxstbw_config["fixed_interval"])
+                ? $wxstbw_config["fixed_interval"]
                 : 20;
             $interval = max(5, (int) $interval); // 确保间隔不小于5
 
@@ -530,34 +544,34 @@ function wxs_process_paragraph($text, $watermark)
 }
 
 // 获取配置的HTML标签
-function wxs_watermark_get_html_tags()
+function wxstbw_get_html_tags()
 {
-    $tags = wxs_watermark_get_setting("html_tags", "p,li");
+    $tags = wxstbw_get_setting("html_tags", "p,li");
     $tags = array_map("trim", explode(",", $tags));
     return array_filter($tags); // 过滤空值
 }
 
 // 处理HTML内容中的所有配置标签
-function wxs_process_html_content($content)
+function wxstbw_process_html_content($content)
 {
-    global $wxs_watermark_config;
+    global $wxstbw_config;
     // 检查是否启用
-    if (empty($wxs_watermark_config["enable"])) {
+    if (empty($wxstbw_config["enable"])) {
         return $content;
     }
     // 调试模式处理
-    $isDebug = !empty($wxs_watermark_config["debug_mode"]);
-    $rawWatermark = wxs_generate_watermark_raw();
+    $isDebug = !empty($wxstbw_config["debug_mode"]);
+    $rawWatermark = wxstbw_generate_watermark_raw();
     $watermark = $isDebug
         ? "[" . esc_html__("Watermark Debug PHP Mode:", 'wxs-text-watermarking') . "{$rawWatermark}]"
-        : wxs_generate_watermark_selector();
+        : wxstbw_generate_watermark_selector();
 
     if (empty($watermark)) {
         return $content;
     }
 
     // 获取配置的标签
-    $tags = wxs_watermark_get_html_tags();
+    $tags = wxstbw_get_html_tags();
     if (empty($tags)) {
         $tags = ["p", "li"];
     }
@@ -587,7 +601,7 @@ function wxs_process_html_content($content)
                 foreach ($node->childNodes as $child) {
                     if ($child->nodeType === XML_TEXT_NODE) {
                         $original_text = $child->nodeValue;
-                        $processed_text = wxs_process_paragraph(
+                        $processed_text = wxstbw_process_paragraph(
                             $original_text,
                             $watermark
                         );
@@ -609,7 +623,7 @@ function wxs_process_html_content($content)
 }
 
 // 获取消毒后的用户代理
-function wxs_get_sanitized_user_agent() {
+function wxstbw_get_sanitized_user_agent() {
     if (isset($_SERVER['HTTP_USER_AGENT'])) {
         return sanitize_text_field(wp_unslash($_SERVER['HTTP_USER_AGENT']));
     }
@@ -617,19 +631,19 @@ function wxs_get_sanitized_user_agent() {
 }
 
 // 主处理函数 - 根据运行模式决定处理方式
-function wxs_watermark_main($content)
+function wxstbw_watermark_main($content)
 {
-    global $wxs_watermark_config;
+    global $wxstbw_config;
 
     // 检查是否启用
-    if (empty($wxs_watermark_config["enable"])) {
+    if (empty($wxstbw_config["enable"])) {
         return $content;
     }
     
     // 检查用户权限
-    if (!wxs_watermark_check_user_permission()) {
+    if (!wxstbw_check_user_permission()) {
         // 调试模式下记录跳过信息
-        if (!empty($wxs_watermark_config["debug_mode"])) {
+        if (!empty($wxstbw_config["debug_mode"])) {
             $current_user = wp_get_current_user();
             $user_info = $current_user->ID ? "User ID: {$current_user->ID}" : "Guest";
             error_log(esc_html__("Watermark skipped for user (user group control): ", 'wxs-text-watermarking') . $user_info);
@@ -638,17 +652,17 @@ function wxs_watermark_main($content)
     }
 
     // 获取运行模式
-    $run_mode = isset($wxs_watermark_config["run_mode"])
-        ? $wxs_watermark_config["run_mode"]
+    $run_mode = isset($wxstbw_config["run_mode"])
+        ? $wxstbw_config["run_mode"]
         : "hybrid";
 
     // 爬虫过滤
-    $user_agent = strtolower(wxs_get_sanitized_user_agent());
+    $user_agent = strtolower(wxstbw_get_sanitized_user_agent());
     $bot_ua_list = [];
-    if (!empty($wxs_watermark_config["bot_ua"])) {
+    if (!empty($wxstbw_config["bot_ua"])) {
         // 过滤空值和空格
         $bot_ua_list = array_filter(
-            array_map("trim", explode("\n", $wxs_watermark_config["bot_ua"]))
+            array_map("trim", explode("\n", $wxstbw_config["bot_ua"]))
         );
     }
 
@@ -669,7 +683,7 @@ function wxs_watermark_main($content)
     switch ($run_mode) {
         case "dynamic":
             // 动态模式：纯PHP处理，不管是否为登录状态
-            return wxs_process_html_content($content);
+            return wxstbw_process_html_content($content);
             break;
 
         case "static":
@@ -680,14 +694,14 @@ function wxs_watermark_main($content)
         case "hybrid":
             // 混合模式：登录用户用PHP，未登录用户用JS
             $is_logged_in = is_user_logged_in();
-            if (!empty($wxs_watermark_config["debug_mode"])) {
+            if (!empty($wxstbw_config["debug_mode"])) {
                 error_log(
                     esc_html__("Hybrid Mode Processing - User Login Status: ", 'wxs-text-watermarking') .
                         ($is_logged_in ? esc_html__("Logged in (PHP processing)", 'wxs-text-watermarking') : esc_html__("Not logged in (JS processing)", 'wxs-text-watermarking'))
                 );
             }
             return $is_logged_in
-                ? wxs_process_html_content($content)
+                ? wxstbw_process_html_content($content)
                 : $content;
             break;
 
@@ -695,41 +709,41 @@ function wxs_watermark_main($content)
             // 未知模式默认使用混合模式逻辑
             $is_logged_in = is_user_logged_in();
             return $is_logged_in
-                ? wxs_process_html_content($content)
+                ? wxstbw_process_html_content($content)
                 : $content;
             break;
     }
 }
 // 将内容处理也挂载到init之后
 add_action('init', function() {
-    add_filter("the_content", "wxs_watermark_main", 999);
+    add_filter("the_content", "wxstbw_watermark_main", 999);
 });
 
 // 脚本入队与配置本地化 - 根据运行模式决定是否加载JS
 add_action("wp_enqueue_scripts", function () {
-    global $wxs_watermark_config, $version;
+    global $wxstbw_config, $wxstbw_version;
 
     // 检查是否启用
-    if (empty($wxs_watermark_config["enable"])) {
+    if (empty($wxstbw_config["enable"])) {
         return;
     }
     
     // 检查用户权限
-    if (!wxs_watermark_check_user_permission()) {
+    if (!wxstbw_check_user_permission()) {
         return;
     }
 
     // 获取运行模式
-    $run_mode = isset($wxs_watermark_config["run_mode"])
-        ? $wxs_watermark_config["run_mode"]
+    $run_mode = isset($wxstbw_config["run_mode"])
+        ? $wxstbw_config["run_mode"]
         : "hybrid";
 
     // 爬虫检测
-    $user_agent = strtolower(wxs_get_sanitized_user_agent());
+    $user_agent = strtolower(wxstbw_get_sanitized_user_agent());
     $bot_ua_list = [];
-    if (!empty($wxs_watermark_config["bot_ua"])) {
+    if (!empty($wxstbw_config["bot_ua"])) {
         $bot_ua_list = array_filter(
-            array_map("trim", explode("\n", $wxs_watermark_config["bot_ua"]))
+            array_map("trim", explode("\n", $wxstbw_config["bot_ua"]))
         );
     }
 
@@ -751,7 +765,7 @@ add_action("wp_enqueue_scripts", function () {
     if ($run_mode === "static") {
         $load_js = true;
         // 调试模式下记录加载信息
-        if (!empty($wxs_watermark_config["debug_mode"])) {
+        if (!empty($wxstbw_config["debug_mode"])) {
             error_log(esc_html__("Pure JS mode enabled, loading watermark script", 'wxs-text-watermarking'));
         }
     } elseif ($run_mode === "dynamic") {
@@ -763,128 +777,128 @@ add_action("wp_enqueue_scripts", function () {
     // 入队JS文件
     if ($load_js) {
         wp_enqueue_script(
-            "wxs-watermark-script",
-            WXS_WATERMARK_PLUGIN_URL . "lib/assets/js/index.min.js",
+            "wxstbw-watermark-script",
+            WXSTBW_PLUGIN_URL . "lib/assets/js/index.min.js",
             [],
-            $version,
+            $wxstbw_version,
             true
         );
 
         // 本地化配置
-        wxs_output_watermark_config();
+        wxstbw_output_watermark_config();
     }
 });
 
 // 输出配置到前端JS
-function wxs_output_watermark_config()
+function wxstbw_output_watermark_config()
 {
-    global $wxs_watermark_config;
-    if (empty($wxs_watermark_config) || !is_array($wxs_watermark_config)) {
+    global $wxstbw_config;
+    if (empty($wxstbw_config) || !is_array($wxstbw_config)) {
         return;
     }
     // 强制在调试模式下输出详细日志
-    $is_debug = !empty($wxs_watermark_config["debug_mode"]);
+    $is_debug = !empty($wxstbw_config["debug_mode"]);
     if ($is_debug) {
         error_log(
             esc_html__("Watermark Debug Mode Enabled - Configuration Information: ", 'wxs-text-watermarking') .
-                print_r($wxs_watermark_config, true)
+                print_r($wxstbw_config, true)
         );
     }
     // 生成水印内容供JS使用
-    $watermark_raw = wxs_generate_watermark_raw();
+    $watermark_raw = wxstbw_generate_watermark_raw();
     // 获取配置的HTML标签
-    $html_tags = wxs_watermark_get_html_tags();
+    $html_tags = wxstbw_get_html_tags();
     if (empty($html_tags)) {
         $html_tags = ["p", "li"];
     }
     // 格式化配置，确保debug_mode正确传递
     $js_config = [
-        "enable" => isset($wxs_watermark_config["enable"])
-            ? $wxs_watermark_config["enable"]
+        "enable" => isset($wxstbw_config["enable"])
+            ? $wxstbw_config["enable"]
             : 0,
-        "user_group_enable" => isset($wxs_watermark_config["user_group_enable"])
-            ? $wxs_watermark_config["user_group_enable"]
+        "user_group_enable" => isset($wxstbw_config["user_group_enable"])
+            ? $wxstbw_config["user_group_enable"]
             : 0,
-        "user_group_type" => isset($wxs_watermark_config["user_group_type"])
-            ? esc_js($wxs_watermark_config["user_group_type"])
+        "user_group_type" => isset($wxstbw_config["user_group_type"])
+            ? esc_js($wxstbw_config["user_group_type"])
             : "wordpress",
-        "wordpress_user_roles" => isset($wxs_watermark_config["wordpress_user_roles"])
-            ? array_map('esc_js', $wxs_watermark_config["wordpress_user_roles"])
+        "wordpress_user_roles" => isset($wxstbw_config["wordpress_user_roles"])
+            ? array_map('esc_js', $wxstbw_config["wordpress_user_roles"])
             : [],
-        "ip_endpoint" => esc_js(WXS_WATERMARK_PLUGIN_URL . "obtain-an-ip.php"),
+        "ip_endpoint" => esc_js(WXSTBW_PLUGIN_URL . "obtain-an-ip.php"),
         "min_paragraph_length" => isset(
-            $wxs_watermark_config["min_paragraph_length"]
+            $wxstbw_config["min_paragraph_length"]
         )
-            ? $wxs_watermark_config["min_paragraph_length"]
+            ? $wxstbw_config["min_paragraph_length"]
             : 20,
-        "insert_method" => isset($wxs_watermark_config["insert_method"])
-            ? $wxs_watermark_config["insert_method"]
+        "insert_method" => isset($wxstbw_config["insert_method"])
+            ? $wxstbw_config["insert_method"]
             : 2,
         "random" => [
-            "count_type" => isset($wxs_watermark_config["random_count_type"])
-                ? $wxs_watermark_config["random_count_type"]
+            "count_type" => isset($wxstbw_config["random_count_type"])
+                ? $wxstbw_config["random_count_type"]
                 : 2,
             "custom_count" => isset(
-                $wxs_watermark_config["random_custom_count"]
+                $wxstbw_config["random_custom_count"]
             )
-                ? $wxs_watermark_config["random_custom_count"]
+                ? $wxstbw_config["random_custom_count"]
             : 1,
             "word_based_ratio" => isset(
-                $wxs_watermark_config["random_word_ratio"]
+                $wxstbw_config["random_word_ratio"]
             )
-                ? $wxs_watermark_config["random_word_ratio"]
+                ? $wxstbw_config["random_word_ratio"]
                 : 400,
         ],
         "fixed" => [
-            "interval" => isset($wxs_watermark_config["fixed_interval"])
-                ? $wxs_watermark_config["fixed_interval"]
+            "interval" => isset($wxstbw_config["fixed_interval"])
+                ? $wxstbw_config["fixed_interval"]
                 : 20,
         ],
         "watermark_content" => [
-            "include_ip" => isset($wxs_watermark_config["include_ip"])
-                ? $wxs_watermark_config["include_ip"]
+            "include_ip" => isset($wxstbw_config["include_ip"])
+                ? $wxstbw_config["include_ip"]
                 : 1,
-            "include_user" => isset($wxs_watermark_config["include_user"])
-                ? $wxs_watermark_config["include_user"]
+            "include_user" => isset($wxstbw_config["include_user"])
+                ? $wxstbw_config["include_user"]
                 : 1,
-            "include_time" => isset($wxs_watermark_config["include_time"])
-                ? $wxs_watermark_config["include_time"]
+            "include_time" => isset($wxstbw_config["include_time"])
+                ? $wxstbw_config["include_time"]
                 : 1,
-            "include_custom" => isset($wxs_watermark_config["include_custom"])
-                ? $wxs_watermark_config["include_custom"]
+            "include_custom" => isset($wxstbw_config["include_custom"])
+                ? $wxstbw_config["include_custom"]
                 : 1,
-            "custom_text" => isset($wxs_watermark_config["custom_text"])
-                ? esc_js($wxs_watermark_config["custom_text"])
+            "custom_text" => isset($wxstbw_config["custom_text"])
+                ? esc_js($wxstbw_config["custom_text"])
                 : esc_js(esc_html__("Mr. Wang's Notes All Rights Reserved", 'wxs-text-watermarking')),
         ],
         "htmlTags" => array_map('esc_js', $html_tags),
-        "jsGlobalEnable" => isset($wxs_watermark_config["js_global_enable"])
-            ? $wxs_watermark_config["js_global_enable"]
+        "jsGlobalEnable" => isset($wxstbw_config["js_global_enable"])
+            ? $wxstbw_config["js_global_enable"]
             : 0,
-        "jsClassSelectors" => isset($wxs_watermark_config["js_class_selectors"])
-            ? esc_js($wxs_watermark_config["js_class_selectors"])
+        "jsClassSelectors" => isset($wxstbw_config["js_class_selectors"])
+            ? esc_js($wxstbw_config["js_class_selectors"])
             : "",
-        "jsIdSelectors" => isset($wxs_watermark_config["js_id_selectors"])
-            ? esc_js($wxs_watermark_config["js_id_selectors"])
+        "jsIdSelectors" => isset($wxstbw_config["js_id_selectors"])
+            ? esc_js($wxstbw_config["js_id_selectors"])
             : "",
         "global_force_article" => isset(
-            $wxs_watermark_config["global_force_article"]
+            $wxstbw_config["global_force_article"]
         )
-            ? $wxs_watermark_config["global_force_article"]
+            ? $wxstbw_config["global_force_article"]
             : 0,
 
-        "bot_ua" => isset($wxs_watermark_config["bot_ua"])
-            ? array_map('esc_js', array_filter(explode("\n", $wxs_watermark_config["bot_ua"])))
+        "bot_ua" => isset($wxstbw_config["bot_ua"])
+            ? array_map('esc_js', array_filter(explode("\n", $wxstbw_config["bot_ua"])))
             : [],
         "debug_mode" => $is_debug ? 1 : 0, // 确保是数字类型
-        "run_mode" => isset($wxs_watermark_config["run_mode"])
-            ? esc_js($wxs_watermark_config["run_mode"])
+        "run_mode" => isset($wxstbw_config["run_mode"])
+            ? esc_js($wxstbw_config["run_mode"])
             : "hybrid", // 传递运行模式
     ];
 
     wp_localize_script(
-        "wxs-watermark-script",
-        "wxsWatermarkConfig",
+        "wxstbw-watermark-script",
+        "wxstbwConfig",
         $js_config
     );
 }
