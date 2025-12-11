@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: WXS Text Watermarking
+ * Plugin Name: Wxs Text Watermarking
  * Plugin URI: https://wordpress.org/plugins/wxs-text-watermarking/
  * Description: Add blind watermark to article content, support multiple insertion methods and custom configurations, filter UA whitelist
  * Requires at least: 6.3
