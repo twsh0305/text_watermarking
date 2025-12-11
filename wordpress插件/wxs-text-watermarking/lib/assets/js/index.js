@@ -1,12 +1,12 @@
 document.addEventListener('DOMContentLoaded', function() {
     // 页面状态变量
-    const wxs_isUserLoggedIn = window.wxs_isUserLoggedIn || false;
-    const wxs_current_user_id = window.wxs_current_user_id || false;
-    const wxs_current_user_roles = window.wxs_current_user_roles || [];
-    const wxs_isArticlePage = window.wxs_isArticlePage || false;
+    const wxstbw_isUserLoggedIn = window.wxstbw_isUserLoggedIn || false;
+    const wxstbw_current_user_id = window.wxstbw_current_user_id || false;
+    const wxstbw_current_user_roles = window.wxstbw_current_user_roles || [];
+    const wxstbw_isArticlePage = window.wxstbw_isArticlePage || false;
 
     // 加载配置
-    const config = window.wxsWatermarkConfig || {};
+    const config = window.wxstbwConfig || {};
     
     // 配置规范化（统一处理布尔值类型）
     const normalizedConfig = {
@@ -44,10 +44,10 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('文本盲水印JS初始化');
         console.log('配置:', normalizedConfig);
         console.log('用户状态:', {
-            isLoggedIn: wxs_isUserLoggedIn,
-            userId: wxs_current_user_id,
-            userRoles: wxs_current_user_roles,
-            isArticlePage: wxs_isArticlePage
+            isLoggedIn: wxstbw_isUserLoggedIn,
+            userId: wxstbw_current_user_id,
+            userRoles: wxstbw_current_user_roles,
+            isArticlePage: wxstbw_isArticlePage
         });
     }
 
@@ -60,8 +60,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // 检查用户组控制
     if (normalizedConfig.user_group_enable) {
         // 获取用户角色信息（从WordPress传递）
-        const userRoles = Array.isArray(wxs_current_user_roles) ? wxs_current_user_roles : [];
-        const isGuest = !wxs_isUserLoggedIn;
+        const userRoles = Array.isArray(wxstbw_current_user_roles) ? wxstbw_current_user_roles : [];
+        const isGuest = !wxstbw_isUserLoggedIn;
         
         let shouldProcess = true;
         
@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // 检查运行模式
-    if (normalizedConfig.run_mode === 'hybrid' && wxs_isUserLoggedIn) {
+    if (normalizedConfig.run_mode === 'hybrid' && wxstbw_isUserLoggedIn) {
         if (isDebug) console.log('混合模式 - 登录用户，跳过JS处理');
         return;
     }
@@ -171,7 +171,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         if (normalizedConfig.watermark_content.include_user) {
-            parts.push(`USER:${wxs_isUserLoggedIn ? wxs_current_user_id : 'guest'}`);
+            parts.push(`USER:${wxstbw_isUserLoggedIn ? wxstbw_current_user_id : 'guest'}`);
         }
         
         if (normalizedConfig.watermark_content.include_time) {
@@ -342,7 +342,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (isDebug) console.log('处理的标签:', tags);
         
         // 1. 首先处理文章内容
-        if (wxs_isArticlePage) {
+        if (wxstbw_isArticlePage) {
             if (isDebug) console.log('处理文章页面内容');
             
             const articleSelectors = [
