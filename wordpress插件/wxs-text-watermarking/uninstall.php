@@ -9,9 +9,7 @@
 if (!defined('WP_UNINSTALL_PLUGIN')) {
     exit;
 }
-
-
+delete_option('wxstbw_init_csf_options');
+// 历史设置名
 delete_option('wxs_watermark_init_csf_options');
-
 ?>
-    
