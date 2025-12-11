@@ -1,4 +1,4 @@
-=== Wxs Text Watermarking ===
+=== WXS Text Watermarking ===
 Contributors: twsh0305
 Donate link: https://wxsnote.cn/zanzhu
 Tags: blind, watermark, copyright, protection, text
