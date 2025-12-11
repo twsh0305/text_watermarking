@@ -2,21 +2,21 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Wxs Text Watermarking 1.1.0\n"
+"Project-Id-Version: WXS Text Watermarking 1.1.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wxs-text-watermarking\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-12-10T15:54:30+08:00\n"
+"POT-Creation-Date: 2025-12-10T21:17:25+08:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: wxs-text-watermarking\n"
 
 #. Plugin Name of the plugin
 #: wxs-text-watermarking.php
-msgid "Wxs Text Watermarking"
+msgid "WXS Text Watermarking"
 msgstr ""
 
 #. Plugin URI of the plugin
@@ -40,7 +40,7 @@ msgid "https://wxsnote.cn"
 msgstr ""
 
 #: lib/wxs-settings.php:35
-#: wxs-text-watermarking.php:212
+#: wxs-text-watermarking.php:226
 msgid "Text Watermark"
 msgstr ""
 
@@ -62,439 +62,439 @@ msgstr ""
 msgid " Plugin Author: 天无神话 %sThank you for using the Text Blind Watermark Plugin "
 msgstr ""
 
-#: lib/wxs-settings.php:82
+#: lib/wxs-settings.php:85
 msgid "Welcome"
 msgstr ""
 
-#: lib/wxs-settings.php:101
+#: lib/wxs-settings.php:104
 msgid "Thank you for using the Text Blind Watermark Plugin"
 msgstr ""
 
-#: lib/wxs-settings.php:103
+#: lib/wxs-settings.php:106
 msgid "Plugin Features: This plugin can embed invisible blind watermarks in article content to help you protect original content."
 msgstr ""
 
-#: lib/wxs-settings.php:106
+#: lib/wxs-settings.php:109
 msgid "Multiple Insertion Methods"
 msgstr ""
 
-#: lib/wxs-settings.php:107
+#: lib/wxs-settings.php:110
 msgid "Supports three watermark insertion methods: end of paragraph, random positions, and fixed character intervals"
 msgstr ""
 
-#: lib/wxs-settings.php:110
+#: lib/wxs-settings.php:113
 msgid "Custom Watermark Content"
 msgstr ""
 
-#: lib/wxs-settings.php:111
+#: lib/wxs-settings.php:114
 msgid "Can include visitor IP, user ID, timestamp, and custom text"
 msgstr ""
 
-#: lib/wxs-settings.php:114
+#: lib/wxs-settings.php:117
 msgid "Crawler Filtering"
 msgstr ""
 
-#: lib/wxs-settings.php:115
+#: lib/wxs-settings.php:118
 msgid "Can be set to not insert watermarks for search engine crawlers"
 msgstr ""
 
-#: lib/wxs-settings.php:118
+#: lib/wxs-settings.php:121
 msgid "User Group Control"
 msgstr ""
 
-#: lib/wxs-settings.php:119
+#: lib/wxs-settings.php:122
 msgid "Can control watermark insertion for specific user groups or custom user permissions"
 msgstr ""
 
-#: lib/wxs-settings.php:122
+#: lib/wxs-settings.php:125
 msgid "Please configure plugin functions through the left tabs. In debug mode, watermarks will be displayed as visible text for testing purposes."
 msgstr ""
 
-#: lib/wxs-settings.php:123
+#: lib/wxs-settings.php:126
 msgid "Go to Extract Watermark"
 msgstr ""
 
-#: lib/wxs-settings.php:124
+#: lib/wxs-settings.php:127
 msgid "Check for Updates"
 msgstr ""
 
-#: lib/wxs-settings.php:125
+#: lib/wxs-settings.php:128
 msgid "Minor issue; for example, URLs, if you don't add hyperlinks, you should give code highlighting, pure P tag URLs cannot be perfectly adapted"
 msgstr ""
 
-#: lib/wxs-settings.php:126
+#: lib/wxs-settings.php:129
 msgid "Plugin Author home: "
 msgstr ""
 
-#: lib/wxs-settings.php:127
+#: lib/wxs-settings.php:130
 msgid "Plugin Author: 天无神话"
 msgstr ""
 
-#: lib/wxs-settings.php:128
+#: lib/wxs-settings.php:131
 msgid "Author Email: admin@wxsnote.cn"
 msgstr ""
 
-#: lib/wxs-settings.php:129
+#: lib/wxs-settings.php:132
 msgid "Author Blog: "
 msgstr ""
 
-#: lib/wxs-settings.php:129
+#: lib/wxs-settings.php:132
 msgid "Mr. Wang's Notes"
 msgstr ""
 
-#: lib/wxs-settings.php:130
+#: lib/wxs-settings.php:133
 msgid "Co-development: "
 msgstr ""
 
-#: lib/wxs-settings.php:130
+#: lib/wxs-settings.php:133
 msgid "Big Sheep Blog"
 msgstr ""
 
-#: lib/wxs-settings.php:131
+#: lib/wxs-settings.php:134
 msgid "QQ Group: "
 msgstr ""
 
-#: lib/wxs-settings.php:132
+#: lib/wxs-settings.php:135
 msgid "Produced by 天无神话, please indicate the open source address when reposting, thank you for your cooperation."
 msgstr ""
 
-#: lib/wxs-settings.php:133
+#: lib/wxs-settings.php:136
 msgid "Main open source license requirement: Prohibits removal or modification of author information"
 msgstr ""
 
-#: lib/wxs-settings.php:134
+#: lib/wxs-settings.php:137
 msgid "Principle Introduction: "
 msgstr ""
 
-#: lib/wxs-settings.php:135
+#: lib/wxs-settings.php:138
 msgid "Open Source Address: "
 msgstr ""
 
-#: lib/wxs-settings.php:136
+#: lib/wxs-settings.php:139
 msgid "Admin Framework: "
 msgstr ""
 
-#: lib/wxs-settings.php:136
+#: lib/wxs-settings.php:139
 msgid "Encryption Solution: "
 msgstr ""
 
-#: lib/wxs-settings.php:188
-#: lib/wxs-settings.php:202
+#: lib/wxs-settings.php:150
+#: lib/wxs-settings.php:164
 msgid "Basic Settings"
 msgstr ""
 
-#: lib/wxs-settings.php:209
+#: lib/wxs-settings.php:171
 msgid "Enable Blind Watermark"
 msgstr ""
 
-#: lib/wxs-settings.php:210
+#: lib/wxs-settings.php:172
 msgid "When enabled, blind watermarks will be inserted into article content"
 msgstr ""
 
-#: lib/wxs-settings.php:218
+#: lib/wxs-settings.php:180
 msgid "Enable User Group Control"
 msgstr ""
 
-#: lib/wxs-settings.php:219
+#: lib/wxs-settings.php:181
 msgid "When enabled, watermarks can be configured for specific user groups"
 msgstr ""
 
-#: lib/wxs-settings.php:228
+#: lib/wxs-settings.php:190
 msgid "User Group Type"
 msgstr ""
 
-#: lib/wxs-settings.php:230
+#: lib/wxs-settings.php:192
 msgid "WordPress Built-in User Groups"
 msgstr ""
 
-#: lib/wxs-settings.php:231
+#: lib/wxs-settings.php:193
 msgid "Custom User Groups"
 msgstr ""
 
-#: lib/wxs-settings.php:234
+#: lib/wxs-settings.php:196
 msgid "Select user group type for watermark control"
 msgstr ""
 
-#: lib/wxs-settings.php:245
+#: lib/wxs-settings.php:207
 msgid "WordPress User Groups"
 msgstr ""
 
-#: lib/wxs-settings.php:246
+#: lib/wxs-settings.php:208
 msgid "Select WordPress user groups that should have watermarks inserted"
 msgstr ""
 
-#: lib/wxs-settings.php:272
+#: lib/wxs-settings.php:234
 msgid "Run Mode"
 msgstr ""
 
-#: lib/wxs-settings.php:274
+#: lib/wxs-settings.php:236
 msgid "Dynamic (Pure PHP)"
 msgstr ""
 
-#: lib/wxs-settings.php:275
+#: lib/wxs-settings.php:237
 msgid "Static (Pure JS)"
 msgstr ""
 
-#: lib/wxs-settings.php:276
+#: lib/wxs-settings.php:238
 msgid "Dynamic-Static Hybrid"
 msgstr ""
 
-#: lib/wxs-settings.php:280
+#: lib/wxs-settings.php:242
 msgid "Dynamic: Pure PHP processing, recommended, ensures no page caching plugins like super cache are installed<br>Static: Pure JS processing, not highly recommended, can be bypassed<br>Dynamic-Static Hybrid: PHP for logged-in users, JS for non-logged-in users (suitable for websites with caching)<br>If JS mode or hybrid mode is enabled, please enable WAF to block fake crawlers"
 msgstr ""
 
-#: lib/wxs-settings.php:290
+#: lib/wxs-settings.php:252
 msgid "Minimum Paragraph Length"
 msgstr ""
 
-#: lib/wxs-settings.php:291
+#: lib/wxs-settings.php:253
 msgid "Paragraphs with fewer than this number of characters will not have watermarks inserted (recommended 15-30)"
 msgstr ""
 
-#: lib/wxs-settings.php:301
+#: lib/wxs-settings.php:263
 msgid "Insertion Method"
 msgstr ""
 
-#: lib/wxs-settings.php:303
+#: lib/wxs-settings.php:265
 msgid "Insert at Paragraph End"
 msgstr ""
 
-#: lib/wxs-settings.php:304
+#: lib/wxs-settings.php:266
 msgid "Insert at Random Positions"
 msgstr ""
 
-#: lib/wxs-settings.php:305
+#: lib/wxs-settings.php:267
 msgid "Insert at Fixed Character Intervals"
 msgstr ""
 
-#: lib/wxs-settings.php:308
+#: lib/wxs-settings.php:270
 msgid "Select how watermarks are inserted into articles"
 msgstr ""
 
-#: lib/wxs-settings.php:315
+#: lib/wxs-settings.php:277
 msgid "Random Position Insertion Settings"
 msgstr ""
 
-#: lib/wxs-settings.php:324
+#: lib/wxs-settings.php:286
 msgid "Insertion Count Mode"
 msgstr ""
 
-#: lib/wxs-settings.php:326
+#: lib/wxs-settings.php:288
 msgid "Custom Count"
 msgstr ""
 
-#: lib/wxs-settings.php:327
+#: lib/wxs-settings.php:289
 msgid "Auto-calculate by Word Count"
 msgstr ""
 
-#: lib/wxs-settings.php:338
+#: lib/wxs-settings.php:300
 msgid "Custom Insertion Count"
 msgstr ""
 
-#: lib/wxs-settings.php:339
+#: lib/wxs-settings.php:301
 msgid "Fixed number of watermark insertions per paragraph"
 msgstr ""
 
-#: lib/wxs-settings.php:351
+#: lib/wxs-settings.php:313
 msgid "Word Count Ratio"
 msgstr ""
 
-#: lib/wxs-settings.php:352
+#: lib/wxs-settings.php:314
 msgid "Add 1 insertion per how many words (e.g., 400 = 1 insertion per 400 words)"
 msgstr ""
 
-#: lib/wxs-settings.php:365
+#: lib/wxs-settings.php:327
 msgid "Fixed Character Interval Insertion Settings"
 msgstr ""
 
-#: lib/wxs-settings.php:374
+#: lib/wxs-settings.php:336
 msgid "Insertion Interval"
 msgstr ""
 
-#: lib/wxs-settings.php:375
+#: lib/wxs-settings.php:337
 msgid "Insert watermark every how many characters"
 msgstr ""
 
-#: lib/wxs-settings.php:388
+#: lib/wxs-settings.php:350
 msgid "Debug Mode"
 msgstr ""
 
-#: lib/wxs-settings.php:389
+#: lib/wxs-settings.php:351
 msgid "When enabled, watermarks will be displayed as visible text ([Watermark Debug:...])"
 msgstr ""
 
-#: lib/wxs-settings.php:391
+#: lib/wxs-settings.php:353
 msgid "Used for testing watermark effects, recommended to disable in production environment"
 msgstr ""
 
-#: lib/wxs-settings.php:418
+#: lib/wxs-settings.php:380
 msgid "Custom User Group Configuration"
 msgstr ""
 
-#: lib/wxs-settings.php:422
+#: lib/wxs-settings.php:384
 msgid "Success! Custom function detected:"
 msgstr ""
 
-#: lib/wxs-settings.php:423
+#: lib/wxs-settings.php:385
 msgid "The plugin will use this function to determine whether to insert watermarks for the current user."
 msgstr ""
 
-#: lib/wxs-settings.php:427
+#: lib/wxs-settings.php:389
 msgid "Warning: Custom function not found!"
 msgstr ""
 
 #. translators: %s: plugin目录中func.php文件的完整路径
-#: lib/wxs-settings.php:431
+#: lib/wxs-settings.php:393
 #, php-format
 msgid "The file %s does not exist in your plugin directory."
 msgstr ""
 
-#: lib/wxs-settings.php:433
+#: lib/wxs-settings.php:395
 msgid "Please create this file and add the required function code below."
 msgstr ""
 
-#. translators: 1：func.php文件的完整路径，2：所需函数的名称（wxs_watermark_op_custom()）
-#: lib/wxs-settings.php:437
+#. translators: 1：func.php文件的完整路径，2：所需函数的名称（wxstbw_op_custom()）
+#: lib/wxs-settings.php:399
 #, php-format
 msgid "The file %1$s exists, but the function %2$s is not defined in it."
 msgstr ""
 
-#: lib/wxs-settings.php:443
+#: lib/wxs-settings.php:405
 msgid "Without this function, watermarks will be inserted for all users when custom user group mode is selected."
 msgstr ""
 
-#: lib/wxs-settings.php:448
+#: lib/wxs-settings.php:410
 msgid "Step 1: Create/Edit File"
 msgstr ""
 
 #. translators: %s: 所需文件的名称 (func.php)
-#: lib/wxs-settings.php:451
+#: lib/wxs-settings.php:413
 #, php-format
 msgid "Create a file named %s in the following directory:"
 msgstr ""
 
-#: lib/wxs-settings.php:455
+#: lib/wxs-settings.php:417
 msgid "Step 2: Add the following code to func.php"
 msgstr ""
 
-#: lib/wxs-settings.php:505
+#: lib/wxs-settings.php:467
 msgid "Return value explanation:"
 msgstr ""
 
-#: lib/wxs-settings.php:507
+#: lib/wxs-settings.php:469
 msgid "Return TRUE: Insert watermark for this user"
 msgstr ""
 
-#: lib/wxs-settings.php:508
+#: lib/wxs-settings.php:470
 msgid "Return FALSE: Skip watermark for this user"
 msgstr ""
 
-#: lib/wxs-settings.php:553
+#: lib/wxs-settings.php:484
 msgid "Watermark Content Settings"
 msgstr ""
 
-#: lib/wxs-settings.php:567
+#: lib/wxs-settings.php:498
 msgid "Include Visitor IP"
 msgstr ""
 
-#: lib/wxs-settings.php:568
+#: lib/wxs-settings.php:499
 msgid "Visitor's IP address, for user traceability and positioning"
 msgstr ""
 
-#: lib/wxs-settings.php:574
+#: lib/wxs-settings.php:505
 msgid "Include User ID"
 msgstr ""
 
-#: lib/wxs-settings.php:575
+#: lib/wxs-settings.php:506
 msgid "Show ID for logged-in users, show \"guest\" for visitors"
 msgstr ""
 
-#: lib/wxs-settings.php:581
+#: lib/wxs-settings.php:512
 msgid "Include Timestamp"
 msgstr ""
 
-#: lib/wxs-settings.php:582
+#: lib/wxs-settings.php:513
 msgid "Time when watermark was generated (YYYY-MM-DD HH:MM:SS)"
 msgstr ""
 
-#: lib/wxs-settings.php:588
+#: lib/wxs-settings.php:519
 msgid "Include Custom Text"
 msgstr ""
 
-#: lib/wxs-settings.php:594
+#: lib/wxs-settings.php:525
 msgid "Custom Text Content"
 msgstr ""
 
-#: lib/wxs-settings.php:595
+#: lib/wxs-settings.php:526
 msgid "Recommended to include copyright information (e.g., \"XX All Rights Reserved\")"
 msgstr ""
 
-#: lib/wxs-settings.php:596
+#: lib/wxs-settings.php:527
 msgid " All Rights Reserved"
 msgstr ""
 
-#: lib/wxs-settings.php:596
-#: wxs-text-watermarking.php:858
+#: lib/wxs-settings.php:527
+#: wxs-text-watermarking.php:872
 msgid "Mr. Wang's Notes All Rights Reserved"
 msgstr ""
 
-#: lib/wxs-settings.php:609
+#: lib/wxs-settings.php:540
 msgid "Advanced Settings"
 msgstr ""
 
-#: lib/wxs-settings.php:623
+#: lib/wxs-settings.php:554
 msgid "Processed HTML Tags"
 msgstr ""
 
-#: lib/wxs-settings.php:625
+#: lib/wxs-settings.php:556
 msgid "Enter HTML tags to process, separated by commas <code>,</code>, articles only, not recursive, only one level, defaults to <code>p</code>,<code>li</code><br>Common article tags: <code>h2</code> to <code>h6</code>,<code>p</code>,<code>li</code>,<code>span</code>,<code>strong</code>,<code>em</code>,<code>b</code>,<code>i</code>,<code>blockquote</code>,<code>q</code>, etc.<br>Not recommended: <code>code</code>,<code>pre</code>"
 msgstr ""
 
-#: lib/wxs-settings.php:636
+#: lib/wxs-settings.php:567
 msgid "JS Global Processing Switch"
 msgstr ""
 
-#: lib/wxs-settings.php:637
+#: lib/wxs-settings.php:568
 msgid "When enabled, content outside articles will be processed based on the selectors below, disabled by default"
 msgstr ""
 
-#: lib/wxs-settings.php:643
+#: lib/wxs-settings.php:574
 msgid "Class Selector Settings"
 msgstr ""
 
-#: lib/wxs-settings.php:645
+#: lib/wxs-settings.php:576
 msgid "JS only, recursively processes all within tags, format example: <code>.css1</code>,<code>.css2</code>,<code>p.css3</code>,<code>span.css4</code>"
 msgstr ""
 
-#: lib/wxs-settings.php:656
+#: lib/wxs-settings.php:587
 msgid "ID Selector Settings"
 msgstr ""
 
-#: lib/wxs-settings.php:658
+#: lib/wxs-settings.php:589
 msgid "JS only, recursively processes all within tags, format example: <code>#id1</code>,<code>#id2</code>, note: CSS selector specification does not allow IDs starting with numbers (like <code>#123</code>)"
 msgstr ""
 
-#: lib/wxs-settings.php:669
+#: lib/wxs-settings.php:600
 msgid "Force Enable Global Selectors on Article Pages"
 msgstr ""
 
-#: lib/wxs-settings.php:670
+#: lib/wxs-settings.php:601
 msgid "When enabled, even on article pages, global selector matched elements will take effect"
 msgstr ""
 
-#: lib/wxs-settings.php:671
+#: lib/wxs-settings.php:602
 msgid "Requires \"JS Global Processing Switch\" to be enabled first, otherwise this setting has no effect"
 msgstr ""
 
-#: lib/wxs-settings.php:685
+#: lib/wxs-settings.php:616
 msgid "Crawler Filter Whitelist"
 msgstr ""
 
-#: lib/wxs-settings.php:702
+#: lib/wxs-settings.php:633
 msgid "Crawler UA List"
 msgstr ""
 
-#: lib/wxs-settings.php:703
+#: lib/wxs-settings.php:634
 msgid "One crawler identifier per line, no watermarks inserted when matched, no matching when empty, used to prevent search engines from crawling incorrectly, recommended to use with WAF to block fake crawlers."
 msgstr ""
 
@@ -502,84 +502,84 @@ msgstr ""
 msgid "Text Blind Watermarking Plugin depends on mbstring PHP extension, please enable or install this PHP extension."
 msgstr ""
 
-#: wxs-text-watermarking.php:168
+#: wxs-text-watermarking.php:180
 msgid "Text Blind Watermarking Plugin Error: Missing necessary file - "
 msgstr ""
 
-#: wxs-text-watermarking.php:211
-#: wxs-text-watermarking.php:223
-#: wxs-text-watermarking.php:241
+#: wxs-text-watermarking.php:225
+#: wxs-text-watermarking.php:237
+#: wxs-text-watermarking.php:255
 msgid "Text Blind Watermark Configuration"
 msgstr ""
 
-#: wxs-text-watermarking.php:224
+#: wxs-text-watermarking.php:238
 msgid "Settings"
 msgstr ""
 
-#: wxs-text-watermarking.php:235
+#: wxs-text-watermarking.php:249
 msgid "You do not have sufficient permissions to access this page."
 msgstr ""
 
-#: wxs-text-watermarking.php:239
+#: wxs-text-watermarking.php:253
 msgid "Loaded"
 msgstr ""
 
-#: wxs-text-watermarking.php:239
+#: wxs-text-watermarking.php:253
 msgid "Not Loaded"
 msgstr ""
 
-#: wxs-text-watermarking.php:243
+#: wxs-text-watermarking.php:257
 msgid "Detected that the configuration panel framework did not load properly, possibly due to missing or corrupted files."
 msgstr ""
 
-#: wxs-text-watermarking.php:244
+#: wxs-text-watermarking.php:258
 msgid "CSF Framework Status: "
 msgstr ""
 
-#: wxs-text-watermarking.php:245
+#: wxs-text-watermarking.php:259
 msgid "Please check if the "
 msgstr ""
 
-#: wxs-text-watermarking.php:245
+#: wxs-text-watermarking.php:259
 msgid "folder exists and is complete."
 msgstr ""
 
-#: wxs-text-watermarking.php:246
+#: wxs-text-watermarking.php:260
 msgid "If the problem persists, please reinstall the plugin."
 msgstr ""
 
-#: wxs-text-watermarking.php:304
-msgid "Text Blind Watermark Warning: wxs_watermark_op_custom() function not found, watermark will be inserted for all users."
+#: wxs-text-watermarking.php:318
+msgid "Text Blind Watermark Warning: wxstbw_op_custom() function not found, watermark will be inserted for all users."
 msgstr ""
 
-#: wxs-text-watermarking.php:371
+#: wxs-text-watermarking.php:385
 msgid "guest"
 msgstr ""
 
-#: wxs-text-watermarking.php:552
+#: wxs-text-watermarking.php:566
 msgid "Watermark Debug PHP Mode:"
 msgstr ""
 
-#: wxs-text-watermarking.php:635
+#: wxs-text-watermarking.php:649
 msgid "Watermark skipped for user (user group control): "
 msgstr ""
 
-#: wxs-text-watermarking.php:685
+#: wxs-text-watermarking.php:699
 msgid "Hybrid Mode Processing - User Login Status: "
 msgstr ""
 
-#: wxs-text-watermarking.php:686
+#: wxs-text-watermarking.php:700
 msgid "Logged in (PHP processing)"
 msgstr ""
 
-#: wxs-text-watermarking.php:686
+#: wxs-text-watermarking.php:700
 msgid "Not logged in (JS processing)"
 msgstr ""
 
-#: wxs-text-watermarking.php:755
+#: wxs-text-watermarking.php:769
 msgid "Pure JS mode enabled, loading watermark script"
 msgstr ""
 
-#: wxs-text-watermarking.php:789
+#: wxs-text-watermarking.php:803
 msgid "Watermark Debug Mode Enabled - Configuration Information: "
 msgstr ""
