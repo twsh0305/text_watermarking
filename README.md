@@ -77,6 +77,7 @@
 3. 激活插件后，通过左侧菜单「文本水印」进入配置页面
 4. 启用插件并根据需求配置水印参数（建议先开启调试模式测试效果）
 
+或直接在wordpress插件目录搜索“文本盲水印”
 
 ## 使用指南
 
@@ -110,6 +111,92 @@
    $extractedInfo = wxs_extractWatermark($textWithWatermark);
    echo "提取的水印信息：" . $extractedInfo;
    ```
+
+## 自定义功能
+
+需要您具有基本的开发能力
+在插件目录下的lib目录创建func.php，并在插件设置中，点击基础设置->用户组类型选择自定义用户组
+func.php文件示例1：
+   ```php
+<?php
+/**
+ * Custom 用户组水印控制功能 User Group Watermark Control Function
+ * 
+ * @param int|null $user_id 当前用户ID，访客为空 Current user ID, visitor is empty
+ * @return bool True插入水印，False跳过 True Insert watermark, False Skip
+ * 非开发者请勿使用，此处是自定义的演示，请勿直接使用，要配合其它用户组函数使用的，此方案可免更新覆盖
+ * Non-developers do not use, here is a custom demo, do not use directly, to cooperate with other user group functions, this scheme can be updated free of coverage
+ */
+function wxstbw_op_custom($user_id = null) {
+    // 示例1：跳过特定用户级别的水印 (主题用户级别1)，Example 1: Skip watermark for a specific user level (subject user level 1)
+    if (function_exists('your_theme_get_user_level')) {
+        $user_level = your_theme_get_user_level($user_id);
+        if ($user_level == 1) {
+            return false; // 跳过1级用户的水印，Skip watermark for level 1 users
+        }
+    }
+    
+    // 示例2：跳过具有特定Meta值的用户的水印，Example 2: Skipping watermarks for users with specific Meta values
+    if ($user_id) {
+        $user_meta = get_user_meta($user_id, 'your_custom_field', true);
+        if ($user_meta == 'skip_watermark') {
+            return false;
+        }
+    }
+    
+    // 示例3：跳过VIP用户的水印，Example 3: Skip the watermark for VIP users
+    if (function_exists('is_user_vip') && is_user_vip($user_id)) {
+        return false;
+    }
+    
+    // 示例4：仅为特定角色插入水印（替代方法），Example 4: Watermarks inserted only for specific characters (alternative)
+    if ($user_id) {
+        $user = get_user_by('id', $user_id);
+        $allowed_roles = ['subscriber', 'customer']; // 为这些角色插入水印，Insert watermarks for these characters
+        $disallowed_roles = ['administrator', 'editor']; // 跳过这些角色，Skip these characters
+        
+        $user_roles = $user->roles;
+        foreach ($disallowed_roles as $role) {
+            if (in_array($role, $user_roles)) {
+                return false;
+            }
+        }
+    }
+    
+    // 默认值：插入水印，Default: Insert watermark
+    return true;
+}
+   ```
+
+func.php文件示例2(仅子比主题)：
+   ```php
+<?php
+
+/**
+ * 根据用户VIP等级控制水印显示
+ * 
+ * @param int|null $user_id 当前用户ID，访客为空
+ * @return bool True插入水印，False跳过
+ */
+function wxs_watermark_op_custom($user_id = null) {
+    // 仅对有用户ID的情况做VIP等级判断（访客直接返回true，插入水印）
+    if ($user_id && function_exists('zib_get_user_vip_level')) {
+        // 获取用户VIP等级并转为整数
+        $vip_level = (int) zib_get_user_vip_level($user_id);
+        // 会员等级大于0时，跳过水印（返回false）
+        if ($vip_level > 2) {
+            return false;
+        }
+    }
+    
+    // 默认返回true（插入水印）：
+    // 1. 访客用户
+    // 2. 无VIP等级函数时
+    // 3. VIP等级≤1的用户
+    return true;
+}
+   ```
+
 ## 插件基于以下开源项目
 后台框架：[Codestar Framework](https://github.com/Codestar/codestar-framework) 加密方案：[Emoji Encoder](https://github.com/paulgb/emoji-encoder)
 
