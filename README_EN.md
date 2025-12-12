@@ -100,7 +100,7 @@ To detect watermark information in text, use one of the following methods:
 2. **Online Extraction Tool 2**: [Heo Text Watermark](https://textwatermark.zhheo.com/), paste the watermarked text for parsing.
 3. **Code Extraction**: Use the provided extraction function (example):
    ```php
-   require 'path/to/extract.php'; // Include the extraction tool
+   require 'path/to/example.php'; // Include the extraction tool
    $textWithWatermark = "Watermarked text content...";
    $extractedInfo = wxs_extractWatermark($textWithWatermark);
    echo "Extracted watermark information: " . $extractedInfo;
