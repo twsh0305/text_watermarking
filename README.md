@@ -106,7 +106,7 @@
 2. **在线提取工具2**：[洪绘文本盲水印](https://textwatermark.zhheo.com/)，粘贴含水印文本即可解析
 3. **代码提取**：使用项目提供的提取函数（示例）：
    ```php
-   require 'path/to/extract.php'; // 引入提取工具
+   require 'path/to/example.php'; // 引入提取工具
    $textWithWatermark = "包含盲水印的文本内容...";
    $extractedInfo = wxs_extractWatermark($textWithWatermark);
    echo "提取的水印信息：" . $extractedInfo;
