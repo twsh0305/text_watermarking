@@ -110,7 +110,7 @@ To detect watermark information in text, use one of the following methods:
 Requires basic development skills.
 Create a func.php file in the plugin's lib directory, and in the plugin settings, go to "Basic Settings" → "User Group Type" and select "Custom User Group".
 
-Example 1 for func.php:
+Example for func.php:
    ```php
 <?php
 /**
@@ -157,33 +157,6 @@ function wxstbw_op_custom($user_id = null) {
  }
 
  // Default: Insert watermark
- return true;
-}
-   ```
-Example 2 for func.php (for Zibll Theme only):
-   ```php
-<?php
-/**
-* Control watermark display based on user VIP level
-*
-* @param int|null $user_id Current user ID, null for visitors
-* @return bool True to insert watermark, False to skip
-*/
-function wxs_watermark_op_custom($user_id = null) {
- // Only check VIP level if a user ID exists (visitors get watermark by default)
- if ($user_id && function_exists('zib_get_user_vip_level')) {
-     // Get user VIP level and convert to integer
-     $vip_level = (int) zib_get_user_vip_level($user_id);
-     // Skip watermark for VIP levels greater than 2 (return false)
-     if ($vip_level > 2) {
-         return false;
-     }
- }
-
- // Default return true (insert watermark):
- // 1. Visitor users
- // 2. When VIP level function doesn't exist
- // 3. Users with VIP level ≤ 1
  return true;
 }
    ```
