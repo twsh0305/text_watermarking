@@ -157,27 +157,29 @@ if (wxstbw_is_zibll_themes()) {
     add_action("zib_require_end", "wxstbw_init_csf_settings");
 } else {
     // 非子比引入必要文件
-    $required_files = [
+    $wxstbw_required_files = [
         "/lib/codestar-framework/codestar-framework.php",
         "/lib/wxs-settings.php",
     ];
 
     // 检查Codestar Framework是否已存在
-    $csf_exists = class_exists("CSF");
-    foreach ($required_files as $file) {
-        $full_path = WXSTBW_PLUGIN_DIR . $file;
+    $wxstbw_csf_exists = class_exists("CSF");
+    foreach ($wxstbw_required_files as $wxstbw_file) {
+        $wxstbw_full_path = WXSTBW_PLUGIN_DIR . $wxstbw_file;
         // 如果是Codestar框架文件且已存在，则跳过加载
         if (
-            $file === "/lib/codestar-framework/codestar-framework.php" &&
-            $csf_exists
+            $wxstbw_file === "/lib/codestar-framework/codestar-framework.php" &&
+            $wxstbw_csf_exists
         ) {
             continue;
         }
         // 加载其他文件
-        if (file_exists($full_path)) {
-            require_once $full_path;
+        if (file_exists($wxstbw_full_path)) {
+            require_once $wxstbw_full_path;
         } else {
-            error_log(esc_html__("Text Blind Watermarking Plugin Error: Missing necessary file - ", 'wxs-text-watermarking') . $full_path);
+            if (WP_DEBUG && WP_DEBUG_LOG) {
+                error_log(esc_html__("Text Blind Watermarking Plugin Error: Missing necessary file - ", 'wxs-text-watermarking') . $wxstbw_full_path);
+            }
         }
     }
 }
@@ -315,7 +317,9 @@ if (!function_exists('wxstbw_check_user_permission')) {
                     return wxstbw_op_custom($user_id);
                 } else {
                     // 如果自定义函数不存在，记录警告并默认插入水印
-                    error_log(esc_html__('Text Blind Watermark Warning: wxstbw_op_custom() function not found, watermark will be inserted for all users.', 'wxs-text-watermarking'));
+                    if (!empty($wxstbw_config["debug_mode"])) {
+                        error_log(esc_html__('Text Blind Watermark Warning: wxstbw_op_custom() function not found, watermark will be inserted for all users.', 'wxs-text-watermarking'));
+                    }
                     return true;
                 }
                 
@@ -356,10 +360,10 @@ function wxstbw_get_client_ip()
     
     // 消毒和验证来自各种标头的IP
     if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-        $ip_list = explode(',', wp_unslash($_SERVER['HTTP_X_FORWARDED_FOR']));
+        $ip_list = explode(',', sanitize_text_field(wp_unslash($_SERVER['HTTP_X_FORWARDED_FOR'])));
         $ip = sanitize_text_field(trim($ip_list[0])); // 取第一个有效IP并消毒
     } elseif (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-        $ip = sanitize_text_field(trim(wp_unslash($_SERVER['HTTP_CLIENT_IP'])));
+        $ip = sanitize_text_field(wp_unslash($_SERVER['HTTP_CLIENT_IP']));
     } elseif (!empty($_SERVER['REMOTE_ADDR'])) {
         $ip = sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR']));
     }
@@ -825,7 +829,6 @@ function wxstbw_output_watermark_config()
         "wordpress_user_roles" => isset($wxstbw_config["wordpress_user_roles"])
             ? array_map('esc_js', $wxstbw_config["wordpress_user_roles"])
             : [],
-        "ip_endpoint" => esc_js(WXSTBW_PLUGIN_URL . "obtain-an-ip.php"),
         "min_paragraph_length" => isset(
             $wxstbw_config["min_paragraph_length"]
         )
@@ -902,3 +905,64 @@ function wxstbw_output_watermark_config()
         $js_config
     );
 }
+
+
+
+/**
+ * 注册自定义查询变量
+ */
+add_filter('query_vars', function ($vars) {
+    $vars[] = 'wxstbw_query';
+    return $vars;
+});
+
+/**
+ * 处理IP请求的端点逻辑
+ */
+add_action('template_redirect', function () {
+    // 仅处理带有wxstbw_query参数的请求
+    if (get_query_var('wxstbw_query') !== 'getip') {
+        return;
+    }
+
+    // 验证请求方法
+    if (!isset($_SERVER['REQUEST_METHOD']) || $_SERVER['REQUEST_METHOD'] !== 'GET') {
+        wp_die('Invalid request method', 400);
+    }
+
+    // 验证来源
+    $referer = isset($_SERVER['HTTP_REFERER']) 
+        ? wp_parse_url(sanitize_text_field(wp_unslash($_SERVER['HTTP_REFERER']))) 
+        : false;
+    
+    $host = isset($_SERVER['HTTP_HOST']) 
+        ? sanitize_text_field(wp_unslash($_SERVER['HTTP_HOST'])) 
+        : '';
+    
+    // 安全验证
+    if ($referer && !empty($host) && strpos($referer['host'], $host) === false) {
+        wp_die('Invalid referer', 403);
+    }
+
+    // 强制不缓存该响应
+    nocache_headers();
+    header('Content-Type: application/json; charset=utf-8');
+
+    // IP获取和响应构建
+    try {
+        $visitor_ip = wxstbw_get_client_ip();
+        $response = [
+            'success' => !empty($visitor_ip) && $visitor_ip !== 'unknown',
+            'ip' => $visitor_ip,
+            'timestamp' => time()
+        ];
+    } catch (Exception $e) {
+        $response = [
+            'success' => false,
+            'ip' => '',
+            'error' => $e->getMessage()
+        ];
+    }
+
+    wp_send_json($response);
+});
