@@ -172,29 +172,28 @@ function wxstbw_op_custom($user_id = null) {
 func.php文件示例2(仅子比主题)：
    ```php
 <?php
-
 /**
- * 根据用户VIP等级控制水印显示
- * 
- * @param int|null $user_id 当前用户ID，访客为空
- * @return bool True插入水印，False跳过
- */
-function wxs_watermark_op_custom($user_id = null) {
-    // 仅对有用户ID的情况做VIP等级判断（访客直接返回true，插入水印）
-    if ($user_id && function_exists('zib_get_user_vip_level')) {
-        // 获取用户VIP等级并转为整数
-        $vip_level = (int) zib_get_user_vip_level($user_id);
-        // 会员等级大于0时，跳过水印（返回false）
-        if ($vip_level > 2) {
-            return false;
-        }
-    }
-    
-    // 默认返回true（插入水印）：
-    // 1. 访客用户
-    // 2. 无VIP等级函数时
-    // 3. VIP等级≤1的用户
-    return true;
+* 根据用户VIP等级控制水印显示
+* 
+* @param int|null $user_id 当前用户ID，访客为空
+* @return bool True插入水印，False跳过
+*/
+function wxstbw_op_custom($user_id = null) {
+ // 仅对有用户ID的情况做VIP等级判断（访客直接返回true，插入水印）
+ if ($user_id && function_exists('zib_get_user_vip_level')) {
+     // 获取用户VIP等级并转为整数
+     $vip_level = (int) zib_get_user_vip_level($user_id);
+     // 会员等级大于0时，跳过水印（返回false）
+     if ($vip_level > 0) {
+         return false;
+     }
+ }
+ 
+ // 默认返回true（插入水印）：
+ // 1. 访客用户
+ // 2. 无VIP等级函数时
+ // 3. VIP等级≤1的用户
+ return true;
 }
    ```
 
