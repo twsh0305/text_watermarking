@@ -2,10 +2,10 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: WXS Text Watermarking 1.1.0\n"
+"Project-Id-Version: Wxs Text Watermarking 1.1.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wxs-text-watermarking\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2025-12-10 21:25+0800\n"
+"PO-Revision-Date: 2025-12-12 13:47+0800\n"
 "Last-Translator: 天无神话 <2031301686@qq.com>\n"
 "Language-Team: 中文 (简体) <LL@li.org>\n"
 "Language: zh_CN\n"
@@ -17,7 +17,7 @@ msgstr ""
 
 #. Plugin Name of the plugin
 #: wxs-text-watermarking.php
-msgid "WXS Text Watermarking"
+msgid "Wxs Text Watermarking"
 msgstr "文本盲水印"
 
 #. Plugin URI of the plugin
@@ -40,7 +40,7 @@ msgstr "天无神话"
 msgid "https://wxsnote.cn"
 msgstr "https://wxsnote.cn"
 
-#: lib/wxs-settings.php:35 wxs-text-watermarking.php:226
+#: lib/wxs-settings.php:35 wxs-text-watermarking.php:228
 msgid "Text Watermark"
 msgstr "文本水印"
 
@@ -432,7 +432,7 @@ msgstr "建议包含版权信息（如\"XX版权所有\"）"
 msgid " All Rights Reserved"
 msgstr " 版权所有"
 
-#: lib/wxs-settings.php:527 wxs-text-watermarking.php:872
+#: lib/wxs-settings.php:527 wxs-text-watermarking.php:875
 msgid "Mr. Wang's Notes All Rights Reserved"
 msgstr "王先生笔记 版权所有"
 
@@ -500,83 +500,83 @@ msgstr "每行一个爬虫标识，匹配时不插入水印，清空时不匹配
 msgid "Text Blind Watermarking Plugin depends on mbstring PHP extension, please enable or install this PHP extension."
 msgstr "文本盲水印插件依赖 mbstring PHP 扩展，请启用或安装此 PHP 扩展。"
 
-#: wxs-text-watermarking.php:180
+#: wxs-text-watermarking.php:181
 msgid "Text Blind Watermarking Plugin Error: Missing necessary file - "
 msgstr "文本盲水印插件错误：缺少必要文件 - "
 
-#: wxs-text-watermarking.php:225 wxs-text-watermarking.php:237
-#: wxs-text-watermarking.php:255
+#: wxs-text-watermarking.php:227 wxs-text-watermarking.php:239
+#: wxs-text-watermarking.php:257
 msgid "Text Blind Watermark Configuration"
 msgstr "文本盲水印配置"
 
-#: wxs-text-watermarking.php:238
+#: wxs-text-watermarking.php:240
 msgid "Settings"
 msgstr "设置"
 
-#: wxs-text-watermarking.php:249
+#: wxs-text-watermarking.php:251
 msgid "You do not have sufficient permissions to access this page."
 msgstr "您没有足够的权限访问此页面。"
 
-#: wxs-text-watermarking.php:253
+#: wxs-text-watermarking.php:255
 msgid "Loaded"
 msgstr "已加载"
 
-#: wxs-text-watermarking.php:253
+#: wxs-text-watermarking.php:255
 msgid "Not Loaded"
 msgstr "未加载"
 
-#: wxs-text-watermarking.php:257
+#: wxs-text-watermarking.php:259
 msgid "Detected that the configuration panel framework did not load properly, possibly due to missing or corrupted files."
 msgstr "检测到配置面板框架未正常加载，可能是文件缺失或损坏。"
 
-#: wxs-text-watermarking.php:258
+#: wxs-text-watermarking.php:260
 msgid "CSF Framework Status: "
 msgstr "CSF框架状态："
 
-#: wxs-text-watermarking.php:259
+#: wxs-text-watermarking.php:261
 msgid "Please check if the "
 msgstr "请检查"
 
-#: wxs-text-watermarking.php:259
+#: wxs-text-watermarking.php:261
 msgid "folder exists and is complete."
 msgstr "文件夹是否存在且完整。"
 
-#: wxs-text-watermarking.php:260
+#: wxs-text-watermarking.php:262
 msgid "If the problem persists, please reinstall the plugin."
 msgstr "如果问题仍然存在，请重新安装插件。"
 
-#: wxs-text-watermarking.php:318
+#: wxs-text-watermarking.php:321
 msgid "Text Blind Watermark Warning: wxstbw_op_custom() function not found, watermark will be inserted for all users."
 msgstr "文本盲水印警告：未找到 wxstbw_op_custom() 函数，将为所有用户插入水印。"
 
-#: wxs-text-watermarking.php:385
+#: wxs-text-watermarking.php:389
 msgid "guest"
 msgstr "游客"
 
-#: wxs-text-watermarking.php:566
+#: wxs-text-watermarking.php:570
 msgid "Watermark Debug PHP Mode:"
 msgstr "水印调试PHP模式："
 
-#: wxs-text-watermarking.php:649
+#: wxs-text-watermarking.php:653
 msgid "Watermark skipped for user (user group control): "
 msgstr "已跳过用户的水印（用户组控制）："
 
-#: wxs-text-watermarking.php:699
+#: wxs-text-watermarking.php:703
 msgid "Hybrid Mode Processing - User Login Status: "
 msgstr "混合模式处理 - 用户登录状态："
 
-#: wxs-text-watermarking.php:700
+#: wxs-text-watermarking.php:704
 msgid "Logged in (PHP processing)"
 msgstr "已登录（PHP处理）"
 
-#: wxs-text-watermarking.php:700
+#: wxs-text-watermarking.php:704
 msgid "Not logged in (JS processing)"
 msgstr "未登录（JS处理）"
 
-#: wxs-text-watermarking.php:769
+#: wxs-text-watermarking.php:773
 msgid "Pure JS mode enabled, loading watermark script"
 msgstr "纯JS模式已启用，加载水印脚本"
 
-#: wxs-text-watermarking.php:803
+#: wxs-text-watermarking.php:807
 msgid "Watermark Debug Mode Enabled - Configuration Information: "
 msgstr "水印调试模式已启用 - 配置信息："
