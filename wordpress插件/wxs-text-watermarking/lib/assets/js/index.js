@@ -152,7 +152,10 @@ document.addEventListener('DOMContentLoaded', function() {
     let pageIP = 'unknown';
     async function fetchIP() {
         try {
-            const response = await fetch(normalizedConfig.ip_endpoint);
+            // 使用WordPress查询变量端点
+            const currentUrl = new URL(window.location.href);
+            currentUrl.searchParams.set('wxstbw_query', 'getip');
+            const response = await fetch(currentUrl.toString());
             const data = await response.json();
             if (data.success) {
                 pageIP = data.ip;
