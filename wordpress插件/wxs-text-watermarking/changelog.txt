@@ -1,0 +1,39 @@
+=== Wxs Text Watermarking ===
+
+== Archived Changelog Entries ==
+
+This file contains older changelog entries, so we can keep the size of the standard WordPress readme.txt file reasonable.
+For the latest changes, please see the "Changelog" section of the [Github](https://github.com/twsh0305/text_watermarking/).
+
+== Changelog ==
+
+
+= 1.0.8 =
+* Fixed: Use WP local time
+* Fixed: Directly call the CSF Framework of Zibi Theme if Zibi Theme exists
+* Fixed: PHP 8.x errors
+* Fixed: The issue where global JS doesn’t work on articles
+
+= 1.0.7 =
+* Added: Tag selection, class element selection and ID container selection
+
+= 1.0.6 =
+* Fixed: File import errors
+
+= 1.0.5 =
+* Fixed: Missing styles issue with CSF Framework
+
+= 1.0.4 =
+* Fixed: Blank pages on some WordPress settings panel pages
+
+= 1.0.3 =
+* New: JS control
+
+= 1.0.2 =
+* Added: Introduced CSF Framework and created settings panel
+
+= 1.0.1 =
+* Added: Plugin creation
+
+= 1.0.0 =
+* Pure function hook code
