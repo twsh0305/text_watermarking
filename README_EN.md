@@ -71,7 +71,7 @@ Based on **Variation Selectors** in the Unicode character set to implement blind
 3. After activating the plugin, access the configuration page via the left-hand menu "Text Watermark".
 4. Enable the plugin and configure watermark parameters as needed (recommended to enable debug mode first for testing).
 
-Or directly search for "文本盲水印" in the WordPress plugin directory.
+Or directly search for "Wxs Text Watermarking" in the WordPress plugin directory.
 
 ## User Guide
 
@@ -96,7 +96,7 @@ In "Watermark Content Settings", check the information to include:
 To detect watermark information in text, use one of the following methods:
 
 1. **Online Extraction Tool 1**: Visit the [official watermark extraction page](https://wxsnote.cn/wbmsy), paste the watermarked text for parsing.
-2. **Online Extraction Tool 2**: [洪绘文本盲水印](https://textwatermark.zhheo.com/), paste the watermarked text for parsing.
+2. **Online Extraction Tool 2**: [Heo Text Watermark](https://textwatermark.zhheo.com/), paste the watermarked text for parsing.
 3. **Code Extraction**: Use the provided extraction function (example):
    ```php
    require 'path/to/extract.php'; // Include the extraction tool
