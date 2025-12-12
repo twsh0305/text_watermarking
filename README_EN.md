@@ -1,4 +1,4 @@
-# Text Blind Watermarking
+# Wxs Text Watermarking
 
 A dedicated text copyright protection tool for WordPress blogs, embedding invisible blind watermarks within article content to enable traceability and infringement evidence collection for original content.
 
