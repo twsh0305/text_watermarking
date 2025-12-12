@@ -5,10 +5,11 @@ A dedicated text copyright protection tool for WordPress blogs, embedding invisi
 [中文文档](https://github.com/twsh0305/text_watermarking/blob/main/README.md) | [English document](https://github.com/twsh0305/text_watermarking/blob/main/README_EN.md)
 
 ## Screenshots
-<img width="2539" height="1085" alt="image" src="https://github.com/user-attachments/assets/371b429b-2885-48db-ba43-98280b972307" />
-<img width="2538" height="983" alt="image" src="https://github.com/user-attachments/assets/55a8dd33-7ec9-4a59-a189-6092d190b4fb" />
-<img width="2536" height="968" alt="image" src="https://github.com/user-attachments/assets/cc79e343-edca-428f-9654-44ed14973540" />
-<img width="2312" height="564" alt="image" src="https://github.com/user-attachments/assets/7ab6fa68-6f22-4f0e-b5f2-4f6348cb4015" />
+<img width="2537" height="1238" alt="image" src="https://github.com/user-attachments/assets/49daec6a-fe37-46ee-a14f-d7c8a47694bf" />
+<img width="2538" height="1238" alt="image" src="https://github.com/user-attachments/assets/8de403a2-a263-4fea-8148-dad00155dcb4" />
+<img width="2540" height="1238" alt="image" src="https://github.com/user-attachments/assets/fab545cf-a2a9-4b9a-8412-847e961b53bd" />
+<img width="2538" height="1238" alt="image" src="https://github.com/user-attachments/assets/f87eb960-5a2f-4863-a756-51e9815eb545" />
+
 
 ## Changelog
 - 1.0.0 Pure function hook code
