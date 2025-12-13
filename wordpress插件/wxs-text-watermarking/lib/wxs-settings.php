@@ -25,7 +25,7 @@ function wxstbw_init_csf_settings() {
     }
     
     // 刷新所有缓存
-    wp_cache_flush();
+    //wp_cache_flush();
     
     $version = wxstbw_plugin_version();
     $prefix = 'wxstbw_init_csf_options';
