@@ -5,7 +5,7 @@
  * Description: Add blind watermark to article content, support multiple insertion methods and custom configurations, filter UA whitelist
  * Requires at least: 6.3
  * Requires PHP: 7.4
- * Version: 1.1.0
+ * Version: 1.1.1
  * Author: twsh0305
  * Author URI: https://wxsnote.cn
  * License: GPLv2 or later
@@ -22,7 +22,7 @@ if (!defined("ABSPATH")) {
 // 插件统一版本
 function wxstbw_plugin_version()
 {
-    return "1.1.0";
+    return "1.1.1";
 }
 $wxstbw_version = wxstbw_plugin_version();
 
@@ -38,8 +38,8 @@ if (!extension_loaded("mbstring")) {
 define("WXSTBW_PLUGIN_DIR", plugin_dir_path(__FILE__));
 define("WXSTBW_PLUGIN_URL", plugin_dir_url(__FILE__));
 
-//  加载插件目录下的func.php，若无则不加载
-$wxstbw_func_file = WXSTBW_PLUGIN_DIR . '/lib/func.php';
+//  加载插件目录下的wxstbw-func，若无则不加载
+$wxstbw_func_file = WP_CONTENT_DIR . '/wxstbw-func.php';
 if (file_exists($wxstbw_func_file)) {
     require_once $wxstbw_func_file;
 }
@@ -184,7 +184,7 @@ if (wxstbw_is_zibll_themes()) {
     }
 }
 
-// 添加输出JS状态变量的动作 - 修复：使用wp_add_inline_script
+// 添加输出JS状态变量的动作
 function wxstbw_output_js_vars() {
     // 获取用户登录状态
     $is_user_logged_in = is_user_logged_in() ? "true" : "false";
@@ -205,7 +205,7 @@ function wxstbw_output_js_vars() {
     // 检查是否为文章页面
     $is_article_page = is_single() ? "true" : "false";
     
-    // 输出变量到页面 - 使用wp_add_inline_script
+    // 输出变量到页面
     $js_vars = "window.wxstbw_isUserLoggedIn = " . esc_js($is_user_logged_in) . ";\n";
     $js_vars .= "window.wxstbw_current_user_id = " . esc_js($current_user_id) . ";\n";
     $js_vars .= "window.wxstbw_current_user_roles = " . $current_user_roles . ";\n";
@@ -289,9 +289,6 @@ if (!function_exists('wxstbw_check_user_permission')) {
         
         // 处理游客（未登录用户）
         if (!$user_id) {
-            // 对于游客，可以根据需要处理
-            // 如果用户组控制启用，我们通常对游客也应用水印
-            // 但可以在这里添加特殊逻辑
             return true;
         }
         
@@ -477,7 +474,54 @@ function wxstbw_calc_random_count($text_length)
     }
 }
 
-// 处理单个段落文本
+// 检查节点是否在排除的标签内
+function wxstbw_is_inside_excluded_tag($node) {
+    $parent = $node;
+    while ($parent !== null) {
+        if ($parent->nodeType === XML_ELEMENT_NODE) {
+            $tag_name = strtolower($parent->nodeName);
+            // 排除code标签及其内容
+            if ($tag_name === 'code') {
+                return true;
+            }
+        }
+        $parent = $parent->parentNode;
+    }
+    return false;
+}
+
+// 处理文本中的URL部分 - 分割文本，只对非URL部分处理
+function wxstbw_process_text_with_url_filter($text, $watermark) {
+    if (empty($text) || empty($watermark)) {
+        return $text;
+    }
+    
+    // URL正则表达式 - 匹配常见URL格式
+    $url_pattern = '/(https?:\/\/[^\s<>"\'{}|\\^`\[\]]+)/iu';
+    
+    // 使用preg_split分割文本，同时保留URL部分
+    $parts = preg_split($url_pattern, $text, -1, PREG_SPLIT_DELIM_CAPTURE);
+    
+    if (count($parts) === 1) {
+        // 没有URL，直接处理整个文本
+        return wxstbw_process_paragraph($text, $watermark);
+    }
+    
+    $result = '';
+    foreach ($parts as $index => $part) {
+        if ($index % 2 === 0) {
+            // 偶数索引：非URL部分，需要处理
+            $result .= wxstbw_process_paragraph($part, $watermark);
+        } else {
+            // 奇数索引：URL部分，直接保留，不处理
+            $result .= $part;
+        }
+    }
+    
+    return $result;
+}
+
+// 处理单个段落文本（包含URL过滤）
 function wxstbw_process_paragraph($text, $watermark)
 {
     global $wxstbw_config;
@@ -604,8 +648,14 @@ function wxstbw_process_html_content($content)
             foreach ($nodes as $node) {
                 foreach ($node->childNodes as $child) {
                     if ($child->nodeType === XML_TEXT_NODE) {
+                        // 检查是否在排除的标签内（如code标签）
+                        if (wxstbw_is_inside_excluded_tag($child)) {
+                            continue;
+                        }
+                        
                         $original_text = $child->nodeValue;
-                        $processed_text = wxstbw_process_paragraph(
+                        // 使用带有URL过滤的处理函数
+                        $processed_text = wxstbw_process_text_with_url_filter(
                             $original_text,
                             $watermark
                         );
