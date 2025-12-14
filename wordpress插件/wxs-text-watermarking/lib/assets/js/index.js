@@ -34,7 +34,10 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         fixed: {
             interval: parseInt(config.fixed?.interval) || 20
-        }
+        },
+        htmlTags: Array.isArray(config.htmlTags) ? config.htmlTags : ['p', 'li'],
+        bot_ua: Array.isArray(config.bot_ua) ? config.bot_ua : [],
+        run_mode: config.run_mode || 'hybrid'
     };
     
     const isDebug = normalizedConfig.debug_mode;
@@ -127,7 +130,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 爬虫过滤
     const userAgent = navigator.userAgent.toLowerCase();
-    const botUAs = (Array.isArray(normalizedConfig.bot_ua) ? normalizedConfig.bot_ua : [])
+    const botUAs = normalizedConfig.bot_ua
         .map(bot => bot.toString().trim().toLowerCase())
         .filter(bot => bot);
     
@@ -137,14 +140,18 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
 
-    // 生成水印字符
+    // 变体选择器定义
+    const VARIATION_SELECTOR_START = 0xFE00;
+    const VARIATION_SELECTOR_SUPPLEMENT_START = 0xE0100;
+
+    // 字节转换为变体选择器字符
     function byteToChar(byte) {
         if (!Number.isInteger(byte) || byte < 0 || byte > 255) return '';
         
         if (byte < 16) {
-            return String.fromCodePoint(0xFE00 + byte);
+            return String.fromCodePoint(VARIATION_SELECTOR_START + byte);
         } else {
-            return String.fromCodePoint(0xE0100 + (byte - 16));
+            return String.fromCodePoint(VARIATION_SELECTOR_SUPPLEMENT_START + (byte - 16));
         }
     }
 
@@ -152,16 +159,52 @@ document.addEventListener('DOMContentLoaded', function() {
     let pageIP = 'unknown';
     async function fetchIP() {
         try {
-            // 使用WordPress查询变量端点
-            const currentUrl = new URL(window.location.href);
-            currentUrl.searchParams.set('wxstbw_query', 'getip');
-            const response = await fetch(currentUrl.toString());
+            // 获取当前页面的基础URL
+            const currentUrl = window.location.href;
+            
+            // 解析当前URL
+            const url = new URL(currentUrl);
+            
+            // 设置查询参数
+            url.searchParams.set('wxstbw_query', 'getip');
+            
+            // 移除hash部分，避免问题
+            url.hash = '';
+            
+            if (isDebug) {
+                console.log('请求IP的URL:', url.toString());
+            }
+            
+            const response = await fetch(url.toString(), {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                credentials: 'same-origin'
+            });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
             const data = await response.json();
             if (data.success) {
                 pageIP = data.ip;
+                if (isDebug) {
+                    console.log('获取到IP地址:', pageIP);
+                }
+            } else {
+                if (isDebug) {
+                    console.warn('获取IP失败:', data.error || '未知错误');
+                }
             }
         } catch (error) {
-            if (isDebug) console.error('获取IP失败:', error);
+            if (isDebug) {
+                console.error('获取IP失败:', error);
+                // 使用备用方法获取IP
+                pageIP = 'unknown';
+            }
         }
     }
 
@@ -178,8 +221,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         if (normalizedConfig.watermark_content.include_time) {
+            // 获取WordPress时区设置（这里简化处理，实际应该从服务器获取时区设置）
             const now = new Date();
-            const timeStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
+            const timeStr = now.getFullYear() + '-' + 
+                          String(now.getMonth() + 1).padStart(2, '0') + '-' + 
+                          String(now.getDate()).padStart(2, '0') + ' ' + 
+                          String(now.getHours()).padStart(2, '0') + ':' + 
+                          String(now.getMinutes()).padStart(2, '0') + ':' + 
+                          String(now.getSeconds()).padStart(2, '0');
             parts.push(`TIME:${timeStr}`);
         }
         
@@ -192,7 +241,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 生成水印字符串
     async function generateWatermark() {
-        await fetchIP();
+        if (normalizedConfig.watermark_content.include_ip) {
+            await fetchIP();
+        }
         const rawContent = generateWatermarkContent();
         
         if (isDebug) {
@@ -213,89 +264,138 @@ document.addEventListener('DOMContentLoaded', function() {
         return watermark;
     }
 
-    // 处理文本节点
-    async function processTextNode(node, watermark) {
-        const originalText = node.textContent;
-        
-        // 检查文本长度
-        if (originalText.length < normalizedConfig.min_paragraph_length) {
-            return originalText;
+    // 计算随机插入次数
+    function calcRandomCount(textLength) {
+        if (normalizedConfig.random.count_type == 1) {
+            const customCount = normalizedConfig.random.custom_count || 1;
+            return Math.max(1, customCount);
+        } else {
+            const ratio = normalizedConfig.random.word_based_ratio || 400;
+            return Math.max(1, Math.floor(textLength / ratio));
+        }
+    }
+
+    // 检查节点是否在排除的标签内
+    function isInsideExcludedTag(node) {
+        let parent = node.parentElement;
+        while (parent) {
+            const tagName = parent.tagName.toLowerCase();
+            // 排除code标签及其内容
+            if (tagName === 'code') {
+                return true;
+            }
+            parent = parent.parentElement;
+        }
+        return false;
+    }
+
+    // URL正则表达式
+    const URL_PATTERN = /(https?:\/\/[^\s"<>]+)/gi;
+
+    // 处理文本中的URL部分 - 分割文本，只对非URL部分处理
+    function processTextWithUrlFilter(text, watermark) {
+        if (!text || !watermark) {
+            return text;
         }
         
-        let processedText = originalText;
+        // 使用split方法分割文本，同时保留URL部分
+        const parts = text.split(URL_PATTERN);
         
-        switch (normalizedConfig.insert_method) {
-            case 1: // 末尾插入
-                processedText = originalText + watermark;
-                break;
+        if (parts.length === 1) {
+            // 没有URL，直接处理整个文本
+            return processParagraph(text, watermark);
+        }
+        
+        let result = '';
+        for (let i = 0; i < parts.length; i++) {
+            if (i % 2 === 0) {
+                // 偶数索引：非URL部分，需要处理
+                result += processParagraph(parts[i], watermark);
+            } else {
+                // 奇数索引：URL部分，直接保留，不处理
+                result += parts[i];
+            }
+        }
+        
+        return result;
+    }
+
+    // 处理单个段落文本
+    function processParagraph(text, watermark) {
+        const minLength = normalizedConfig.min_paragraph_length || 20;
+        const textLength = text.length;
+        
+        if (textLength < minLength || !watermark) {
+            return text;
+        }
+        
+        const method = normalizedConfig.insert_method || 2;
+        switch (method) {
+            case 1: // 段落末尾插入
+                return text + watermark;
                 
-            case 2: // 随机插入
-                const textLength = originalText.length;
-                let insertCount;
-                
-                if (normalizedConfig.random.count_type === 1) {
-                    insertCount = Math.max(1, normalizedConfig.random.custom_count);
-                } else {
-                    insertCount = Math.max(1, Math.floor(textLength / normalizedConfig.random.word_based_ratio));
-                }
-                
-                // 确保插入次数不超过文本长度
-                insertCount = Math.min(insertCount, Math.max(1, textLength - 1));
-                
-                // 生成插入位置
+            case 2: // 随机位置插入
+                const insertCount = calcRandomCount(textLength);
                 const positions = [];
-                for (let i = 0; i < insertCount; i++) {
+                
+                // 避免插入次数超过文本长度
+                const actualInsertCount = Math.min(insertCount, textLength - 1);
+                
+                for (let i = 0; i < actualInsertCount; i++) {
                     let pos;
                     do {
                         pos = Math.floor(Math.random() * (textLength - 1)) + 1;
-                    } while (positions.includes(pos) && positions.length < textLength);
-                    
-                    if (!positions.includes(pos)) {
-                        positions.push(pos);
-                    }
+                    } while (positions.includes(pos));
+                    positions.push(pos);
                 }
-                
                 positions.sort((a, b) => a - b);
                 
-                // 插入水印
-                let result = '';
+                let result = "";
                 let lastPos = 0;
                 for (const pos of positions) {
-                    result += originalText.substring(lastPos, pos);
+                    result += text.substring(lastPos, pos);
                     result += watermark;
                     lastPos = pos;
                 }
-                result += originalText.substring(lastPos);
-                processedText = result;
-                break;
+                result += text.substring(lastPos);
+                return result;
                 
-            case 3: // 固定间隔插入
-                const interval = Math.max(5, normalizedConfig.fixed.interval);
-                let fixedResult = '';
+            case 3: // 固定字数插入
+                const interval = Math.max(5, normalizedConfig.fixed.interval || 20);
                 
-                for (let i = 0; i < originalText.length; i++) {
-                    fixedResult += originalText[i];
-                    if ((i + 1) % interval === 0 && i < originalText.length - 1) {
+                let fixedResult = "";
+                for (let i = 0; i < textLength; i++) {
+                    fixedResult += text[i];
+                    if ((i + 1) % interval === 0 && i < textLength - 1) {
                         fixedResult += watermark;
                     }
                 }
-                processedText = fixedResult;
-                break;
+                return fixedResult;
+                
+            default:
+                return text;
         }
-        
-        return processedText;
     }
 
-    // 处理元素
-    async function processElement(element, watermark, tags) {
-        // 检查是否是配置的标签
-        const tagName = element.tagName.toLowerCase();
-        const shouldProcess = tags.includes(tagName);
-        
-        if (!shouldProcess && !normalizedConfig.jsGlobalEnable) {
+    // 处理单个文本节点
+    function processTextNode(node, watermark) {
+        // 检查是否在排除的标签内（如code标签）
+        if (isInsideExcludedTag(node)) {
             return;
         }
         
+        const originalText = node.nodeValue;
+        
+        // 使用带有URL过滤的处理函数
+        const processedText = processTextWithUrlFilter(originalText, watermark);
+        
+        if (processedText !== originalText) {
+            node.nodeValue = processedText;
+        }
+    }
+
+    // 处理元素
+    async function processElement(element, watermark) {
         // 创建TreeWalker遍历文本节点
         const walker = document.createTreeWalker(
             element,
@@ -303,7 +403,7 @@ document.addEventListener('DOMContentLoaded', function() {
             {
                 acceptNode: function(node) {
                     // 跳过空的文本节点
-                    if (!node.textContent.trim()) {
+                    if (!node.nodeValue || !node.nodeValue.trim()) {
                         return NodeFilter.FILTER_REJECT;
                     }
                     return NodeFilter.FILTER_ACCEPT;
@@ -311,18 +411,16 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         );
         
-        const textNodes = [];
+        // 处理所有文本节点
         let node;
+        const nodesToProcess = [];
         while (node = walker.nextNode()) {
-            textNodes.push(node);
+            nodesToProcess.push(node);
         }
         
-        // 处理文本节点
-        for (const textNode of textNodes) {
-            const processedText = await processTextNode(textNode, watermark);
-            if (processedText !== textNode.textContent) {
-                textNode.textContent = processedText;
-            }
+        // 批量处理文本节点
+        for (const textNode of nodesToProcess) {
+            processTextNode(textNode, watermark);
         }
     }
 
@@ -337,40 +435,26 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
+        if (isDebug) console.log('水印长度:', watermark.length);
+        
         // 获取要处理的标签
-        const tags = Array.isArray(normalizedConfig.htmlTags) 
-            ? normalizedConfig.htmlTags 
-            : ['p', 'li'];
+        const tags = normalizedConfig.htmlTags;
         
         if (isDebug) console.log('处理的标签:', tags);
         
         // 1. 首先处理文章内容
-        if (wxstbw_isArticlePage) {
+        if (wxstbw_isArticlePage || normalizedConfig.global_force_article) {
             if (isDebug) console.log('处理文章页面内容');
             
-            const articleSelectors = [
-                '.article-content',
-                '.post-content',
-                '.entry-content',
-                '#content .article',
-                '.post'
-            ];
-            
-            let articleContainer = null;
-            for (const selector of articleSelectors) {
-                articleContainer = document.querySelector(selector);
-                if (articleContainer) break;
-            }
-            
-            if (articleContainer) {
-                // 处理配置的标签
-                for (const tag of tags) {
-                    const elements = articleContainer.querySelectorAll(tag);
-                    if (isDebug) console.log(`找到 ${elements.length} 个 <${tag}> 元素`);
-                    
-                    for (const element of elements) {
-                        await processElement(element, watermark, tags);
-                    }
+            // 处理所有配置的标签
+            for (const tag of tags) {
+                const elements = document.querySelectorAll(tag);
+                if (isDebug && elements.length > 0) {
+                    console.log(`找到 ${elements.length} 个 <${tag}> 元素`);
+                }
+                
+                for (const element of elements) {
+                    await processElement(element, watermark);
                 }
             }
         }
@@ -407,10 +491,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 for (const selector of selectors) {
                     try {
                         const elements = document.querySelectorAll(selector);
-                        if (isDebug) console.log(`选择器 ${selector} 找到 ${elements.length} 个元素`);
+                        if (isDebug && elements.length > 0) {
+                            console.log(`选择器 ${selector} 找到 ${elements.length} 个元素`);
+                        }
                         
                         for (const element of elements) {
-                            await processElement(element, watermark, tags);
+                            // 对于全局选择器，只处理配置的标签
+                            const tagName = element.tagName.toLowerCase();
+                            if (tags.includes(tagName)) {
+                                await processElement(element, watermark);
+                            }
                         }
                     } catch (error) {
                         if (isDebug) console.error(`选择器错误 ${selector}:`, error);
