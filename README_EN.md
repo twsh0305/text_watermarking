@@ -23,6 +23,7 @@ A dedicated text copyright protection tool for WordPress blogs, embedding invisi
 - 1.0.8 1. Use WordPress local time. 2. Directly use the child theme's CSF framework if a child theme exists. 3. Fixed PHP 8.x warnings. 4. Fixed global JS not applying to articles.
 - 1.0.9 1. Multi-language internationalization. 2. Localized external resources. 3. Complied with WordPress plugin development standards, using WP functions.
 - 1.1.0 1. Fixed text disorder caused by JS. 2. Added user group determination.
+- 1.1.1 1. Added exclude code and url
 
 ## Core Features
 
