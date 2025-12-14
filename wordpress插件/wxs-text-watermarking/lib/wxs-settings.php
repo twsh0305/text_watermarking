@@ -3,8 +3,8 @@
  * 文本盲水印插件 - CSF设置面板配置
  * 
  * @package WXS Text Watermarking
- * @author 大绵羊 天无神话
- * @version 1.1.0
+ * @author 天无神话
+ * @version 1.1.1
  */
 
 // 防止直接访问
@@ -25,7 +25,7 @@ function wxstbw_init_csf_settings() {
     }
     
     // 刷新所有缓存
-    //wp_cache_flush();
+    wp_cache_flush();
     
     $version = wxstbw_plugin_version();
     $prefix = 'wxstbw_init_csf_options';
@@ -125,12 +125,11 @@ function wxstbw_get_welcome_content() {
         <p><?php echo esc_html__('Please configure plugin functions through the left tabs. In debug mode, watermarks will be displayed as visible text for testing purposes.', 'wxs-text-watermarking'); ?></p>
         <a href="https://wxsnote.cn/wbmsy" target="_blank" class="wxstbw-watermark-btn"><i class="fa fa-paper-plane"></i> <?php echo esc_html__('Go to Extract Watermark', 'wxs-text-watermarking'); ?></a>
         <a href="https://github.com/twsh0305/text_watermarking/releases/latest" target="_blank" class="wxstbw-watermark-btn"><i class="fa fa-cloud-upload"></i> <?php echo esc_html__('Check for Updates', 'wxs-text-watermarking'); ?></a>
-        <p style="color:red"><?php echo esc_html__('Minor issue; for example, URLs, if you don\'t add hyperlinks, you should give code highlighting, pure P tag URLs cannot be perfectly adapted', 'wxs-text-watermarking'); ?></p>
         <p><?php echo esc_html__('Plugin Author home: ', 'wxs-text-watermarking'); ?><a href="https://profiles.wordpress.org/twsh0305/" target="_blank">twsh0305</a></p>
         <p><?php echo esc_html__('Plugin Author: 天无神话', 'wxs-text-watermarking'); ?></p>
         <p><?php echo esc_html__('Author Email: admin@wxsnote.cn', 'wxs-text-watermarking'); ?></p>
         <p><?php echo esc_html__('Author Blog: ', 'wxs-text-watermarking'); ?><a href="https://wxsnote.cn/" target="_blank"><?php echo esc_html__('Mr. Wang\'s Notes', 'wxs-text-watermarking'); ?></a></p>
-        <p><?php echo esc_html__('Co-development: ', 'wxs-text-watermarking'); ?><a href="https://dmyblog.cn/" target="_blank"><?php echo esc_html__('Big Sheep Blog', 'wxs-text-watermarking'); ?></a></p>
+        <p><?php echo esc_html__('To contribute: ', 'wxs-text-watermarking'); ?><a href="https://dmyblog.cn/" target="_blank"><?php echo esc_html__('Big Sheep Blog', 'wxs-text-watermarking'); ?></a></p>
         <p><?php echo esc_html__('QQ Group: ', 'wxs-text-watermarking'); ?><a href="https://jq.qq.com/?_wv=1027&k=eiGEOg3i" target="_blank">399019539</a></p>
         <p><?php echo esc_html__('Produced by 天无神话, please indicate the open source address when reposting, thank you for your cooperation.', 'wxs-text-watermarking'); ?></p>
         <p style="color:red"><?php echo esc_html__('Main open source license requirement: Prohibits removal or modification of author information', 'wxs-text-watermarking'); ?></p>
@@ -360,12 +359,12 @@ function wxstbw_get_basic_settings_fields() {
  * 获取自定义用户组信息
  */
 function wxstbw_get_custom_user_group_info() {
-    // 1. 定义插件目录下func.php的绝对路径（核心：获取当前插件的真实目录）
-    $plugin_dir = plugin_dir_path(__FILE__); // 当前函数所在插件的根目录
-    $func_file = $plugin_dir . 'func.php';   // func.php的完整路径
-    $func_file_url = plugin_dir_url(__FILE__) . 'func.php'; // 用于前端显示的路径（仅提示）
+    // 1. 定义wp-content目录下func.php的绝对路径（核心：获取当前插件的真实目录）
+    $content_dir = WP_CONTENT_DIR; // 当前函数所在插件的根目录
+    $func_file = $content_dir . '/wxstbw-func.php';   // wxstbw-func.php的完整路径
+    $func_file_url = WP_CONTENT_DIR . '/wxstbw-func.php'; // 用于前端显示的路径（仅提示）
     
-    // 2. 加载func.php（如果文件存在）
+    // 2. 加载wxstbw-func.php（如果文件存在）
     $file_exists = file_exists($func_file);
     if ($file_exists && !function_exists('wxstbw_op_custom')) {
         require_once $func_file; // 加载文件（避免重复加载用require_once）
@@ -410,11 +409,11 @@ function wxstbw_get_custom_user_group_info() {
             <h5><?php echo esc_html__('Step 1: Create/Edit File', 'wxs-text-watermarking'); ?></h5>
             <p><?php 
             /* translators: %s: 所需文件的名称 (func.php) */
-            echo sprintf(esc_html__('Create a file named %s in the following directory:', 'wxs-text-watermarking'), '<code>func.php</code>'); 
+            echo sprintf(esc_html__('Create a file named %s in the following directory:', 'wxs-text-watermarking'), '<code>wxstbw-func.php</code>'); 
             ?></p>
             <pre><code><?php echo esc_html($func_file); ?></code></pre>
             
-            <h5><?php echo esc_html__('Step 2: Add the following code to func.php', 'wxs-text-watermarking'); ?></h5>
+            <h5><?php echo esc_html__('Step 2: Add the following code to wxstbw-func.php', 'wxs-text-watermarking'); ?></h5>
             <pre><code><?php echo esc_html('<?php
 /**
  * Custom 用户组水印控制功能 User Group Watermark Control Function
