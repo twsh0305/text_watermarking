@@ -4,7 +4,7 @@
  * 
  * @package WXS Text Watermarking
  * @author 天无神话
- * @version 1.1.1
+ * @version 1.1.2
  */
 
 // 防止直接访问
@@ -24,8 +24,6 @@ function wxstbw_init_csf_settings() {
         return false;
     }
     
-    // 刷新所有缓存
-    wp_cache_flush();
     
     $version = wxstbw_plugin_version();
     $prefix = 'wxstbw_init_csf_options';
