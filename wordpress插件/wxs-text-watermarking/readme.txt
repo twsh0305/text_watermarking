@@ -4,7 +4,7 @@ Donate link: https://wxsnote.cn/zanzhu
 Tags: blind, watermark, copyright, protection, text
 Requires at least: 6.3
 Tested up to: 6.9
-Stable tag: 1.1.1
+Stable tag: 1.1.2
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -90,6 +90,9 @@ The plugin automatically clears all configuration data during uninstallation, le
 
 == Changelog ==
 
+= 1.1.2 =
+* Fixed Remove cache control
+
 = 1.1.1 =
 * Added exclude code and url
 
@@ -105,6 +108,9 @@ The plugin automatically clears all configuration data during uninstallation, le
 To read the changelog for Wxs Text Watermarking, please navigate to the <a href="https://github.com/twsh0305/text_watermarking/">Github page</a>.
 
 == Upgrade Notice ==
+
+= 1.1.2 =
+Fixed Remove cache control
 
 = 1.1.1 =
 Added exclude code and url
