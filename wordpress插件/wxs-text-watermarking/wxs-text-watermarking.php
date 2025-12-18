@@ -5,7 +5,7 @@
  * Description: Add blind watermark to article content, support multiple insertion methods and custom configurations, filter UA whitelist
  * Requires at least: 6.3
  * Requires PHP: 7.4
- * Version: 1.1.1
+ * Version: 1.1.2
  * Author: twsh0305
  * Author URI: https://wxsnote.cn
  * License: GPLv2 or later
@@ -22,7 +22,7 @@ if (!defined("ABSPATH")) {
 // 插件统一版本
 function wxstbw_plugin_version()
 {
-    return "1.1.1";
+    return "1.1.2";
 }
 $wxstbw_version = wxstbw_plugin_version();
 
