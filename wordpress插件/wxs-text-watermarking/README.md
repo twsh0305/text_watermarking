@@ -214,4 +214,4 @@ function wxstbw_op_custom($user_id = null) {
 - 原理介绍：[文本盲水印技术实现](https://wxsnote.cn/6395.html)
 - QQ群：[399019539](https://jq.qq.com/?_wv=1027&k=eiGEOg3i)
 - 开源地址：[GitHub仓库](https://github.com/twsh0305/text_watermarking)
-- 插件地址：[wordpress插件目录](https://wordpress.org/plugins/wxs-text-watermarking/)
+- 插件地址：[wordpress插件目录](https://cn.wordpress.org/plugins/wxs-text-watermarking/)
