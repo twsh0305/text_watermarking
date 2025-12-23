@@ -2,7 +2,7 @@
 
 A dedicated text copyright protection tool for WordPress blogs, embedding invisible blind watermarks within article content to enable traceability and infringement evidence collection for original content.
 
-[中文文档](https://github.com/twsh0305/text_watermarking/blob/main/README.md) | [English document](https://github.com/twsh0305/text_watermarking/blob/main/README_EN.md)
+[WordPress中文文档](https://github.com/twsh0305/text_watermarking/tree/main/wordpress%E6%8F%92%E4%BB%B6/wxs-text-watermarking)| [WordPress english document](https://github.com/twsh0305/text_watermarking/blob/main/wordpress%E6%8F%92%E4%BB%B6/wxs-text-watermarking/README_EN.md)
 
 ## Screenshots
 <img width="2537" height="1238" alt="image" src="https://github.com/user-attachments/assets/49daec6a-fe37-46ee-a14f-d7c8a47694bf" />
