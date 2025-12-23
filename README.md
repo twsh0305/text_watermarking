@@ -6,7 +6,15 @@
 
 [WordPress中文文档](https://github.com/twsh0305/text_watermarking/tree/main/wordpress%E6%8F%92%E4%BB%B6/wxs-text-watermarking)| [WordPress english document](https://github.com/twsh0305/text_watermarking/blob/main/wordpress%E6%8F%92%E4%BB%B6/wxs-text-watermarking/README_EN.md)
 
+XiunoBBS文档暂时没空写，总之开箱即用
+
 ## 截图
+wordpress后台
+<img width="2537" height="1238" alt="image" src="https://github.com/user-attachments/assets/e865628a-3236-403f-a759-366b80af750e" />
+xiunobbs后台
+<img width="2537" height="1238" alt="image" src="https://github.com/user-attachments/assets/57a49842-5643-4173-8950-505ff21455cd" />
+提取效果展示
+<img width="2538" height="1238" alt="image" src="https://github.com/user-attachments/assets/f8c82719-6093-4c4a-b06b-0f273e9114c3" />
 
 
 
