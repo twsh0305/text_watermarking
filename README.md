@@ -6,7 +6,7 @@
 
 [WordPress中文文档](https://github.com/twsh0305/text_watermarking/tree/main/wordpress%E6%8F%92%E4%BB%B6/wxs-text-watermarking)| [WordPress english document](https://github.com/twsh0305/text_watermarking/blob/main/wordpress%E6%8F%92%E4%BB%B6/wxs-text-watermarking/README_EN.md)
 
-XiunoBBS文档暂时没空写，总之开箱即用
+XiunoBBS文档暂时没空写，总之开箱即用，介绍见；[https://wxsnote.cn/7180.html](https://wxsnote.cn/7180.html)
 
 ## 截图
 wordpress后台
