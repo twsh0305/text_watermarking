@@ -179,3 +179,7 @@ This plugin is released under the GPLv2 license (see LICENSE file for details).
 - QQ Group：[399019539](https://jq.qq.com/?_wv=1027&k=eiGEOg3i)
 - Open Source Repository：[GitHub Repository](https://github.com/twsh0305/text_watermarking)
 - Plugin Page：[WordPress Plugin Directory](https://wordpress.org/plugins/wxs-text-watermarking/)
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=twsh0305/text_watermarking&type=date&legend=top-left)](https://www.star-history.com/#twsh0305/text_watermarking&type=date&legend=top-left)
