@@ -76,6 +76,6 @@ xiunobbs后台
 - 开源地址：[GitHub仓库](https://github.com/twsh0305/text_watermarking)
 - wordPress插件地址：[wordpress插件目录](https://cn.wordpress.org/plugins/wxs-text-watermarking/)
 
-## Star History
+## Star 历史
 
 [![Star History Chart](https://api.star-history.com/svg?repos=twsh0305/text_watermarking&type=date&legend=top-left)](https://www.star-history.com/#twsh0305/text_watermarking&type=date&legend=top-left)
