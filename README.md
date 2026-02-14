@@ -2,7 +2,7 @@
 
 文本版权保护工具，通过在文章内容中嵌入不可见的盲水印信息，实现原创内容的版权追溯与侵权取证。
 
-[WordPress中文文档](https://github.com/twsh0305/text_watermarking/tree/main/wordpress%E6%8F%92%E4%BB%B6/wxs-text-watermarking)| [WordPress english document](https://github.com/twsh0305/text_watermarking/blob/main/wordpress%E6%8F%92%E4%BB%B6/wxs-text-watermarking/README_EN.md)
+[WordPress中文文档](https://github.com/twsh0305/text_watermarking/blob/main/README.md)| [WordPress english document](https://github.com/twsh0305/text_watermarking/blob/main/README_EN.md)
 
 ## 截图
 wordpress后台
