@@ -2,20 +2,13 @@
 
 文本版权保护工具，通过在文章内容中嵌入不可见的盲水印信息，实现原创内容的版权追溯与侵权取证。
 
-当前已支持的系统：WordPress XiunoBBS
-
 [WordPress中文文档](https://github.com/twsh0305/text_watermarking/tree/main/wordpress%E6%8F%92%E4%BB%B6/wxs-text-watermarking)| [WordPress english document](https://github.com/twsh0305/text_watermarking/blob/main/wordpress%E6%8F%92%E4%BB%B6/wxs-text-watermarking/README_EN.md)
-
-XiunoBBS文档暂时没空写，总之开箱即用，介绍见：[https://wxsnote.cn/7180.html](https://wxsnote.cn/7180.html)
 
 ## 截图
 wordpress后台
 <img width="2537" height="1238" alt="image" src="https://github.com/user-attachments/assets/e865628a-3236-403f-a759-366b80af750e" />
-xiunobbs后台
-<img width="2537" height="1238" alt="image" src="https://github.com/user-attachments/assets/57a49842-5643-4173-8950-505ff21455cd" />
 提取效果展示
 <img width="2538" height="1238" alt="image" src="https://github.com/user-attachments/assets/f8c82719-6093-4c4a-b06b-0f273e9114c3" />
-
 
 
 ## 核心功能
