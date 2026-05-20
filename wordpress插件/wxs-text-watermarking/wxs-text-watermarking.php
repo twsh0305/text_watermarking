@@ -5,7 +5,7 @@
  * Description: Add blind watermark to article content, support multiple insertion methods and custom configurations, filter UA whitelist
  * Requires at least: 6.3
  * Requires PHP: 7.4
- * Version: 1.1.2
+ * Version: 1.1.3
  * Author: twsh0305
  * Author URI: https://wxsnote.cn
  * License: GPLv2 or later
@@ -22,7 +22,7 @@ if (!defined("ABSPATH")) {
 // 插件统一版本
 function wxstbw_plugin_version()
 {
-    return "1.1.2";
+    return "1.1.3";
 }
 $wxstbw_version = wxstbw_plugin_version();
 
@@ -154,7 +154,10 @@ add_action('init', 'wxstbw_init_translated_functions');
 if (wxstbw_is_zibll_themes()) {
     // 使用子比函数挂载
     require_once WXSTBW_PLUGIN_DIR . "/lib/wxs-settings.php";
-    add_action("zib_require_end", "wxstbw_init_csf_settings");
+    //在zib_require_end触发时不做实事，只注册一个回调，让真正的CSF初始化延迟到WordPress认为翻译加载合法的时机再执行，防止触发翻译过早
+    add_action("zib_require_end", function () {
+        add_action('after_setup_theme', 'wxstbw_init_csf_settings', 0);
+    });
 } else {
     // 非子比引入必要文件
     $wxstbw_required_files = [
@@ -1016,3 +1019,11 @@ add_action('template_redirect', function () {
 
     wp_send_json($response);
 });
+
+
+// 移除 CSF 框架自动注册到「工具」菜单的 Welcome 页面，避免出现在管理工具栏
+add_action('admin_menu', function () {
+    if (class_exists('CSF')) {
+        remove_submenu_page('tools.php', 'csf-welcome');
+    }
+}, 999);

@@ -22,8 +22,9 @@
 - 1.0.8 1.使用wp的本地时间，2.如果存在子比主题，则直接调用子比主题的CSF框架，3.修复PHP8.x的报错，4.修复全局js文章不生效的问题
 - 1.0.9 1.多语言国际化，2.外部资源本地化，3.遵守WordPress插件开发规范，使用WP函数
 - 1.1.0 1.修复js导致的文字错乱，2.增加用户组判断
-- 1.1.1 1.增加code和url的排除
+- 1.1.1 1.增加<code>和url的排除
 - 1.1.2 删除cache控制
+- 1.1.3 1.修复zibll主题触发翻译过早的问题。2.修复wp7.0错误加载Codestar Framework欢迎页的问题。
 
 ## 核心功能
 
@@ -214,4 +215,4 @@ function wxstbw_op_custom($user_id = null) {
 - 原理介绍：[文本盲水印技术实现](https://wxsnote.cn/6395.html)
 - QQ群：[399019539](https://jq.qq.com/?_wv=1027&k=eiGEOg3i)
 - 开源地址：[GitHub仓库](https://github.com/twsh0305/text_watermarking)
-- 插件地址：[wordpress插件目录](https://cn.wordpress.org/plugins/wxs-text-watermarking/)
+- 插件地址：[wordpress插件目录](https://wordpress.org/plugins/wxs-text-watermarking/)

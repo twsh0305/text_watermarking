@@ -25,6 +25,7 @@ A dedicated text copyright protection tool for WordPress blogs, embedding invisi
 - 1.1.0 1. Fixed text disorder caused by JS. 2. Added user group determination.
 - 1.1.1 1. Added exclude code and url
 - 1.1.2 Removing cache control
+- 1.1.3 1. Fix the issue where the Zibll theme triggers translation prematurely. 2. Fix the problem of the Codestar Framework welcome page being incorrectly loaded under WordPress 7.0.
 
 ## Core Features
 
