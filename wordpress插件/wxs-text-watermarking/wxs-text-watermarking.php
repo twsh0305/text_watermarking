@@ -88,7 +88,7 @@ function wxstbw_enqueue_admin_styles()
         // 加载Font Awesome
         wp_enqueue_style(
             "wxstbw-font-awesome",
-            WXSTBW_PLUGIN_URL . "lib/assets/webfonts/css/all.min.css",
+            WXSTBW_PLUGIN_URL . "lib/assets/css/all.min.css",
             [],
             "7.0.0",
             "all"
@@ -1019,7 +1019,6 @@ add_action('template_redirect', function () {
 
     wp_send_json($response);
 });
-
 
 // 移除 CSF 框架自动注册到「工具」菜单的 Welcome 页面，避免出现在管理工具栏
 add_action('admin_menu', function () {
