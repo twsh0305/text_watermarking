@@ -49,9 +49,6 @@ Plugin based on open-source projects:
 - Background framework: [Codestar Framework](https://github.com/Codestar/codestar-framework)
 - Encryption scheme: [Emoji Encoder](https://github.com/paulgb/emoji-encoder)
 
-License Details:
-Use and modification permitted, but original copyright notice must be retained (prohibits removing/modifying author info in code). Modified versions must be open-sourced as GPLv2 or later with full source code available.
-
 Author Information:
 - Author: twsh0305
 - Blog: [Mr. Wang's Notes](https://wxsnote.cn/)
