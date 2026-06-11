@@ -26,6 +26,7 @@ A dedicated text copyright protection tool for WordPress blogs, embedding invisi
 - 1.1.1 1. Added exclude code and url
 - 1.1.2 Removing cache control
 - 1.1.3 1. Fix the issue where the Zibll theme triggers translation prematurely. 2. Fix the problem of the Codestar Framework welcome page being incorrectly loaded under WordPress 7.0.
+- 1.1.4 1. Fix duplicate registration of CSF settings panel under Zibll theme. 2. Replace zib_require_end hook with after_setup_theme. 3. Add re-entry protection to CSF initialization. 4. Restrict settings.css to plugin settings page only.
 
 ## Core Features
 

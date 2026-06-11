@@ -5,7 +5,7 @@
  * Description: Add blind watermark to article content, support multiple insertion methods and custom configurations, filter UA whitelist
  * Requires at least: 6.3
  * Requires PHP: 7.4
- * Version: 1.1.3
+ * Version: 1.1.4
  * Author: twsh0305
  * Author URI: https://wxsnote.cn
  * License: GPLv2 or later
@@ -22,7 +22,7 @@ if (!defined("ABSPATH")) {
 // 插件统一版本
 function wxstbw_plugin_version()
 {
-    return "1.1.3";
+    return "1.1.4";
 }
 $wxstbw_version = wxstbw_plugin_version();
 
@@ -104,8 +104,13 @@ function wxstbw_enqueue_admin_styles()
         );
     }
 }
-// 加载设置页面样式
+// 加载设置页面样式（仅插件设置页）
 function wxstbw_enqueue_admin_settings_styles() {
+    $current_screen = get_current_screen();
+    $prefix = "wxstbw_init_csf_options";
+    if (!isset($current_screen->id) || $current_screen->id !== "toplevel_page_" . $prefix) {
+        return;
+    }
     wp_enqueue_style(
         "wxstbw-settings-css",
         WXSTBW_PLUGIN_URL . "lib/assets/css/settings.css",
@@ -117,47 +122,44 @@ function wxstbw_enqueue_admin_settings_styles() {
 add_action('admin_enqueue_scripts', 'wxstbw_enqueue_admin_settings_styles');
 
 
-// 初始化所有需要翻译的功能
-function wxstbw_init_translated_functions() {
-    // 全局配置变量
+// 初始化全局配置变量（所有环境通用）
+function wxstbw_init_global_config() {
     global $wxstbw_config;
     $wxstbw_config = get_option("wxstbw_init_csf_options", []);
-    
-    // 记录CSF初始化状态的变量
-    $csf_initialized = false;
+}
+add_action('init', 'wxstbw_init_global_config');
 
-    // 初始化CSF设置面板
+// 非子比主题环境下初始化CSF设置面板和后台菜单
+function wxstbw_init_translated_functions() {
+    // 子比主题环境下CSF已在after_setup_theme中初始化，此处跳过
+    if (wxstbw_is_zibll_themes()) {
+        return;
+    }
+    
+    $csf_initialized = false;
     if (class_exists("CSF")) {
         $csf_initialized = wxstbw_init_csf_settings();
-    } else {
-        $csf_initialized = false;
     }
 
     // 添加备用菜单注册方式，确保在CSF无法正常工作时仍能显示插件入口
     if (!$csf_initialized) {
-        if (!wxstbw_is_zibll_themes()) {
-            add_action("admin_menu", "wxstbw_add_fallback_menu");
-        }
+        add_action("admin_menu", "wxstbw_add_fallback_menu");
     }
     
     // 挂钩到后台样式加载钩子
-    if (!wxstbw_is_zibll_themes()) {
-        add_action(
-            "admin_enqueue_scripts",
-            "wxstbw_enqueue_admin_styles",
-            500
-        );
-    }
+    add_action(
+        "admin_enqueue_scripts",
+        "wxstbw_enqueue_admin_styles",
+        500
+    );
 }
 add_action('init', 'wxstbw_init_translated_functions');
 
 if (wxstbw_is_zibll_themes()) {
-    // 使用子比函数挂载
+    // 使用子比主题CSF框架，引入设置文件
     require_once WXSTBW_PLUGIN_DIR . "/lib/wxs-settings.php";
-    //在zib_require_end触发时不做实事，只注册一个回调，让真正的CSF初始化延迟到WordPress认为翻译加载合法的时机再执行，防止触发翻译过早
-    add_action("zib_require_end", function () {
-        add_action('after_setup_theme', 'wxstbw_init_csf_settings', 0);
-    });
+    // 子比主题环境下，CSF注册统一挂在after_setup_theme
+    add_action('after_setup_theme', 'wxstbw_init_csf_settings');
 } else {
     // 非子比引入必要文件
     $wxstbw_required_files = [

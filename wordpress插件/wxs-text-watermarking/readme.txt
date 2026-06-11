@@ -4,7 +4,7 @@ Donate link: https://wxsnote.cn/zanzhu
 Tags: blind, watermark, copyright, protection, text
 Requires at least: 6.3
 Tested up to: 7.0
-Stable tag: 1.1.3
+Stable tag: 1.1.4
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -89,6 +89,12 @@ The plugin automatically clears all configuration data during uninstallation, le
 4. Enable the plugin and configure parameters (enable debug mode first for testing).
 
 == Changelog ==
+= 1.1.4 =
+* Fix duplicate registration of CSF settings panel under Zibll theme
+* Replace zib_require_end hook with after_setup_theme
+* Add re-entry protection to CSF initialization
+* Restrict settings.css to plugin settings page only
+
 = 1.1.3 =
 * Fix the issue where the Zibll theme triggers translation prematurely
 * Fix the problem of the Codestar Framework welcome page being incorrectly loaded under WordPress 7.0
@@ -111,6 +117,9 @@ The plugin automatically clears all configuration data during uninstallation, le
 To read the changelog for Wxs Text Watermarking, please navigate to the <a href="https://github.com/twsh0305/text_watermarking/">Github page</a>.
 
 == Upgrade Notice ==
+
+= 1.1.4 =
+Fix duplicate CSF settings panel under Zibll theme. Replace zib_require_end with after_setup_theme. Add re-entry protection and restrict CSS loading.
 
 = 1.1.3 =
 Fix the issue where the Zibll theme triggers translation prematurely. Fix the problem of the Codestar Framework welcome page being incorrectly loaded under WordPress 7.0.

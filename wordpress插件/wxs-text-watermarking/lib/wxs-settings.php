@@ -15,6 +15,12 @@ if (!defined('ABSPATH')) exit;
  */
 function wxstbw_init_csf_settings() {
     
+    // 防止重复初始化
+    static $done = false;
+    if ($done) {
+        return true;
+    }
+    
     // 只有后台才执行此代码
     if (!is_admin()) {
         return;
@@ -23,6 +29,8 @@ function wxstbw_init_csf_settings() {
     if (!class_exists('CSF')) {
         return false;
     }
+    
+    $done = true;
     
     
     $version = wxstbw_plugin_version();

@@ -25,6 +25,7 @@
 - 1.1.1 1.增加<code>和url的排除
 - 1.1.2 删除cache控制
 - 1.1.3 1.修复zibll主题触发翻译过早的问题。2.修复wp7.0错误加载Codestar Framework欢迎页的问题。
+- 1.1.4 1.修复zibll主题下CSF设置面板重复注册的问题。2.将zib_require_end钩子更新为after_setup_theme。3.CSF初始化增加防重入保护。4.settings.css仅限插件设置页加载。
 
 ## 核心功能
 
